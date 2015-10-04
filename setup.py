@@ -20,7 +20,8 @@ requirements = [
 
 test_requirements = [
    'fake-factory',
-   'coverage'
+   'coverage',
+   'pylint'
 ]
 
 setup(
