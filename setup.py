@@ -24,9 +24,9 @@ test_requirements = [
 ]
 
 setup(
-    name='ehrcorral',
+    name='EHRcorral',
     version='0.0.1',
-    description="EHRCorral cross-matches and links electronic medical records for the purpose of de-duplication",
+    description="EHRcorral cross-matches and links electronic medical records for the purpose of de-duplication",
     long_description=readme + '\n\n' + history,
     author="Nikhil Haas",
     author_email='nikhil@nikhilhaas.com',

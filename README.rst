@@ -1,5 +1,5 @@
 ===============================
-EHRCorral
+EHRcorral
 ===============================
 
 .. image:: https://img.shields.io/travis/nsh87/ehrcorral.svg
@@ -9,7 +9,7 @@ EHRCorral
         :target: https://pypi.python.org/pypi/ehrcorral
 
 
-EHRCorral cross-matches and links electronic medical records for the
+EHRcorral cross-matches and links electronic medical records for the
 purpose of de-duplication
 
 * Free software: ISC license
