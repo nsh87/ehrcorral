@@ -2,6 +2,6 @@
 Usage
 ========
 
-To use EHRCorral in a project::
+To use EHRcorral in a project::
 
     import ehrcorral
