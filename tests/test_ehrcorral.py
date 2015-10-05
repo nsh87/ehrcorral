@@ -13,6 +13,7 @@ from __future__ import unicode_literals
 import unittest
 import json
 import os
+import random
 
 from ehrcorral.herd import Herd
 from faker import Faker
@@ -35,14 +36,20 @@ def create_population(N, start_date="-99y", end_date="-1y"):
             as ``start_date``.
 
     Returns:
-        A tuple of dictionaries, each representing an individual profile,
+        tuple: A tuple of dictionaries, each representing an individual profile,
         sorted by profile name.
     """
-    profile_fields = ['name', 'address', 'ssn']
+    profile_fields = ['name', 'address', 'ssn', 'blood_group', 'sex']
     population = [fake.profile(fields=profile_fields) for i in range(N)]
+    gender_change = {'M': 'F', 'F': 'M'}
     for i in range(N):
+        record = population[i]
+        # Birthdate
         birthdate = fake.date_time_between(start_date="-99y", end_date="-1y")
-        population[i]['birthdate'] = birthdate.strftime("%Y-%m-%d")
+        record['birthdate'] = birthdate.strftime("%Y-%m-%d")
+        # Gender
+        sex = record['sex']
+        record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
     return tuple(sorted(population, key=lambda profile: profile['name']))
 
 
