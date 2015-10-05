@@ -4,9 +4,29 @@ them.
 """
 
 
+from collections import namedtuple
+
+
+class Record(namedtuple('Record', ['first_name',
+                                   'middle_name',
+                                   'last_name',
+                                   'suffix',
+                                   'gender',
+                                   'sex',
+                                   'address',
+                                   'ssn',
+                                   'id_number',
+                                   'blood_type',
+                                   'birthdate'])):
+    """An immutable representation of an electronic health record primarily
+    containing identifying patient information.
+    """
+    __slots__ = ()  # Prevent per-instance dictionaries for low memory
+
+
 class Herd(object):
-    """A collection of profiles, each representing an individual electronic
-    health record.
+    """A collection of :py:class:`.Record` with methods for interacting with
+    and linking records in the herd.
 
     You need:
     - validate names (check for commas, weird chars, convert to unicode/ascii?)
