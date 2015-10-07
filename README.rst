@@ -69,6 +69,15 @@ here your herd is a collection of Records.::
 Above, we have defined a tuple of Records. In general, the population of
 your herd should not change, so a tuple is desirable.
 
+You have four name fields available to you: `first_name`, `middle_name`,
+`last_name`, and `suffix`. How you define them is entirely up to you. There
+is no special transformations that get applied (WHAT ABOUT CONVERTING TO
+UNICODE OR REMOVING SPECIAL CHARACATERS - MAYBE MAKE THAT A FLAG) and they
+are first matched phonetically and then evaluated for similarity - each field
+is matched the same way. DON'T YOU WANT ONLY A SINGLE NAME (i.e. NO SPACES)
+IN EACH ONE? If you want to leave the middle name field blank, that is fine.
+However you define each field is entirely up to you.
+
 Create and Populating a Herd
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
