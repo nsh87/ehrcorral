@@ -30,7 +30,7 @@ class TestHerdStr(unittest.TestCase):
         with open(data_path, 'r') as data_file:
             self.population = tuple(json.load(data_file))
 
-    def test_herd_str(self):
+    def test_herd_str_method(self):
         try:
             herd = Herd()
             str(herd)
