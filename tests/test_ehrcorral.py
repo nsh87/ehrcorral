@@ -21,38 +21,6 @@ from faker import Faker
 fake = Faker()
 
 
-def create_population(N, start_date="-99y", end_date="-1y"):
-    """Creates a fake population.
-
-    A population consists of N profiles of various individuals, where each
-    profile includes at least a name, address, and SSN. Herd generation is not
-    100% reproducible, so each new population will essentially be random.
-
-    Args:
-        N (int): Number of profiles to create.
-        start_date (str): Earliest date to use for birthdate. In the form of
-            ``+/-[number of years]y``.
-        end_date (str): Latest date to use for birthdate, in the same format
-            as ``start_date``.
-
-    Returns:
-        tuple: A tuple of dictionaries, each representing an individual profile,
-        sorted by profile name.
-    """
-    profile_fields = ['name', 'address', 'ssn', 'blood_group', 'sex']
-    population = [fake.profile(fields=profile_fields) for i in range(N)]
-    gender_change = {'M': 'F', 'F': 'M'}
-    for i in range(N):
-        record = population[i]
-        # Birthdate
-        birthdate = fake.date_time_between(start_date="-99y", end_date="-1y")
-        record['birthdate'] = birthdate.strftime("%Y-%m-%d")
-        # Gender
-        sex = record['sex']
-        record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
-    return tuple(sorted(population, key=lambda profile: profile['name']))
-
-
 class TestHerdStr(unittest.TestCase):
 
     def setUp(self):
