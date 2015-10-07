@@ -50,16 +50,15 @@ class TestHerdPopulation(unittest.TestCase):
 
     def test_population_loaded_correctly(self):
         expected_first_profile = {
-            'name': 'Aden Reichel',
-            'ssn': '317-38-3203',
-            'birthdate': '1917-08-30',
-            'address': '59654 Wolff Branch Apt. 970\n'
-                       'North Fritztown, VT 46589-9935'
+           'name': 'Alina Muller PhD',
+           'blood_group': '0+',
+           'gender': 'F',
+           'birthdate': '1974-02-06',
+           'sex': 'F',
+           'ssn': '439-10-5390',
+           'address': '6226 Padberg Junction\nWest Noreen, NH 47351'
         }
         self.assertEqual(self.population[0], expected_first_profile)
-        population_len = len(self.population)
-        names = [self.population[i]['name'] for i in range(population_len)]
-        self.assertIn('Dr. Duard Weissnat', names)
         self.assertEqual(len(self.population), 100)
 
     def test_herd_class_catches_invalid_profile_on_instantiation(self):
