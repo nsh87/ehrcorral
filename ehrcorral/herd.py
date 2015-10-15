@@ -11,36 +11,28 @@ from collections import namedtuple
 
 
 RECORD_FIELDS = (
-   'first_name',
-   'middle_name',
-   'last_name',
-   'suffix',
-   'address',
-   'sex',
-   'gender',
-   'ssn',
-   'birthdate',
-   'blood_type',
+    'first_name',
+    'middle_name',
+    'last_name',
+    'suffix',
+    'address',
+    'sex',
+    'gender',
+    'ssn',
+    'birthdate',
+    'blood_type',
 )
 
-_RECORD_FIELDS = (
-   'soundex',
-   'nysiis',
-   'metaphone',
-   'dmetaphone',
+META_FIELDS = (
+    'id',
+    'soundex',
+    'nysiis',
+    'metaphone',
+    'dmetaphone',
 )
 
 
 class Record(namedtuple('Record', RECORD_FIELDS)):
-    __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
-
-
-class _Record(namedtuple('_Record', Record._fields + _RECORD_FIELDS)):
-    """An immutable representation of an electronic health record, primarily
-    containing identifying patient information.
-
-    This is an internal class that is not indented to be used directly.
-    """
     __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
 
 
@@ -79,9 +71,8 @@ class Herd(object):
     require a connection object in order to create a herd (maybe not).
 
     """
-    def __init__(self, population=None):
-        self._population = None  # Declaration for readability
-        self.population = () if population is None else population
+    def __init__(self):
+        self.population = ()
 
     def __str__(self):
         population = self.population
@@ -96,20 +87,17 @@ class Herd(object):
         else:
             return str(population)
 
-    def __repr__(self):
-        return "Herd(population={})".format(str(self))
+#    def __repr__(self):
+#        return "Herd(population={})".format(str(self))
 
-    @property
-    def population(self):
-        """Get the current population."""
-        return self._population
+    def populate(self, records):
+        """Sets the Herd's sub-population.
 
-    @population.setter
-    def population(self, value):
-        """Validate and set the herd's population."""
-        if not isinstance(value, (tuple, list)):
+        Args:
+            records (list, tuple): A list or tuple of :py:class:`._Record`s
+        """
+        if not isinstance(records, (tuple, list)):
             raise ValueError("Expected a tuple or list.")
-        #if not all(isinstance(profile, dict) for profile in value):
-        #    raise ValueError("Expected a tuple of dictionaries.")
-        
-        self._population = value
+        if isinstance(records, list):
+            records = tuple(records)
+        self.population = records
