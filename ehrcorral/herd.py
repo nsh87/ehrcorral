@@ -192,6 +192,7 @@ class Herd(object):
             # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
             sys.exc_info()
 
+
 def gen_record(data):
     """Generate a :py:class:`.Record` which can be used to populate a
     :py:class:`Herd`.
