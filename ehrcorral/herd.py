@@ -64,7 +64,6 @@ class Herd(object):
     """
     def __init__(self):
         self.population = ()
-        self._phoneme = 'dmetaphone'
 
     def __str__(self):
         population = self.population
@@ -79,18 +78,6 @@ class Herd(object):
         else:
             return str(population)
 
-    @property
-    def phoneme(self):
-        """Get the current phoneme."""
-        return self._phoneme
-
-    @phoneme.setter
-    def phoneme(self, value):
-        """Validate and set the phoneme to use for blocking."""
-        if value not in PHONEMES:
-            raise ValueError("Must be one of {}.".format(PHONEMES))
-        self._phoneme = value
-
     def populate(self, records):
         """Sets the Herd's sub-population.
 
@@ -102,6 +89,18 @@ class Herd(object):
         if isinstance(records, list):
             records = tuple(records)
         self.population = records
+
+    def explode(self, blocking='dmetaphone'):
+        """Generates primary and exploded phonemic blocking codes for each
+        Record.
+
+        The primary blocking code uses the current surname and first forename
+        and exploded blocking codes use various combinations of birth surname,
+        first surname, and middle name.
+        """
+        if blocking not in PHONEMES:
+            raise ValueError("Blocking method be one of {}.".format(PHONEMES))
+
 
 
 def gen_record(data):
