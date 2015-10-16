@@ -75,7 +75,7 @@ def create_population(N, start_date, end_date):
         else:
             record['forename'] = fake.first_name_male()
             record['mid_forename'] = fake.last_name() if has_middle_name else ''
-            record['birth_surname'] = fake.last_name_male()
+            record['current_surname'] = fake.last_name_male()
         record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
     return tuple(sorted(population, key=lambda profile: profile['forename']))
 
