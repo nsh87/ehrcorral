@@ -70,6 +70,27 @@ class TestHerd(unittest.TestCase):
         self.assertEqual(herd.population, self.population)
 
 
+class TestRecordGeneration(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
+        with open(data_path, 'r') as data_file:
+            cls.profiles = tuple(json.load(data_file))
+
+    def test_record_generation_from_fake_profiles(self):
+        records = [gen_record(profile) for profile in self.profiles]
+        self.assertEqual(len(records), 100)
+
+    def test_record_generation_catches_invalid_profiles(self):
+        with self.assertRaises(ValueError):
+            record = gen_record({'forename': 'Joe'})
+        with self.assertRaises(ValueError):
+            record = gen_record({'birth_surname': 'Smith'})
+        with self.assertRaises(ValueError):
+            record = gen_record({'test': 'test'})
+
+
 class TestPhonemicCompression(unittest.TestCase):
 
     @classmethod
