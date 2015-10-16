@@ -16,6 +16,7 @@ import os
 import random
 
 from ehrcorral.herd import Herd
+from ehrcorral.herd import compress
 from faker import Faker
 
 fake = Faker()
@@ -126,6 +127,22 @@ class TestHerdPopulation(unittest.TestCase):
         except Exception as e:
             self.fail("Populating the herd raised: {}.".format(e))
         self.assertEqual(herd.population, self.population)
+
+    def tearDown(self):
+        pass
+
+
+class TestCompressionAndBlocking(unittest.TestCase):
+
+    def setUp(self):
+        self.name = ['Jellyfish']
+        self.names = ['Jellyfish', 'Exeter']
+
+    def test_soundex_compression(self):
+        single_compression = compress(self.name, 'soundex')
+        self.assertEqual(single_compression, ['J412'])
+        multiple_compressions = compress(self.names, 'soundex')
+        self.assertEqual(multiple_compressions, ['J412', 'E236'])
 
     def tearDown(self):
         pass
