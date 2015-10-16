@@ -42,12 +42,32 @@ PHONEMES = (
 )
 
 
-block_dispatch = {
+compression_dispatch = {
     'soundex': jellyfish.soundex,
     'nysiss': jellyfish.nysiis,
     'metaphone': jellyfish.metaphone,
     'dmetaphone': metaphone.doublemetaphone
 }
+
+
+def compress(names, method):
+    """Compresses surnames using different phonemic algorithms.
+
+    Args:
+        names (list): A list of names, typically surnames
+        method (str): A phonemic compression algorithm. Must be one of
+            :py:data::PHONEMES.
+
+    Returns:
+        A list of the compressions.
+    """
+    # Double metaphone returns a list of two, so need to unpack it
+    if method == 'dmetaphone':
+        compressions = map(compression_dispatch[method](), *names)
+        compressions = [comp for comp in compressions if comp != '']
+    else:
+        compressions = map(compression_dispatch[method](), names)
+    return compressions
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
@@ -132,12 +152,7 @@ class Herd(object):
         profile = record.profile
         surnames = [profile.current_surname, profile.birth_surname]
         surnames = [surname for surname in surnames if surname != '']
-        # Double metaphone returns a list of two, so need to unpack it
-        if blocking == 'dmetaphone':
-            bases = map(block_dispatch[blocking](), *surnames)
-        else:
-            bases = map(block_dispatch[blocking](), surnames)
-        bases = [base for base in bases if base != '']
+        bases = compress(surnames, blocking)
         # Bases are now [PJTR, PHTR] - base phonemic compressions of surnames
         forenames = [profile.forename, profile.second_forename]
         forenames = [forename for forename in forenames if forename != '']
