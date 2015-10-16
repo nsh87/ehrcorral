@@ -22,13 +22,16 @@ from faker import Faker
 fake = Faker()
 
 
-class TestHerdStr(unittest.TestCase):
+class TestHerdProperties(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
-            cls.population = tuple(json.load(data_file))
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        cls.herd = Herd()
+        cls.herd.populate(records)
 
     def test_herd_str_method(self):
         try:
@@ -36,38 +39,41 @@ class TestHerdStr(unittest.TestCase):
             str(herd)
         except Exception as e:
             self.fail("Getting string of empty herd raised: {}.".format(e))
+        self.assertEqual(str(herd), '()')
         try:
-            herd = Herd(self.population)
+            herd = self.herd
             str(herd)
         except Exception as e:
-            self.fail("Getting string herd raised: {}.".format(e))
+            self.fail("Getting string of herd raised: {}.".format(e))
+        self.assertNotEqual(str(herd), '()')
+
+    def test_retrieving_populated_herd_size(self):
+        self.assertEqual(self.herd.size, 100)
+
+    def test_retrieving_herd_size_with_no_population(self):
+        try:
+            herd = Herd()
+        except Exception as e:
+            self.fail("Creating herd with no population raised: {}.".format(e))
+        self.assertEqual(herd.size, 0)
 
 
-class TestHerd(unittest.TestCase):
+class TestHerdCreation(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
-            cls.population = tuple(json.load(data_file))
+            cls.profiles = tuple(json.load(data_file))
 
     def test_population_loaded_correctly(self):
-        self.assertEqual(len(self.population), 100)
+        self.assertEqual(len(self.profiles), 100)
 
-    def test_instantiate_herd_class_with_no_population(self):
-        try:
-            herd = Herd()
-        except Exception as e:
-            self.fail("Creating herd with no population raised: {}.".format(e))
-        self.assertEqual(len(herd.population), 0)
-
-    def test_herd_class_allows_valid_population_after_instantiation(self):
+    def test_populating_herd(self):
+        records = [gen_record(profile) for profile in self.profiles]
         herd = Herd()
-        try:
-            herd.population = self.population
-        except Exception as e:
-            self.fail("Populating the herd raised: {}.".format(e))
-        self.assertEqual(herd.population, self.population)
+        herd.populate(records)
+        self.assertEqual(herd.size, 100)
 
 
 class TestRecordGeneration(unittest.TestCase):
@@ -121,6 +127,7 @@ class TestPhonemicCompression(unittest.TestCase):
         self.assertEqual(single_compression, ['JLFX', 'ALFX'])
         multiple_compressions = compress(self.names, 'dmetaphone')
         self.assertEqual(multiple_compressions, ['JLFX', 'ALFX', 'AKSTR'])
+
 
 class TestPhonemicBlocking(unittest.TestCase):
 
