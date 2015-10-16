@@ -67,15 +67,17 @@ def create_population(N, start_date, end_date):
         sex = record['sex']
         if sex == 'F':
             record['forename'] = fake.first_name_female()
-            record['middle_name'] = fake.last_name() if has_middle_name else ''
-            record['birth_surname'] = fake.last_name_female()
-            record['present_surname'] = fake.last_name() if is_married else ''
+            if has_middle_name:
+                record['second_forename'] = fake.last_name()
+            record['present_surname'] = fake.last_name()
+            if is_married:
+                record['birth_surname'] = fake.last_name_female()
         else:
             record['forename'] = fake.first_name_male()
             record['middle_name'] = fake.last_name() if has_middle_name else ''
             record['birth_surname'] = fake.last_name_male()
         record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
-    return tuple(sorted(population, key=lambda profile: profile['name']))
+    return tuple(sorted(population, key=lambda profile: profile['forename']))
 
 
 if __name__ == '__main__':
