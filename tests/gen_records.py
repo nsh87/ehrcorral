@@ -52,7 +52,7 @@ def create_population(N, start_date, end_date):
         tuple: A tuple of dictionaries, each representing an individual profile,
         sorted by profile name.
     """
-    profile_fields = ['name', 'address', 'ssn', 'blood_group', 'sex']
+    profile_fields = ['address', 'ssn', 'blood_group']
     population = [fake.profile(fields=profile_fields) for i in range(N)]
     gender_change = {'M': 'F', 'F': 'M'}
     for i in range(N):
@@ -60,8 +60,20 @@ def create_population(N, start_date, end_date):
         # Birthdate
         birthdate = fake.date_time_between(start_date="-99y", end_date="-1y")
         record['birthdate'] = birthdate.strftime("%Y-%m-%d")
-        # Gender
+        # Name, Sex, and Gender
+        record['sex'] = 'F' if random.random() < 0.60 else 'M'
+        has_middle_name = True if random.random() < 0.50 else False
+        is_married = True if random.random() < 0.49 else False
         sex = record['sex']
+        if sex == 'F':
+            record['forename'] = fake.first_name_female()
+            record['middle_name'] = fake.last_name() if has_middle_name else ''
+            record['birth_surname'] = fake.last_name_female()
+            record['present_surname'] = fake.last_name() if is_married else ''
+        else:
+            record['forename'] = fake.first_name_male()
+            record['middle_name'] = fake.last_name() if has_middle_name else ''
+            record['birth_surname'] = fake.last_name_male()
         record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
     return tuple(sorted(population, key=lambda profile: profile['name']))
 
