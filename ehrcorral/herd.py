@@ -61,37 +61,6 @@ class Record(object):
 class Herd(object):
     """A collection of :py:class:`.Record`s with methods for interacting with
     and linking records in the herd.
-
-    You need:
-    - validate names (check for commas, weird chars, convert to unicode/ascii?)
-        * remove Mrs, PhD, Ms., etc.
-        * check for commas, weird chars
-        * convert to unicode/ascii?
-    - validate that you only have certain field names in the incoming dict
-    - parse names into first, last, prefix, suffix
-
-    need to make separate .csv's for each region
-    get male and female names and combine
-    only use the No. 1, No. 2, and No. 3 names
-    download whatever is in the first <a> (some names will be left out)
-    split by / and add to list
-    split by , and add to list
-    split by ( and remove whatever comes after the opening parenthesis
-              then convert everything to ASCII (i.e. need to remove accented
-                                                characters, umlaus)
-
-              when you generate a single file, you might make 1000 names and
-              make the population of names representative of the population of
-              ethnicities in the US. or just compare separately.
-
-              what do you do with names with JR...SR...I...II?
-
-    HAVE ABILITY to grow a herd, which doesn't mean adding to the tuple of
-    Records...have it be a way around memory limitations. That means that
-    instead of 'appending' to the tuple of Records, it immediately sends
-    the data to append to the ES database. It should therefore be that you
-    require a connection object in order to create a herd (maybe not).
-
     """
     def __init__(self):
         self.population = ()
