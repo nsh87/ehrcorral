@@ -131,10 +131,10 @@ class Herd(object):
         if blocking not in PHONEMES:
             raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
         for record in self.population:
-            record._blocks = self.block(record, blocking)
+            record._blocks = self.gen_blocks(record, blocking)
 
     @staticmethod
-    def block(record, blocking):
+    def gen_blocks(record, blocking_method):
         """Generate the blocking codes for a given record.
 
         Blocking codes are comprised of the phonemic compressions of the
@@ -142,8 +142,8 @@ class Herd(object):
 
         Args:
             record (Record): An object of class Record
-            blocking (str): Which phonemic compression to use for the generation
-                of blocks. Must be one of :py:data::PHONEMES.
+            blocking_method (str): Which phonemic compression to use for the
+                generation of blocks. Must be one of :py:data::PHONEMES.
 
         Returns:
             A list containing each blocking code.
@@ -152,7 +152,7 @@ class Herd(object):
         profile = record.profile
         surnames = [profile.current_surname, profile.birth_surname]
         surnames = [surname for surname in surnames if surname != '']
-        bases = compress(surnames, blocking)
+        bases = compress(surnames, blocking_method)
         # Bases are now [PJTR, PHTR] - base phonemic compressions of surnames
         forenames = [profile.forename, profile.second_forename]
         forenames = [forename for forename in forenames if forename != '']
