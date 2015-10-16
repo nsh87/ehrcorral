@@ -90,6 +90,15 @@ class Record(object):
         self._meta = None
         self._blocks = None
 
+    def __unicode__(self):
+        if self.profile is None:
+            return ''
+        else:
+            return str(self.profile._asdict())
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
+
     def gen_blocks(self, blocking_method):
         """Generate and set the blocking codes for a given record.
 
@@ -125,7 +134,7 @@ class Herd(object):
     def __init__(self):
         self._population = None
 
-    def __str__(self):
+    def __unicode__(self):
         population = self._population
         if population is None:
             return str(())
@@ -138,6 +147,9 @@ class Herd(object):
             )
         else:
             return str(population)
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
     @property
     def size(self):
