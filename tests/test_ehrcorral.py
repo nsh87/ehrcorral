@@ -76,6 +76,24 @@ class TestHerdCreation(unittest.TestCase):
         self.assertEqual(herd.size, 100)
 
 
+class TestHerdExplode(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        cls.herd = Herd()
+        cls.herd.populate(records)
+
+    def test_herd_exploding(self):
+        self.herd._explode(blocking='dmetaphone')
+        for record in self.herd._population:
+            self.assertIsInstance(record._blocks, tuple)
+            self.assertTrue(1 <= len(record._blocks) <= 8)
+
+
 class TestRecordGeneration(unittest.TestCase):
 
     @classmethod
