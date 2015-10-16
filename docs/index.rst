@@ -18,9 +18,8 @@ Contents:
    authors
    history
 
-.. automodule:: herd
-
-.. autoclass:: Record
+.. automodule:: ehrcorral.herd
+   :members:
 
 Indices and tables
 ==================
