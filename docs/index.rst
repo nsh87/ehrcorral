@@ -18,6 +18,9 @@ Contents:
    authors
    history
 
+.. autosummary::
+   :toctree: ehrcorral
+
 .. automodule:: ehrcorral.herd
    :members:
 
