@@ -7,12 +7,14 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import jellyfish
+import metaphone
 from collections import namedtuple
 
 PROFILE_FIELDS = (
     'forename',
-    'middle_name',
-    'present_surname'
+    'second_forename',
+    'current_surname'
     'birth_surname'
     'suffix',
     'address',
@@ -40,6 +42,14 @@ PHONEMES = (
 )
 
 
+block_dispatch = {
+    'soundex': jellyfish.soundex,
+    'nysiss': jellyfish.nysiis,
+    'metaphone': jellyfish.metaphone,
+    'dmetaphone': metaphone.doublemetaphone
+}
+
+
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
 
@@ -55,7 +65,7 @@ class Record(object):
     def __init__(self):
         self.profile = None
         self._meta = None
-        self._block = None
+        self._blocks = None
 
 
 class Herd(object):
@@ -99,8 +109,44 @@ class Herd(object):
         first surname, and middle name.
         """
         if blocking not in PHONEMES:
-            raise ValueError("Blocking method be one of {}.".format(PHONEMES))
+            raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
+        for record in self.population:
+            record._blocks = self.block(record, blocking)
 
+    @staticmethod
+    def block(record, blocking):
+        """Generate the blocking codes for a given record.
+
+        Blocking codes are comprised of the phonemic compressions of the
+        surnames plus the first letter of each forename.
+
+        Args:
+            record (Record): An object of class Record
+            blocking (str): Which phonemic compression to use for the generation
+                of blocks. Must be one of :py:data::PHONEMES.
+
+        Returns:
+            A list containing each blocking code.
+        """
+        blocks = []
+        profile = record.profile
+        surnames = [profile.current_surname, profile.birth_surname]
+        surnames = [surname for surname in surnames if surname != '']
+        # Double metaphone returns a list of two, so need to unpack it
+        if blocking == 'dmetaphone':
+            bases = map(block_dispatch[blocking](), *surnames)
+        else:
+            bases = map(block_dispatch[blocking](), surnames)
+        bases = [base for base in bases if base != '']
+        # Bases are now [PJTR, PHTR] - base phonemic compressions of surnames
+        forenames = [profile.forename, profile.second_forename]
+        forenames = [forename for forename in forenames if forename != '']
+        # Append 1st letter of each forename to each surname compression
+        for base in bases:
+            for forename in forenames:
+                block = base + forename[0]
+                blocks.append(block.upper())
+        return blocks
 
 
 def gen_record(data):
@@ -119,7 +165,7 @@ def gen_record(data):
     fields = [data.get(field, '') for field in PROFILE_FIELDS]
     profile = Profile._make(fields)
     if profile.forename == '' or profile.present_surname == '':
-        raise ValueError("A forename and present_surname must be supplied.")
+        raise ValueError("A forename and current_surname must be supplied.")
     record = Record()
     record.profile = profile
     return record
