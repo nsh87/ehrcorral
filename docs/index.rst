@@ -17,11 +17,8 @@ Contents:
    modules
    contributing
 
-.. toctree::
-   :maxdepth: 1
-
-   authors
-   history
+authors
+history
 
 Indices and tables
 ==================
