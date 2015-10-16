@@ -9,22 +9,30 @@ from __future__ import unicode_literals
 
 from collections import namedtuple
 
-
-RECORD_FIELDS = (
-    'first_name',
+PROFILE_FIELDS = (
+    'forename',
     'middle_name',
-    'last_name',
+    'present_surname'
+    'birth_surname'
     'suffix',
     'address',
     'sex',
     'gender',
     'ssn',
-    'birthdate',
+    'birth_year',
+    'birth_month',
+    'birth_day',
     'blood_type',
 )
 
+
 META_FIELDS = (
-    'id',
+    'person',  # Unique to this individual, which can be changed if match found
+    'accession',  # Unique number in entire herd to identify this record
+)
+
+
+PHONEMES = (
     'soundex',
     'nysiis',
     'metaphone',
@@ -32,12 +40,26 @@ META_FIELDS = (
 )
 
 
-class Record(namedtuple('Record', RECORD_FIELDS)):
+class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
 
 
+class Meta(namedtuple('Meta', META_FIELDS)):
+    __slots__ = ()
+
+
+class Record(object):
+    """A Record contains identifying information about a patient, as well as
+    generated phonemic and meta information.
+    """
+    def __init__(self):
+        self.profile = None
+        self._meta = None
+        self._block = None
+
+
 class Herd(object):
-    """A collection of :py:class:`._Record`s with methods for interacting with
+    """A collection of :py:class:`.Record`s with methods for interacting with
     and linking records in the herd.
 
     You need:
@@ -101,3 +123,27 @@ class Herd(object):
         if isinstance(records, list):
             records = tuple(records)
         self.population = records
+
+
+def gen_record(data):
+    """Generate a :py:class:`.Record` which can be used to populate a
+    :py:class:`Herd`.
+
+    In addition to extracting the profile information for
+
+    Args:
+        data (dict): A dictionary containing at least one of fields in
+            :py:data::PROFILE_FIELDS.
+
+    Returns:
+        A object of class :py:class:`.Record`.
+    """
+    fields = [data.get(field, '') for field in PROFILE_FIELDS]
+    profile = Profile._make(fields)
+    if profile.forename == '' or profile.present_surname == '':
+        raise ValueError("A forename and present_surname must be supplied.")
+    record = Record()
+    record.profile = profile
+    return record
+
+
