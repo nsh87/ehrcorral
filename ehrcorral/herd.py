@@ -63,7 +63,7 @@ def compress(names, method):
     """
     # Double metaphone returns a list of two, so need to unpack it
     if method == 'dmetaphone':
-        compressions = map(compression_dispatch[method](), *names)
+        compressions = map(compression_dispatch[method](), names)
         compressions = [comp for comp in compressions if comp != '']
     else:
         compressions = map(compression_dispatch[method](), names)
