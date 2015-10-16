@@ -33,6 +33,9 @@ sys.path.insert(0, project_root)
 
 import ehrcorral
 
+modules_path = os.path.join(project_root, 'ehrcorral')
+sys.path.append(modules_path)
+
 # -- General configuration ---------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -279,4 +282,4 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 # Napoleon settings
-#napoleon_google_docstring = True
+napoleon_google_docstring = True
