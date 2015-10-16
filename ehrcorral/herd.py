@@ -7,9 +7,11 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import sys
+from collections import namedtuple
+
 import jellyfish
 import metaphone
-from collections import namedtuple
 
 PROFILE_FIELDS = (
     'forename',
@@ -125,11 +127,12 @@ class Herd(object):
 
     def __str__(self):
         population = self._population
-        if len(population) > 6:
-            return "[\n  {},\n  {},\n  {}\n...,\n  {},\n  {}\n]".format(
+        if population is None:
+            return str(())
+        elif len(population) >= 4:
+            return "({},\n {}\n ...,\n {},\n {})".format(
                 population[0],
                 population[1],
-                population[2],
                 population[-2],
                 population[-1]
             )
