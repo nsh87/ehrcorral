@@ -18,6 +18,10 @@ Contents:
    authors
    history
 
+.. automodule:: herd
+
+.. autoclass:: Record
+
 Indices and tables
 ==================
 
