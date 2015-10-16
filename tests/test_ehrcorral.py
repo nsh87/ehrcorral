@@ -144,5 +144,23 @@ class TestCompressionAndBlocking(unittest.TestCase):
         multiple_compressions = compress(self.names, 'soundex')
         self.assertEqual(multiple_compressions, ['J412', 'E236'])
 
+    def test_nysiis_compression(self):
+        single_compression = compress(self.name, 'nysiis')
+        self.assertEqual(single_compression, ['JALYF'])
+        multiple_compressions = compress(self.names, 'nysiis')
+        self.assertEqual(multiple_compressions, ['JALYF', 'EXATAR'])
+
+    def test_metaphone_compression(self):
+        single_compression = compress(self.name, 'metaphone')
+        self.assertEqual(single_compression, ['JLFX'])
+        multiple_compressions = compress(self.names, 'metaphone')
+        self.assertEqual(multiple_compressions, ['JLFX', 'EKSTR'])
+
+    def test_dmetaphone_compression(self):
+        single_compression = compress(self.name, 'dmetaphone')
+        self.assertEqual(single_compression, ['JLFX', 'ALFX'])
+        multiple_compressions = compress(self.names, 'dmetaphone')
+        self.assertEqual(multiple_compressions, ['JLFX', 'ALFX', 'AKSTR'])
+
     def tearDown(self):
         pass
