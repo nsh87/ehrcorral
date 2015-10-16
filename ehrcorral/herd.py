@@ -121,10 +121,10 @@ class Herd(object):
     and linking records in the herd.
     """
     def __init__(self):
-        self.population = ()
+        self._population = None
 
     def __str__(self):
-        population = self.population
+        population = self._population
         if len(population) > 6:
             return "[\n  {},\n  {},\n  {}\n...,\n  {},\n  {}\n]".format(
                 population[0],
@@ -146,7 +146,7 @@ class Herd(object):
             raise ValueError("Expected a tuple or list.")
         if isinstance(records, list):
             records = tuple(records)
-        self.population = records
+        self._population = records
 
     def explode(self, blocking='dmetaphone'):
         """Generates primary and exploded phonemic blocking codes for each
@@ -158,8 +158,8 @@ class Herd(object):
         """
         if blocking not in PHONEMES:
             raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
-        for record in self.population:
-            record._blocks = self.gen_blocks(record, blocking)
+        for record in self._population:
+            record.gen_blocks(blocking)
 
 
 def gen_record(data):
