@@ -17,8 +17,10 @@ Contents:
    modules
    contributing
 
-authors
-history
+   :maxdepth: 1
+
+   authors
+   history
 
 Indices and tables
 ==================
