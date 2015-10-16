@@ -21,7 +21,8 @@ Contents:
 .. autosummary::
    :toctree:
 
-   ehrcorral.herd
+   ehrcorral.herd.Herd
+   ehrcorral.herd.Record
 
 .. automodule:: ehrcorral.herd
    :members:
