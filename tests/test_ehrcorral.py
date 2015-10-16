@@ -16,6 +16,7 @@ import os
 import random
 
 from ehrcorral.herd import Herd
+from ehrcorral.herd import gen_record
 from ehrcorral.herd import compress
 from faker import Faker
 
@@ -132,7 +133,7 @@ class TestHerdPopulation(unittest.TestCase):
         pass
 
 
-class TestCompressionAndBlocking(unittest.TestCase):
+class TestPhonemicCompression(unittest.TestCase):
 
     def setUp(self):
         self.name = ['Jellyfish']
@@ -161,6 +162,37 @@ class TestCompressionAndBlocking(unittest.TestCase):
         self.assertEqual(single_compression, ['JLFX', 'ALFX'])
         multiple_compressions = compress(self.names, 'dmetaphone')
         self.assertEqual(multiple_compressions, ['JLFX', 'ALFX', 'AKSTR'])
+
+    def tearDown(self):
+        pass
+
+class TestPhonemicBlocking(unittest.TestCase):
+
+    def setUp(self):
+        # Female profile with different birth surname and current surname
+        female = {
+            'forename': 'Adelyn',
+            'mid_forename': 'Heidenreich',
+            'current_surname': 'Bartell',
+            'birth_surname': 'Gerlach'
+        }
+        self.female_record = gen_record(female)
+        # Male profile with some missing name fields
+        male = {
+            'forename': 'Oliver',
+            'current_surname': 'Nader'
+        }
+        self.male_record = gen_record(male)
+
+    def test_multiple_surnames_and_forenames(self):
+        self.female_record.gen_blocks('dmetaphone')
+        expected_blocks = ['PRTLA', 'KRLKA', 'JRLKA', 'PRTLH', 'KRLKH', 'JRLKH']
+        self.assertItemsEqual(self.female_record._blocks, expected_blocks)
+
+    def test_single_forename_and_surname(self):
+        self.male_record.gen_blocks('dmetaphone')
+        expected_blocks = ['NTRO']
+        self.assertItemsEqual(self.male_record._blocks, expected_blocks)
 
     def tearDown(self):
         pass
