@@ -178,7 +178,7 @@ def gen_record(data):
     fields = [data.get(field, '') for field in PROFILE_FIELDS]
     profile = Profile._make(fields)
     if len(profile.forename) < 1 or len(profile.current_surname) < 1:
-        raise ValueError("A forename and current_surname must be supplied.")
+        raise ValueError("A forename and current surname must be supplied.")
     record = Record()
     record.profile = profile
     return record
