@@ -95,6 +95,7 @@ class Herd(object):
     """
     def __init__(self):
         self.population = ()
+        self._phoneme = 'dmetaphone'
 
     def __str__(self):
         population = self.population
@@ -109,8 +110,17 @@ class Herd(object):
         else:
             return str(population)
 
-#    def __repr__(self):
-#        return "Herd(population={})".format(str(self))
+    @property
+    def phoneme(self):
+        """Get the current phoneme."""
+        return self._phoneme
+
+    @phoneme.setter
+    def phoneme(self, value):
+        """Validate and set the phoneme to use for blocking."""
+        if value not in PHONEMES:
+            raise ValueError("Phoneme must be one of {}.".format(PHONEMES))
+        self._phoneme = value
 
     def populate(self, records):
         """Sets the Herd's sub-population.
