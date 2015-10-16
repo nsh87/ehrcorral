@@ -139,6 +139,15 @@ class Herd(object):
         else:
             return str(population)
 
+    @property
+    def size(self):
+        """Returns the size of the Herd's population."""
+        population = self._population
+        if population is None:
+            return 0
+        else:
+            return len(population)
+
     def populate(self, records):
         """Sets the Herd's sub-population.
 
