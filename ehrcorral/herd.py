@@ -88,7 +88,7 @@ class Herd(object):
     def phoneme(self, value):
         """Validate and set the phoneme to use for blocking."""
         if value not in PHONEMES:
-            raise ValueError("Phoneme must be one of {}.".format(PHONEMES))
+            raise ValueError("Must be one of {}.".format(PHONEMES))
         self._phoneme = value
 
     def populate(self, records):
