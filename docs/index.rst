@@ -24,9 +24,6 @@ Contents:
    ehrcorral.herd.Herd
    ehrcorral.herd.Record
 
-.. automodule:: ehrcorral.herd
-   :members:
-
 Indices and tables
 ==================
 
