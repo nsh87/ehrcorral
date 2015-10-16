@@ -124,7 +124,7 @@ class Record(object):
             for forename in forenames:
                 block = base + forename[0]
                 blocks.append(block.upper())
-        self._blocks = list(set(blocks))
+        self._blocks = tuple(set(blocks))
 
 
 class Herd(object):
@@ -172,7 +172,12 @@ class Herd(object):
             records = tuple(records)
         self._population = records
 
-    def explode(self, blocking='dmetaphone'):
+    def corral(self, blocking='dmetaphone'):
+        if blocking not in PHONEMES:
+            raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
+        self._explode(blocking)
+
+    def _explode(self, blocking):
         """Generates primary and exploded phonemic blocking codes for each
         Record.
 
@@ -180,8 +185,6 @@ class Herd(object):
         and exploded blocking codes use various combinations of birth surname,
         first surname, and middle name.
         """
-        if blocking not in PHONEMES:
-            raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
         try:
             for record in self._population:
                 record.gen_blocks(blocking)
