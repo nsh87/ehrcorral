@@ -49,16 +49,6 @@ class TestHerdPopulation(unittest.TestCase):
             self.population = tuple(json.load(data_file))
 
     def test_population_loaded_correctly(self):
-        expected_first_profile = {
-           'name': 'Alina Muller PhD',
-           'blood_group': '0+',
-           'gender': 'F',
-           'birthdate': '1974-02-06',
-           'sex': 'F',
-           'ssn': '439-10-5390',
-           'address': '6226 Padberg Junction\nWest Noreen, NH 47351'
-        }
-        self.assertEqual(self.population[0], expected_first_profile)
         self.assertEqual(len(self.population), 100)
 
     def test_herd_class_catches_invalid_profile_on_instantiation(self):
