@@ -14,15 +14,14 @@ Contents:
    readme
    installation
    usage
+   modules
    contributing
+
+.. toctree::
+   :maxdepth: 1
+
    authors
    history
-
-.. autosummary::
-   :toctree:
-
-   ehrcorral.herd.Herd
-   ehrcorral.herd.Record
 
 Indices and tables
 ==================
