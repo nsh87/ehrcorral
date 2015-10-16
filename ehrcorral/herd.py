@@ -170,9 +170,12 @@ class Herd(object):
         """
         if blocking not in PHONEMES:
             raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
-        for record in self._population:
-            record.gen_blocks(blocking)
-
+        try:
+            for record in self._population:
+                record.gen_blocks(blocking)
+        except TypeError as e:
+            err, param, trace = sys.exc_info()
+            raise TypeError("You must populate the Herd first."), None, trace
 
 def gen_record(data):
     """Generate a :py:class:`.Record` which can be used to populate a
