@@ -18,7 +18,7 @@ Contents:
    contributing
    history
 
-.. include:: authors
+.. include:: authors.rst
 
 Indices and tables
 ==================
