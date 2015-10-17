@@ -2,10 +2,7 @@
 Authors
 =======
 
-Development Lead
-----------------
-
-* Nikhil Haas <nikhil@nikhilhaas.com>
+Nikhil Haas <nikhil@nikhilhaas.com>
 
 Contributors
 ------------
