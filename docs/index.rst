@@ -18,6 +18,8 @@ Contents:
    contributing
    history
 
+.. include:: readme.rst
+
 .. include:: authors.rst
 
 Indices and tables
