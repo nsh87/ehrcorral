@@ -18,6 +18,7 @@ Contents:
    contributing
 
    :maxdepth: 1
+   :titlesonly:
 
    authors
    history
