@@ -16,12 +16,9 @@ Contents:
    usage
    modules
    contributing
-
-   :maxdepth: 1
-   :titlesonly:
-
-   authors
    history
+
+.. include:: authors
 
 Indices and tables
 ==================
