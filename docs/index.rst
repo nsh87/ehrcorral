@@ -8,10 +8,9 @@ Welcome to EHRCorral's documentation!
 
 Contents:
 
-.. contents::
-    :maxdepth: 2
 .. toctree::
    :maxdepth: 1
+   :hidden:
 
    readme
    installation
