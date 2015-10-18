@@ -60,7 +60,7 @@ discover other Records that describe the same individual.::
     records = [ehrcorral.gen_record(entry) for entry in ehr_entries]
 
 Above, we create two Records (an entry for John and one for Jane) using the
-function :py:function:`ehrcorral.ehrcorral.gen_record`. Generally, you will not
+function :py:func:`ehrcorral.ehrcorral.gen_record`. Generally, you will not
 need to interact directly with the Records once they are created.
 
 In practicality, you won't have just two EHR entries, but hundreds or millions
@@ -68,13 +68,10 @@ of them, and there might be multiple entries for John or Jane and many other
 individuals in the sub-population. Records are designed to be extremely light on
 memory usage, much more so than a dictionary or list, for example. Therefore,
 when generating Records it is advisable *not* to build up a large dictionary of
-data to then be sent to :py:function:`ehrcorral.ehrcorral.gen_record`. Instead,
+data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`. Instead,
 generate the Records in a loop that operates on a single EHR entry at a time
 so the dictionaries like the ones above are thrown away once the Record is
 created.::
-
-For the full list of fields available to generate a Record, see
-:py:class:`ehrcorral.ehrcorral.Profile`.
 
     records = []
     for data in raw_ehr_data:
@@ -83,6 +80,9 @@ For the full list of fields available to generate a Record, see
         # ...
         # entry =  {'forename': 'John', ... , 'blood_type': 'B+'}
         records.append(ehrcorral.gen_record(entry)
+
+For the full list of fields available to generate a Record, see
+:py:class:`ehrcorral.ehrcorral.Profile`.
 
 You have four name fields available to you: `first_name`, `middle_name`,
 `last_name`, and `suffix`. How you define them is entirely up to you. There
