@@ -185,7 +185,7 @@ class Herd(object):
         """Sets the Herd's sub-population.
 
         Args:
-            records (list, tuple): A list or tuple of :py:class:`.Record`
+            records (list, tuple): A list or tuple of :py:class:`.Record`s
         """
         if not isinstance(records, (tuple, list)):
             raise ValueError("Expected a tuple or list.")
