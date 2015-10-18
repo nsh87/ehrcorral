@@ -13,3 +13,6 @@ Modules
 
 .. autoclass:: ehrcorral.herd.Profile
    :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
