@@ -283,15 +283,14 @@ texinfo_documents = [
 napoleon_google_docstring = True
 
 
-# Customize namedtuple docs
 def no_namedtuple_attrib_docstring(app, what, name, obj, options, lines):
+    """Remove namedtuple docstrings that just say 'Alias for field number...'"""
     if any('Alias for field number' in line for line in lines):
-        # This is a namedtuple with a useless docstring,
-        # in-place purge all of the lines.
         del lines[:]
 
 
 def no_namedtuple_private_attrib(app, what, name, obj, skip, options):
+    """Remove __attrs__, index, and count members from namedtuple docs."""
     obj_name = str(name).split('.')[-1]
     if '__' in obj_name:
         return True
@@ -300,11 +299,6 @@ def no_namedtuple_private_attrib(app, what, name, obj, skip, options):
 
 
 def setup(app):
-    app.connect(
-        'autodoc-process-docstring',
-        no_namedtuple_attrib_docstring,
-    )
-    app.connect(
-        'autodoc-skip-member',
-        no_namedtuple_private_attrib,
-    )
+    """Call the above namedtuple auto-processors."""
+    app.connect( 'autodoc-process-docstring', no_namedtuple_attrib_docstring,)
+    app.connect( 'autodoc-skip-member', no_namedtuple_private_attrib,)
