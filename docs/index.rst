@@ -16,10 +16,10 @@ electronic medical records.
 **EHR** |br|
 noun (electronic healtchare record) |br|
 1. a health record in digital format: *the patient's medical diagnosis was
-entered into her EHR.*
+entered into the EHR.*
 
 **corral** \|kəˈral| |br|
-verb (corrals, corralling, corralled) [ with obj. ]
+verb (corrals, corralling, corralled) [ with obj. ] |br|
 1. gather together and confine (a group of people or things): *the
 organizers were corralling the crowd into marching formation.*
 
