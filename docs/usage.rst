@@ -102,7 +102,9 @@ However you define each field is entirely up to you.
 Creating a Herd
 ---------------
 
-**Ref:** :py:class:`ehrcorral.ehrcorral.Herd`, :py:method:`ehrcorral.ehrcorral.Herd.populate`
+**Ref:** :py:class:`ehrcorral.ehrcorral.Herd`
+
+:py:method:`ehrcorral.ehrcorral.Herd.populate`
 
 Once the Records have been created, you can populate a Herd. A list or tuple
 of Records can be used.
