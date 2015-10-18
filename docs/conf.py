@@ -291,8 +291,18 @@ def no_namedtuple_attrib_docstring(app, what, name, obj, options, lines):
         del lines[:]
 
 
+def no_namedtuple_private_attrib(app, what, name, obj, skip, options):
+    obj_name = str(name).split('.')[-1]
+    if '__' in obj_name:
+        return True
+
+
 def setup(app):
     app.connect(
         'autodoc-process-docstring',
         no_namedtuple_attrib_docstring,
+    )
+    app.connect(
+        'autodoc-skip-member',
+        no_namedtuple_private_attrib,
     )
