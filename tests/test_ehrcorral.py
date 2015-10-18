@@ -14,11 +14,11 @@ import unittest
 import json
 import os
 
-from ehrcorral.herd import Herd
-from ehrcorral.herd import gen_record
-from ehrcorral.herd import compress
 from faker import Faker
-import ehrcorral
+
+from ehrcorral.ehrcorral import Herd
+from ehrcorral.ehrcorral import gen_record
+from ehrcorral.ehrcorral import compress
 
 fake = Faker()
 
