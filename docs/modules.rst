@@ -10,4 +10,3 @@ Modules
 
 .. automodule:: ehrcorral.herd
    :members:
-

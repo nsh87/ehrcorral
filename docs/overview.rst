@@ -2,10 +2,23 @@
 Overview
 ========
 
-Bases on:
+Precedents
+----------
 
-Matching methods:
+Phonemic Tokenization
+---------------------
 
-Blocking techniques:
+Record Blocking
+---------------
 
+Matching
+--------
 
+Lexical Analysis
+^^^^^^^^^^^^^^^^
+
+Similarity Measures
+^^^^^^^^^^^^^^^^^^^
+
+Weighting
+^^^^^^^^^
