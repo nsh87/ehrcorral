@@ -7,12 +7,12 @@ To use EHRcorral in a project::
     import ehrcorral
 
 EHRCorral operates on a collection of Records, each of which represents a single
-electronic health record. A collection of records is called a Herd, hence the
-name EHRCorral: generating a master patient index (MPI) of all the records is
+electronic health record. A collection of Records is called a Herd, hence the
+name EHRCorral: generating a master patient index of all the records is
 done by "corraling" the Herd.
 
 There is a small number of actions to perform, but potentially several setting
-to consider.
+to consider:
 
    1. Create Records
    2. Create a Herd
@@ -26,9 +26,9 @@ Ref: :py:class:`ehrcorral.ehrcorral.Record`
 
 A Record is a simplified representation of a patient's EHR which only contains
 information relevant to the current matching algorithm. Each Record *must*
-contain a forename and a current surname, but can also contain other identifying
-information if it is supplied. All the information in a Record can be used to
-discover other Records that describe the same individual.::
+contain a forename and a current surname, but it can also house other
+identifying information. All the information in a Record is used to discover
+other Records that describe the same individual. ::
 
     ehr_entries = [
         first = {
@@ -71,7 +71,7 @@ when generating Records it is advisable *not* to build up a large dictionary of
 data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`. Instead,
 generate the Records in a loop that operates on a single EHR entry at a time
 so the dictionaries like the ones above are thrown away once the Record is
-created.::
+created. ::
 
     records = []
     for data in raw_ehr_data:
