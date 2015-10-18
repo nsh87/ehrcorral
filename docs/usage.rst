@@ -6,34 +6,37 @@ To use EHRcorral in a project::
 
     import ehrcorral
 
-EHRCorral considers a collection of records to be a "herd". Hence the name
-EHRCorral - generating a master patient index (MPI) of all the records will
-be done by "corraling" the herd.
+EHRCorral operates on a collection of Records, each of which represents a single
+electronic health record. A collection of records is called a Herd, hence the
+name EHRCorral: generating a master patient index (MPI) of all the records is
+done by "corraling" the Herd.
 
-EHRcorral calls a collection of Records a "herd"  - think of it like a
-herd of sheep. There are some core tasks that you want to perform:
+There is a small number of actions to perform, but potentially several setting
+to consider.
 
-    1. Create a herd
-    2. Populate a herd
-    3. Move a herd
+1. Create records
+2. Create a herd
+3. Populate the herd with the records
+4. Corral the herd
 
-These tasks are explained below.
+Records
+-------
 
-Record Class
-------------
+See: :py:class:`ehrcorral.herd.Record`
 
-The :py:class:`ehrcorral.herd.Record` is the main component of your herd. Each
-record contains some identifying information (e.g. name, address, etc.) from an
-EHR that can be used to discover other records that describing the same
-individual. If you imagine a traditional herd as being a collection of sheep,
-here your herd is a collection of Records.::
+A Record is a simplified representation of a patient's EHR which only contains
+information relevant to the current matching algorithm. Each Record must*
+contain a forename (first name) and a current surname (last name), but can also
+contain other identifying information if it is supplied. All the information in
+a Record can be used to discover other Records that describe the same
+individual.::
 
     from ehrcorral.herd import Record
     records = (
-        Record(first_name='John',
-               middle_name='',
-               last_name='Doe',
-               suffix='',
+        Record(forename='John',
+               mid_forename='',
+               current_surname='Doe',
+               suffix='Sr.',
                address='1 Denny Way\nOrlando, FL 32801',
                sex='M',
                gender='M',
@@ -41,8 +44,9 @@ here your herd is a collection of Records.::
                birthdate='04-08-1985',
                blood_type='B+'),
         Record(first_name='Jane',
-               middle_name='',
-               last_name='Doe',
+               middle_name='Erin',
+               birth_surname='Doe',
+               current_surname='Fonda',
                suffix='',
                address='1 Bipinbop St\nAustin, TX 73301',
                sex='F',

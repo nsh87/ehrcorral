@@ -83,8 +83,8 @@ def compress(names, method):
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
-    """A selection of identifying information from a single electronic health
-    record.
+    """A selection of patient-identifying information from a single electronic
+    health record.
 
     .. py:attribute:: forename
 
