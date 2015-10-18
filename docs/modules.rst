@@ -5,13 +5,15 @@ Modules
 .. autosummary::
    :toctree:
 
-   ehrcorral.herd.Herd
-   ehrcorral.herd.Record
+   ehrcorral.ehrcorral.Herd
+   ehrcorral.ehrcorral.Record
 
-.. automodule:: ehrcorral.herd
+.. automodule:: ehrcorral.ehrcorral
    :members:
 
-.. autoclass:: ehrcorral.herd.Profile
+.. autoclass:: ehrcorral.ehrcorral.Profile
    :members:
    :inherited-members:
    :member-order: bysource
+
+.. autofunction:: ehrcorral.ehrcorral.gen_record
