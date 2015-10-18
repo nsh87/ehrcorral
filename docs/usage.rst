@@ -73,12 +73,12 @@ when generating Records it is advisable *not* to build up a large dictionary of
 data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`. Instead,
 generate the Records in a loop that operates on a single EHR entry at a time
 so the dictionaries like the ones above are thrown away once the Record is
-created.
+created:
 
 .. code-block:: python
 
     records = []
-    for data in raw_ehr_data:
+    for entries in ehr:
         # Extract forenames, sex, etc. from EHR data into dict called 'entry'
         # ...
         # entry =  {'forename': 'John', ... , 'blood_type': 'B+'}
