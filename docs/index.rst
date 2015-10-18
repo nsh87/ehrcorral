@@ -9,6 +9,18 @@ Welcome to EHRCorral's documentation!
 EHRCorral creates a master patient index (MPI) by matching and linking
 electronic medical records.
 
+**EHR**
+noun (electronic healtchare record)
+
+  1. a health record in digital format: *the patient's medical diagnosis was
+  entered into her EHR.*
+
+**corral** ``|kəˈral|``
+verb (corrals, corralling, corralled) *[ with obj. ]*
+
+  1. gather together and confine (a group of people or things): *the organizers
+  were corralling the crowd into marching formation.*
+
 .. toctree::
    :maxdepth: 2
 

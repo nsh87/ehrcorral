@@ -6,6 +6,10 @@ To use EHRcorral in a project::
 
     import ehrcorral
 
+EHRCorral considers a collection of records to be a "herd". Hence the name
+EHRCorral - generating a master patient index (MPI) of all the records will
+be done by "corraling" the herd.
+
 EHRcorral calls a collection of Records a "herd"  - think of it like a
 herd of sheep. There are some core tasks that you want to perform:
 
