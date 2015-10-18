@@ -84,6 +84,9 @@ created.
         # entry =  {'forename': 'John', ... , 'blood_type': 'B+'}
         records.append(ehrcorral.gen_record(entry)
 
+Record Fields
+-------------
+
 For the full list of fields available to generate a Record, see
 :py:class:`ehrcorral.ehrcorral.Profile`.
 
@@ -96,20 +99,19 @@ is matched the same way. DON'T YOU WANT ONLY A SINGLE NAME (i.e. NO SPACES)
 IN EACH ONE? If you want to leave the middle name field blank, that is fine.
 However you define each field is entirely up to you.
 
-Create and Populating a Herd
-----------------------------
+Creating a Herd
+---------------
 
-You can create and populate a herd at
-the same time, or create it and then populate it.::
+Ref: :py:class:`ehrcorral.ehrcorral.Herd`
+     :py:method:`ehrcorral.ehrcorral.Herd.populate`
 
-    from ehrcorral.herd import Herd
+Once the Records have been created, you can populate a Herd. A list or tuple
+of Records can be used.
 
-    # Create and populate at the same time
-    herd = Herd(population=records)
+.. code-block:: python
 
-    # Create then populate
-    herd = Herd()
-    herd.populatiion = records
+    herd = ehrcorral.Herd
+    herd.populate(records)
 
 Move a Herd
 -----------
