@@ -1,6 +1,5 @@
-=======
 Authors
-=======
+-------
 
 Nikhil Haas <nikhil@nikhilhaas.com>
 
