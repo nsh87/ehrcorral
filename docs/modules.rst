@@ -13,3 +13,7 @@ Modules
 
 .. autoclass:: ehrcorral.herd.Profile
    :members:
+   :undoc-members:
+
+.. autoattribute:: ehrcorral.herd.Profile
+
