@@ -4,22 +4,21 @@
    contain the root `toctree` directive.
 
 Welcome to EHRCorral's documentation!
-======================================
+=====================================
 
-Contents:
+.. include:: description.rst
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
-   readme
+   EHRCorral <readme>
+   overview
    installation
    usage
    modules
    contributing
-   history
-
-.. include:: readme.rst
+   project
 
 .. include:: authors.rst
 

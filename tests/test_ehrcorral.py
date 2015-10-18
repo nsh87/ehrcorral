@@ -18,6 +18,7 @@ from ehrcorral.herd import Herd
 from ehrcorral.herd import gen_record
 from ehrcorral.herd import compress
 from faker import Faker
+import ehrcorral
 
 fake = Faker()
 

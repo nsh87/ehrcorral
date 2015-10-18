@@ -1,6 +1,6 @@
-===============================
+=========
 EHRcorral
-===============================
+=========
 
 .. image:: https://img.shields.io/travis/nsh87/ehrcorral.svg
         :target: https://travis-ci.org/nsh87/ehrcorral
@@ -8,15 +8,12 @@ EHRcorral
 .. image:: https://img.shields.io/pypi/v/ehrcorral.svg
         :target: https://pypi.python.org/pypi/ehrcorral
 
-
-EHRcorral cross-matches and links electronic medical records for the
-purpose of de-duplication
+.. include:: docs/description.rst
 
 * Free software: ISC license
 * Documentation: https://ehrcorral.readthedocs.org.
 
-Quick Start
------------
+.. include:: docs/overview.rst
 
 
 
