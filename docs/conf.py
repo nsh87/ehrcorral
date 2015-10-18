@@ -281,3 +281,18 @@ texinfo_documents = [
 
 # Napoleon settings
 napoleon_google_docstring = True
+
+
+# Customize namedtuple docs
+def no_namedtuple_attrib_docstring(app, what, name, obj, options, lines):
+    if any('Alias for field number' in line for line in lines):
+        # This is a namedtuple with a useless docstring,
+        # in-place purge all of the lines.
+        del lines[:]
+
+
+def setup(app):
+    app.connect(
+        'autodoc-process-docstring',
+        no_namedtuple_attrib_docstring,
+    )
