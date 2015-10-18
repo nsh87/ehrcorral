@@ -3,23 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. |br| raw:: html
+
+   <br />
+
 Welcome to EHRCorral's documentation!
 =====================================
 
 EHRCorral creates a master patient index (MPI) by matching and linking
 electronic medical records.
 
-**EHR**
-noun (electronic healtchare record)
+**EHR** |br|
+noun (electronic healtchare record) |br|
+1. a health record in digital format: *the patient's medical diagnosis was
+entered into her EHR.*
 
-  1. a health record in digital format: *the patient's medical diagnosis was
-  entered into her EHR.*
-
-**corral** ``|kəˈral|``
-verb (corrals, corralling, corralled) *[ with obj. ]*
-
-  1. gather together and confine (a group of people or things): *the organizers
-  were corralling the crowd into marching formation.*
+**corral** \|kəˈral| |br|
+verb (corrals, corralling, corralled) [ with obj. ]
+1. gather together and confine (a group of people or things): *the
+organizers were corralling the crowd into marching formation.*
 
 .. toctree::
    :maxdepth: 2
