@@ -28,7 +28,9 @@ A Record is a simplified representation of a patient's EHR which only contains
 information relevant to the current matching algorithm. Each Record *must*
 contain a forename and a current surname, but it can also house other
 identifying information. All the information in a Record is used to discover
-other Records that describe the same individual. ::
+other Records that describe the same individual.
+
+.. code-block:: python
 
     ehr_entries = [
         first = {
@@ -71,7 +73,9 @@ when generating Records it is advisable *not* to build up a large dictionary of
 data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`. Instead,
 generate the Records in a loop that operates on a single EHR entry at a time
 so the dictionaries like the ones above are thrown away once the Record is
-created. ::
+created.
+
+.. code-block:: python
 
     records = []
     for data in raw_ehr_data:
