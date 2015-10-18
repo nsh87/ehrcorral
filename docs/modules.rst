@@ -12,8 +12,9 @@ Modules
    :members:
 
 .. autoclass:: ehrcorral.herd.Profile
+   :member-order: bysource
    :members:
-   :undoc-members:
+   :inherited-members:
+   :exclude-members: __add__
 
-.. autoattribute:: ehrcorral.herd.Profile
 
