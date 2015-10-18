@@ -8,7 +8,10 @@ Modules
    ehrcorral.ehrcorral.Herd
    ehrcorral.ehrcorral.Record
 
-.. automodule:: ehrcorral.ehrcorral
+.. autoclass:: ehrcorral.ehrcorral.Herd
+   :members:
+
+.. autoclass:: ehrcorral.ehrcorral.Record
    :members:
 
 .. autoclass:: ehrcorral.ehrcorral.Profile
