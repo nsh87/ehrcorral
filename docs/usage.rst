@@ -14,10 +14,10 @@ done by "corraling" the Herd.
 There is a small number of actions to perform, but potentially several setting
 to consider.
 
-1. Create records
-2. Create a herd
-3. Populate the herd with the records
-4. Corral the herd
+   1. Create records
+   2. Create a herd
+   3. Populate the herd with the records
+   4. Corral the herd
 
 Records
 -------
