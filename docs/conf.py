@@ -295,6 +295,8 @@ def no_namedtuple_private_attrib(app, what, name, obj, skip, options):
     obj_name = str(name).split('.')[-1]
     if '__' in obj_name:
         return True
+    if what == 'method' and (obj_name == 'index' or obj_name == 'count'):
+        return True
 
 
 def setup(app):
