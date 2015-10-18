@@ -12,9 +12,10 @@ Modules
    :members:
 
 .. autoclass:: ehrcorral.herd.Profile
-   :member-order: bysource
    :members:
    :inherited-members:
-   :exclude-members: __add__
+   :exclude-members: __add__,__contains__,__delattr__,__eq__,__format__,
+   __ge__,__getattribute__
+   :member-order: bysource
 
 
