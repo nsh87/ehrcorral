@@ -9,7 +9,7 @@ Welcome to EHRCorral's documentation!
 .. include:: description.rst
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    EHRCorral <readme>
    overview
