@@ -188,6 +188,8 @@ class Herd(object):
             records (list, tuple): A list or tuple containing multiple
                 :py:class:`.Record`
         """
+        if self._population is not None:
+            raise AttributeError("The herd is already populated.")
         if not isinstance(records, (tuple, list)):
             raise ValueError("Expected a tuple or list.")
         if isinstance(records, list):

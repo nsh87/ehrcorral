@@ -90,7 +90,7 @@ Record Fields
 For the full list of fields available to generate a Record, see
 :py:class:`ehrcorral.ehrcorral.Profile`.
 
-If additional fields are passed to :python:`gen_record()` they are ignored.
+If additional fields are passed to ``gen_record()`` they are ignored.
 Missing fields recieve a value of emptry string.
 
 You have four name fields available to you: `first_name`, `middle_name`,
@@ -112,7 +112,9 @@ of Records can be used.
 
 .. code-block:: python
 
-    herd = ehrcorral.Herd
+    herd = ehrcorral.Herd()
     herd.populate(records)
 
-
+Once a Herd has been populated the sub-population cannot be updated. Calling
+``populate()`` again with additional records will raise an error. Making the
+population immutable prevents race conditions during matching.
