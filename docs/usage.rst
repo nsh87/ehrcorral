@@ -90,6 +90,9 @@ Record Fields
 For the full list of fields available to generate a Record, see
 :py:class:`ehrcorral.ehrcorral.Profile`.
 
+If additional fields are passed to :python:`gen_record()` they are ignored.
+Missing fields recieve a value of emptry string.
+
 You have four name fields available to you: `first_name`, `middle_name`,
 `last_name`, and `suffix`. How you define them is entirely up to you. There
 is no special transformations that get applied (WHAT ABOUT CONVERTING TO
@@ -111,9 +114,5 @@ of Records can be used.
 
     herd = ehrcorral.Herd
     herd.populate(records)
-
-Move a Herd
------------
-
 
 
