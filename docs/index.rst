@@ -10,7 +10,6 @@ Welcome to EHRCorral's documentation!
 
 .. toctree::
    :maxdepth: 1
-   :hidden:
 
    EHRCorral <readme>
    overview
@@ -19,8 +18,6 @@ Welcome to EHRCorral's documentation!
    modules
    contributing
    project
-
-.. include:: authors.rst
 
 Indices and tables
 ==================
