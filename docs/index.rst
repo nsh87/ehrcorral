@@ -6,7 +6,8 @@
 Welcome to EHRCorral's documentation!
 =====================================
 
-.. include:: description.rst
+EHRCorral creates a master patient index (MPI) by matching and linking
+electronic medical records.
 
 .. toctree::
    :maxdepth: 2

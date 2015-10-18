@@ -8,12 +8,11 @@ EHRcorral
 .. image:: https://img.shields.io/pypi/v/ehrcorral.svg
         :target: https://pypi.python.org/pypi/ehrcorral
 
-.. include:: docs/description.rst
+EHRCorral matches, links, and de-duplicates electronic medical records for
+the purpose of creating a master patient index (MPI).
 
 * Free software: ISC license
 * Documentation: https://ehrcorral.readthedocs.org.
 
-.. include:: docs/overview.rst
-
-
-
+Quick Start
+-----------
