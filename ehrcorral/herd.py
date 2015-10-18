@@ -14,20 +14,29 @@ import jellyfish
 import metaphone
 
 PROFILE_FIELDS = (
-    'forename',
-    'mid_forename',
-    'current_surname',
-    'birth_surname',
-    'suffix',
-    'address',
-    'sex',
-    'gender',
-    'ssn',
-    'birth_year',
-    'birth_month',
-    'birth_day',
+    'forename',  # First name
+    'mid_forename',  # Middle name
+    'birth_surname',  # Last name at birth, often same as mother's maiden name
+    'current_surname',  # Current last name (if changed, such as after marriage)
+    'suffix',  # Sr., Jnr., II, etc.
+    'address',  # Full address
+    'sex',  # Physiological sex (M or F)
+    'gender',  # The gender identified with by the patient (M or F)
+    'ssn',  # Social security number
+            # This should be the same type of number for all patients (i.e.
+            # do not mix USA social security with Mexico national ID
+            # number)...right?...or does it matter?
+    'other_id',  # Other identifying number, such as driver's license
+    'birth_year',  # YYYY
+    'birth_month',  # MM
+    'birth_day',  # DD
     'blood_type',
 )
+# Use a class and make these class variable so you can document these fields
+# in Sphinx. Make sure that when looping through these variables you get them
+# in the correct order that you write them. You might need to use a
+# namedtuple class. Ideally, every field is its own variable in the class so
+# you can add documentation for that individual variable.
 
 
 META_FIELDS = (
@@ -74,6 +83,18 @@ def compress(names, method):
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
+    """A selection of identifying information from a single electronic health
+    record.
+
+    .. py:attribute:: forename
+
+        Also known as first name
+
+    .. py:attribute:: mid_forename
+
+        Also known as middle name
+
+    """
     __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
 
 

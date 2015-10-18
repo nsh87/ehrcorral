@@ -10,3 +10,5 @@ Modules
 
 .. automodule:: ehrcorral.herd
    :members:
+
+.. autoclass:: ehrcorral.herd.Profile
