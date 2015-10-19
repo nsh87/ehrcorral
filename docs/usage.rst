@@ -44,7 +44,8 @@ other Records that describe the same individual.
             'postal_code': 32801,
             'sex': 'M',
             'gender': 'M',
-            'national_id1': '123-45-678',  # Using social security
+            'national_id1': '123-45-678',  # Using field as social security num
+            'id2': 'F1234578',  # Optional ID, such as driver license num
             'birth_year': '1985',
             'birth_month': '08',
             'birth_day': '04',
