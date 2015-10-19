@@ -38,11 +38,16 @@ other Records that describe the same individual.
             'mid_forename': '',
             'current_surname': 'Doe',
             'suffix': 'Sr.',
-            'address': '1 Denny Way\nOrlando, FL 32801',
+            'address1': '1 Denny Way',
+            'city': 'Orlando',
+            'state_province': 'FL'
+            'postal_code': 32801,
             'sex': 'M',
             'gender': 'M',
-            'ssn': '123-45-678',
-            'birthdate': '04-08-1985',
+            'national_id1': '123-45-678',  # Using social security
+            'birth_year': '1985',
+            'birth_month': '08',
+            'birth_day': '04',
             'blood_type': 'B+'
         }
         second_entry = {
@@ -51,11 +56,17 @@ other Records that describe the same individual.
             'birth_surname': 'Doe',
             'current_surname': 'Fonda',
             'suffix': '',
-            'address': '1 Bipinbop St\nAustin, TX 73301',
+            'address1': '1 Bipinbop St'
+            'address2': 'Apt. 100',
+            'city': 'Austin',
+            'state_province': 'TX',
+            'postal_code': 73301,
             'sex': 'F',
             'gender': 'F',
-            'ssn': '876-54-321',
-            'birthdate': '01-14-1976',
+            'national_id1': '876-54-321',
+            'birth_year': 1976,
+            'birth_month': '08',  # Numeric fields are coerced to proper type
+            'birth_day': 01,
             'blood_type': 'A-'),
         }
     ]
