@@ -42,17 +42,69 @@ probabilistic, weighted matching, lexical analysis, phonemic blocking, and
 manual review.
 
 The approach taken here is influenced in large part by the methods of OX-LINK
-Subsequent improvements to such probabilitic techniques have been incorporated,
+Subsequent improvements to such probabilistic techniques have been incorporated,
 as well.
 
 Phonemic Tokenization
 ---------------------
+
+Phonemic name compression, indexing, or tokenization schemes use phonetics to
+approximately represent a word or name. There are several common name
+compression schemes in wide use, including Soundex, NYSIIS, metaphone, and
+double metaphone, which appear in chronological order according to their date of
+creation. The purpose of name compression in record linkage is to allow for a
+potential name match when the spelling of two names disagrees but the
+phonetics are identical. For example, the Soundex code for Catie and Caity
+are both ``C300``, although their spelling is different.
+
+Soundex is the oldest method, developed in the early 1900s and used to aid
+the U.S.A. Census Bureau. It is computationally efficient and included in
+several modern databases for fuzzy name matching for that reason, but its
+shortcomings are quite obvious when non-anglosaxan names are used and in other
+scenarios. Continuing the example in the previous paragraph, the Soundex code
+for Katie is ``K300``, although it sounds identical to both Catie and Caity,
+which both have the code ``C300``. After stripping vowels and other
+characters in certain situations, Soundex only looks at the initial part of a
+name.
+
+NYSIIS was developed in the 1970s and used by the New York State Department of
+Health and Criminal Justice Services. Unlike Soundex, vowels are not dropped and
+codes are not truncated to just four characters. This leads to improvements in a
+number of areas, and the algorithm is purported to better handle phonemes that
+occur in Hispanic and some European names. The NYSIIS codes for Catie, Caity,
+and Katie are all ``CATY``. The improvement can be seen here since NYSIIS
+correctly identifies the same code for these phonetically identical names.
+
+Metaphone, and then double metaphone, are the most recent phonemic
+compressions available in EHRCorral. Metaphone was first published in 1990
+and is the first algorithm here to consider the sequences of letters and
+sounds rather than just individual characters. It also performs its compression
+based on the entire name, not a truncated or stripped name. Double metaphone
+was released ten years after metaphone and turns its attention particularly
+toward accounting for combinations of sounds that are not present in the
+english language. It is the most robust algorithm not only for that reason,
+but also because it produces two encodings per name: a primary encoding and a
+secondary encoding. The metaphone codes for Catie, Caity, and Katie are all
+``KT``. Double metaphone produces just one encoding (again, ``KT``) and drops
+the secondary encoding since this is a phonetically simple name. If we
+consider the name Katherine, metaphone produces ``KORN`` while double
+metaphone generates two encodings, ``KORN, KTRN``.
+
+Phonemic compressions have been widely used to quickly identify similar names
+for record linkage. They can quickly identify similar names and exclude
+dissimilar ones, reducing the time to find matches, and they can improve false
+positive/negative rates by eliminating unnecessary matches. They are important
+to understand in the context of `Record Blocking`_.
 
 Exploding Data
 --------------
 
 Record Blocking
 ---------------
+
+In the case of double metaphone, both encodings can be used to compressions
+across records, which leads to a slight increase in computation time.
+
 
 Matching
 --------
