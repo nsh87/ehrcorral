@@ -143,7 +143,9 @@ have these errors.
 Consider a Record for a man named Bill Taft Robinson:
 
 **Forename:** Bill
+
 **Mid-forename:** Taft
+
 **Current surname:** Robinson
 
 Initially, blocking would be performed by taking the phonemic compression of
@@ -154,7 +156,7 @@ exploded, it will get the following additional blocking groups:
 
     * **RPNSNT**, using the first initial of the mid-forename
     * **RPNSNW**, using William in place of Bill for the forename since Bill
-    is a common nickname for William in the english language.
+      is a common nickname for William in the english language.
 
 This makes this Record available for probabilistic matching within three
 blocking groups. Therefore, if Bill Taft Robinson has another Record under
