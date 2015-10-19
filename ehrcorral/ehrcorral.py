@@ -119,7 +119,7 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
 
     .. py:attribute:: address2
 
-        Apartment or unit number.
+        Apartment or unit information, such as "Apt. 201".
 
     .. py:attribute:: state_province
 
