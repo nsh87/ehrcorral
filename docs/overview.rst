@@ -112,7 +112,7 @@ comparisons. If every comparison takes just 1 microsecond, it would still take
 over 5 days for the matching process to complete.
 
 By default, EHRCorral blocks data into groups by the phonemic compression of the
-current surname plus the first initial of forename, and then by sex. Other
+current surname plus the first initial of the forename, and then by sex. Other
 blocking techniques group by phonemic compression of the forename or current
 surname, or by birth month or year. A combinatory approach can be taken, as
 well, blocking by both current surname and birth year, and then by sex and birth
