@@ -116,7 +116,7 @@ like Mr. and Mrs., and determining what to use for the national ID field.
 Creating a Herd
 ---------------
 
-**Ref:** :py:class:`ehrcorral.ehrcorral.Herd`
+**Ref:** :py:func:`ehrcorral.ehrcorral.Herd.populate`
 
 Once the Records have been created, you can populate a Herd. A list or tuple
 of Records can be used.
