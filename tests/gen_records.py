@@ -79,12 +79,12 @@ def create_population(N, start_date, end_date):
             record['current_surname'] = fake.last_name_male()
         record['gender'] = gender_change[sex] if random.random() < 0.05 else sex
         # Do some manipulation of keys to match expected Profile fields
-        address = record.pop['address']
+        address = record.pop('address')
         address = re.split('[\n,]', address)
         record['state_province'] = next(s for s in address[-1].split(' ') if s)
         record['postal_code'] = address[-1].split(' ')[-1]
         record['city'] = address[1]
-        record['address'] = address[0]  # First consider address to be one field
+        record['address1'] = address[0]  # First consider address to be one field
         # But then try to split address into two fields and overwrite the field
         # if necessary.
         delimiters = ['Suite', 'Ste', 'Unit', 'Apartment', 'Apt', 'Department',
@@ -92,17 +92,20 @@ def create_population(N, start_date, end_date):
         for delimiter in delimiters:
             split_address = address[0].split(delimiter)
             if len(split_address) > 1:
-                record['address1'] = split_address[0]
+                record['address1'] = split_address[0].rstrip()
                 record['address2'] = delimiter + split_address[1]
         # Fix SSN key to match Profile fields
         ssn = record.pop('ssn')
         record['national_id1'] = ssn
         # Split birthdate to match Profile fields
-        birthdate = record.pop['birthdate']
+        birthdate = record.pop('birthdate')
         birthdate = birthdate.split('-')
         record['birth_year'] = birthdate[0]
         record['birth_month'] = birthdate[1]
         record['birth_day'] = birthdate[2]
+        # Fix 0+/- blood type to be O+/-
+        blood = record.pop('blood_group')
+        record['blood_type'] = blood.replace('0', 'O')
     return tuple(sorted(population, key=lambda profile: profile['forename']))
 
 
