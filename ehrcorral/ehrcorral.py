@@ -92,7 +92,7 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     All fields should be populated with an int or string and will be coerced
     to the proper type for that field automatically.
 
-    .. py:attribute:: forename
+    .. py:member:: forename
 
         Also known as first name.
 
