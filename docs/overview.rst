@@ -163,10 +163,11 @@ blocking groups. Therefore, if Bill Taft Robinson has another Record under
 William Taft Robinson, a potential match can be found with this Record.
 
 A standard set of names and their nicknames is included with EHRCorral, but one
-can be supplied to customize the algorithm to names from a different region. For
+can be supplied to customize the explosion to names from a different region. For
 example, instead of Bill and William, when dealing with records containing
 Hispanic and Western European names perhaps the European name Elizabeth should
-also be considered as Isabel, the accepted Spanish version of Elizabeth.
+also be considered as Isabel, the accepted Spanish version
+of Elizabeth, for blocking purposes.
 
 Matching
 --------
