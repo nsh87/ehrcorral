@@ -59,7 +59,7 @@ are both **C300**, although their spelling is different.
 Soundex is the oldest method here, developed in the early 1900s and used to aid
 the U.S.A. Census Bureau. It is computationally efficient and included in
 several modern databases for fuzzy name matching for that reason, but its
-shortcomings are quite obvious when non-anglosaxan names are used and in other
+shortcomings are quite obvious when non-Anglo-Saxan names are used and in other
 scenarios. Continuing the example in the previous paragraph, the Soundex code
 for Katie is **K300**, although it sounds identical to both Catie and Caity,
 which both have the code **C300**. After stripping vowels and other
