@@ -162,7 +162,9 @@ exploded, it will get the following additional blocking groups:
 
 This makes this Record available for probabilistic matching within three
 blocking groups. Therefore, if Bill Taft Robinson has another Record under
-William Taft Robinson, a potential match can be found with this Record.
+William Taft Robinson, a potential match can be found with this Record. Note
+that the blocking group is only used to determine which Records are checked. It
+does not modify the forename, nor does it insert William in place of Bill.
 
 A standard set of names and their nicknames is included with EHRCorral, but one
 can be supplied to customize the explosion to names from a different region. For
