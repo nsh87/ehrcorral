@@ -127,7 +127,9 @@ robust double metaphone generates two encodings. In the case of double
 metaphone, both encodings are used, effectively creating larger block sizes,
 which can lead to a significant increase in computation time depending on the
 data set. Therefore, the first initial of the forename is also used to then
-decrease the block size.
+decrease the block size. This also helps reduce the size of blocks for very
+common surnames, such as Smith, which occurs at a rate of about 1% (or 10,000
+for every one million) in the United States of America.
 
 Exploding Data
 --------------
