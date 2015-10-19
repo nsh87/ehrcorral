@@ -275,6 +275,13 @@ class Herd(object):
         self._population = records
 
     def corral(self, blocking='dmetaphone'):
+        """Perform record matching on all Records in the Herd.
+
+        Args:
+            blocking (str): Blocking method to use. Defaults to double
+                metaphone. Must be one of 'soundex', 'nysiis', 'metaphone',
+                'dmetaphone'.
+        """
         if blocking not in PHONEMES:
             raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
         self._explode(blocking)

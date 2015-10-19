@@ -9,7 +9,7 @@ To use EHRcorral in a project::
 EHRCorral operates on a collection of Records, each of which represents a single
 electronic health record. A collection of Records is called a Herd, hence the
 name EHRCorral: generating a master patient index of all the records is
-done by "corraling" the Herd.
+done by "corralling" the Herd.
 
 There is a small number of actions to perform, but potentially several setting
 to consider:
@@ -129,3 +129,18 @@ of Records can be used.
 Once a Herd has been populated the sub-population cannot be updated. Calling
 ``populate()`` again with additional records will raise an error. Making the
 population immutable prevents race conditions during matching.
+
+Matching Records
+----------------
+
+**Ref:** :py:class:`ehrcorral.ehrcorral.Herd`
+
+To performing record-linkage on the Herd, simply call:
+
+.. code-block:: python
+
+    herd.corral()
+
+There are some options to consider when corralling a Herd, such as the
+:ref:`record_blocking` method. See :py:method:`ehrcorral.ehrcorral.Herd.corral`
+for documentation of the options.

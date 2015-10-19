@@ -101,6 +101,8 @@ to understand in the context of `Record Blocking`_.
 Exploding Data
 --------------
 
+.. _record-blocking:
+
 Record Blocking
 ---------------
 
