@@ -7,10 +7,10 @@ deterministic, probabilistic, or machine learning methods, or a combination of
 approaches. EHRCorral takes a probabilistic approach, wherein certain fields are
 weighted based on their match-level, which is determined using numerical or
 lexical analysis in the context of two records or the entire set of records. A
-final probability of two records matching is calculated and if the probability
-is above a threshold value the records are linked. Several pre-processing steps
-are often taken to reduce the computational requirements and attempt to increase
-the sensitivity and specificity of the algorithm.
+composite probability of two records matching is calculated and if the
+probability is above a threshold value the records are linked. Several
+pre-processing steps are often taken to reduce the computational requirements
+and attempt to increase the sensitivity and specificity of the algorithm.
 
 Precedents
 ----------
@@ -98,18 +98,41 @@ dissimilar ones, reducing the time to find matches, and they can improve false
 positive/negative rates by eliminating unnecessary matches. They are important
 to understand in the context of `Record Blocking`_.
 
-Exploding Data
---------------
-
-TODO: Fill in.
-
 .. _record-blocking-label:
 
 Record Blocking
 ---------------
 
-In the case of double metaphone, both encodings can be used to compressions
-across records, which leads to a slight increase in computation time.
+Record blocking is a technique used to eliminate probabilistic matching between
+records that clearly do not match based on some field, such as last name. If
+every record has to be checked against every other record for a probabilistic
+match there are :math:`{n \choose 2}` checks that must occur. For 1,000,000
+records, this would require 499,999,500,000 (499 trillion) record-to-record
+comparisons. If every comparison takes just 1 microsecond, it would still take
+over 5 days for the matching process to complete.
+
+By default, EHRCorral blocks data into groups by the phonemic compression of the
+current surname + first initial of forename, and then by sex. Other blocking
+techniques group by phonemic compression of the forename or current surname, or
+by birth month or year. A combinatory approach can be taken, as well, blocking
+by both current surname and birth year, and then by sex and birth month.
+Blocking by phonemic compression has the advantage of eliminating checks between
+two names that have similar spelling but different pronunciations, potentially
+eliminating false positives. On the other hand, if the phonemic compression
+algorithm is inaccurate (as we saw with Caity and Katie using Soundex),
+potential matches are discarded, increasing the false negative rate.
+
+Soundex, NYSIIS, and metaphone all generate a single encoding, while the more
+robust double metaphone generates two encodings. In the case of double
+metaphone, both encodings are used, effectively creating larger block sizes,
+which can lead to a significant increase in computation time depending on the
+data set. Therefore, the first initial of the forename is also used to then
+decrease the block size.
+
+Exploding Data
+--------------
+
+TODO: Fill in.
 
 Matching
 --------
