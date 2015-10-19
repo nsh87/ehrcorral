@@ -132,7 +132,33 @@ decrease the block size.
 Exploding Data
 --------------
 
-TODO: Fill in.
+Exploding the data set refers to the process of generating additional Records
+from each Record by combining or switching fields. The purpose of exploding the
+data set is to mitigate the effect of certain data entry errors or scenarios
+encountered in EHRs, such as the transposition of first name and middle name, or
+the entry of a nickname in a name field. This process is used in conjunction
+with blocking in order to increase the potential matches of a record that might
+have these errors.
+
+Consider a Record for a man named Bill Taft Robinson:
+
+**Forename:** Bill
+**Mid-forename:** Taft
+**Current surname:** Robinson
+
+Initially, blocking would be performed by taking the phonemic compression of
+the current surname plus the first initial of the forename. The metaphone
+compression of Robinson is **RPNSN**, and adding on the first initial of the
+forename would put this record in block **RPNSNB**. When this record is
+exploded, it will get the following additional blocking groups:
+
+    * **RPNSNT**, using the first initial of the mid-forename
+    * **RPNSNW**, using William in place of Bill for the forename since Bill
+    is a common nickname for William in the english language.
+
+This makes this Record available for probabilistic matching within three
+blocking groups. Therefore, if Bill Taft Robinson has another Record under
+William Taft Robinson, a potential match can be found with this Record.
 
 Matching
 --------
