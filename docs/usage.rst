@@ -105,16 +105,13 @@ For the full list of fields available to generate a Record, see
 :py:class:`ehrcorral.ehrcorral.Profile`.
 
 If additional fields are passed to ``gen_record()`` they are ignored.
-Missing fields recieve a value of emptry string.
-
-You have four name fields available to you: `first_name`, `middle_name`,
-`last_name`, and `suffix`. How you define them is entirely up to you. There
-is no special transformations that get applied (WHAT ABOUT CONVERTING TO
-UNICODE OR REMOVING SPECIAL CHARACATERS - MAYBE MAKE THAT A FLAG) and they
-are first matched phonetically and then evaluated for similarity - each field
-is matched the same way. DON'T YOU WANT ONLY A SINGLE NAME (i.e. NO SPACES)
-IN EACH ONE? If you want to leave the middle name field blank, that is fine.
-However you define each field is entirely up to you.
+Missing fields receive a value of empty string. No transformations are applied
+to these fields other than to coerce strings to integers when the algorithm
+requires integers. You should perform any pre-processing that you think is
+relevant for your region or data set, such as removing accents or umlauts if you
+do not want to match based on such special characters, defining forename and
+mid forename if names if your region are particularly long, removing prefixes
+like Mr. and Mrs., and determining what to use for the national ID field.
 
 Creating a Herd
 ---------------
