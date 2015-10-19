@@ -322,8 +322,6 @@ def gen_record(data):
     profile = Profile._make(fields)
     if len(profile.forename) < 1 or len(profile.current_surname) < 1:
         raise ValueError("A forename and current surname must be supplied.")
-    if len(profile.sex) < 1:
-        raise ValueError("A sex must be supplied.")
     record = Record()
     record.profile = profile
     return record
