@@ -110,7 +110,7 @@ to these fields other than to coerce strings to integers when the algorithm
 requires integers. You should perform any pre-processing that you think is
 relevant for your region or data set, such as removing accents or umlauts if you
 do not want to match based on such special characters, defining forename and
-mid forename if names if your region are particularly long, removing prefixes
+mid forename if names in your region are particularly long, removing prefixes
 like Mr. and Mrs., and determining what to use for the national ID field.
 
 Creating a Herd
@@ -126,9 +126,9 @@ of Records can be used.
     herd = ehrcorral.Herd()
     herd.populate(records)
 
-Once a Herd has been populated the sub-population cannot be updated. Calling
-``populate()`` again with additional records will raise an error. Making the
-population immutable prevents race conditions during matching.
+In order to prevent race conditions during matching, the population of a Herd
+cannot be updated once it is set. Calling ``populate()`` again with additional
+records will raise an error.
 
 Matching Records
 ----------------
