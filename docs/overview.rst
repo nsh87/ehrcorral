@@ -116,11 +116,13 @@ current surname plus the first initial of the forename, and then by sex. Other
 blocking techniques group by phonemic compression of the forename or current
 surname, or by birth month or year. A combinatory approach can be taken, as
 well, blocking by both current surname and birth year, and then by sex and birth
-month. Blocking by phonemic compression has the advantage of eliminating checks
-between two names that have similar spelling but different pronunciations,
-potentially eliminating false positives. On the other hand, if the phonemic
-compression algorithm is inaccurate (as we saw with Caity and Katie using
-Soundex), potential matches are discarded, increasing the false negative rate.
+month. By probabilistically checking only records in the same block, the time
+until the algorithm finishes is greatly reduced. Blocking by phonemic
+compression has the advantage of eliminating checks between two names that have
+similar spelling but different pronunciations, potentially eliminating false
+positives. On the other hand, if the phonemic compression algorithm is
+inaccurate (as we saw with Caity and Katie using Soundex), potential matches are
+discarded, increasing the false negative rate.
 
 Soundex, NYSIIS, and metaphone all generate a single encoding, while the more
 robust double metaphone generates two encodings. In the case of double
