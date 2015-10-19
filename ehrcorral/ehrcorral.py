@@ -14,22 +14,25 @@ import jellyfish
 import metaphone
 
 PROFILE_FIELDS = (
-    'forename',  # First name
-    'mid_forename',  # Middle name
-    'birth_surname',  # Last name at birth, often same as mother's maiden name
-    'current_surname',  # Current last name (if changed, such as after marriage)
-    'suffix',  # Sr., Jnr., II, etc.
-    'address',  # Full address
-    'sex',  # Physiological sex (M or F)
-    'gender',  # The gender identified with by the patient (M or F)
-    'ssn',  # Social security number
-            # This should be the same type of number for all patients (i.e.
-            # do not mix USA social security with Mexico national ID
-            # number)...right?...or does it matter?
-    'other_id',  # Other identifying number, such as driver's license
-    'birth_year',  # YYYY
-    'birth_month',  # MM
-    'birth_day',  # DD
+    'forename',
+    'mid_forename',
+    'birth_surname',
+    'current_surname',
+    'suffix',
+    'address1',
+    'address2',
+    'city',
+    'state_province',
+    'postal_code',
+    'country',
+    'sex',
+    'gender',
+    'national_id1',
+    'id2',
+    'mrn',
+    'birth_year',
+    'birth_month',
+    'birth_day',
     'blood_type',
 )
 # Use a class and make these class variable so you can document these fields
@@ -86,14 +89,81 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     """A selection of patient-identifying information from a single electronic
     health record.
 
+    All fields should be populated with an int or string and will be coerced
+    to the proper type for that field automatically.
+
     .. py:attribute:: forename
 
-        Also known as first name
+        Also known as first name.
 
     .. py:attribute:: mid_forename
 
-        Also known as middle name
+        Also known as middle name.
 
+    .. py:attribute:: birth_surname
+
+        Last name at birth, often same as mother's maiden name.
+
+    .. py:attribute:: current_surname
+
+        Current last name. Can differ from birth surname often in the case of
+        marriage for females.
+
+    .. py:attribute:: suffix
+
+        Sr., Junior, II, etc.
+
+    .. py:attribute:: address1
+
+        Street address, such as "100 Main Street".
+
+    .. py:attribute:: address2
+
+        Apartment or unit number.
+
+    .. py:attribute:: state_province
+
+        State or province.
+
+    .. py:attribute:: sex
+
+        Physiological sex (M or F)
+
+    .. py:attribute:: gender
+
+        The gender the patient identifies with (M or F), e.g. in the case of
+        transexualism.
+
+    .. py:attribute:: national_id1
+
+        For example, social security number. This should be the same type of
+        number for all patients. Do not mix USA social security with Mexico
+        passport number.
+
+    .. py:attribute:: id2
+
+        Can be used as an additional identifying ID number, such as driver's
+        license number.
+
+    .. py:attribute:: mrn
+
+        Medical record number.
+
+    .. py:attribute:: birth_year
+
+        In the format YYYY.
+
+    .. py:attribute:: birth_month
+
+        In the format MM.
+
+    .. py:attribute:: birth_day
+
+        In the format DD.
+
+    .. py:attribute:: blood_type
+
+        One of A, B, AB, or O with an optional +/- denoting RhD status.
     """
     __slots__ = ()  # Prevent per-instance dictionaries to reduce memory
 

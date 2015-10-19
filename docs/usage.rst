@@ -72,10 +72,10 @@ light on memory usage, much more so than a dictionary or list, for example. A
 collection of 10 million Records will occupy about 5---6 GB, whereas 10 million
 dictionaries containing the same data will occupy about three times the memory.
 Therefore, when generating Records it is advisable *not* to build up a large
-dictionary of data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`.
-Instead, generate the Records in a loop that operates on a single EHR entry at a
-time so the dictionaries like the ones above are thrown away once the Record is
-created:
+dictionary of data to then be sent one by one to
+:py:func:`ehrcorral.ehrcorral.gen_record`. Instead, generate the Records in a
+loop that operates only on a single EHR entry at a time so the dictionaries like
+the ones above are thrown away once the Record is created:
 
 .. code-block:: python
 
