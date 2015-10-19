@@ -2,46 +2,45 @@
 Overview
 ========
 
-Significant effort has been put into developing record-linkage algorithms
-using deterministic, probabilistic, machine learning methods, or a
-combination of methods. EHRCorral takes a probabilistic approach, wherein
-certain fields are weighted based on their match-level, which is determined
-using numerical or lexical analysis. A final probability of two records
-matching is calculated and if the probability is above a threshold value the
-records are linked. Several pre-processing steps are often taken to reduce
-the computational requirements and attempt to increase the sensitivity and
-specificty of the algorithm.
+Significant effort has been put into developing record-linkage algorithms using
+deterministic, probabilistic, or machine learning methods, or a combination of
+approaches. EHRCorral takes a probabilistic approach, wherein certain fields are
+weighted based on their match-level, which is determined using numerical or
+lexical analysis in the context of two records or the entire set of records. A
+final probability of two records matching is calculated and if the probability
+is above a threshold value the records are linked. Several pre-processing steps
+are often taken to reduce the computational requirements and attempt to increase
+the sensitivity and specificity of the algorithm.
 
 Precedents
 ----------
 
-Purely deterministic models, which attempt to find identical values in
-certain fields, are unideal for many healthcare data sets. Keying errors,
-transpositions (e.g. of first name and last name) are all too common in EHRs,
-and some institutions are only able to record minimal identifying information
-about patients, such as is often the case with transient, homeless, and
-under-served populations. This makes it difficult to identify a field or
-fields which can reliably be matched exactly across records.
+Purely deterministic models, which attempt to find identical values in certain
+fields, are unideal for many healthcare data sets. Keying errors, misspellings,
+and transpositions of first name and last name are all too common in EHRs, and
+some institutions are only able to record minimal identifying information about
+patients, such as is often the case with transient, homeless, and under-served
+populations. This makes it difficult to identify a field or fields which can
+reliably be matched exactly across records.
 
-Machine learning approaches have been tried in recent year with some success,
-particularly with neural networks. However, while machine learning is
-becoming more common and effective as computational power increases, most of
-these algorithms require some method of training in order to identify a
-"pattern" and train a specific algorithm to be applied on future datasets for
-record linkage. This training might entail feeding in a large data set where
-record links have already been identified, or training the algorithm as it is
-developed.
+Machine learning algorithms, such as neural networks, have been used with
+varying degrees of success. However, while machine learning is becoming more
+common in many fields as computational units become cheaper, most of these
+algorithms require some method of training in order to identify a "pattern" and
+develop a specific algorithm to be applied on future records for linkage.
+This training might entail feeding in a large data set where record links have
+already been identified, or training the algorithm as it is developed.
 
 A probabilistic method can run immediately on a data set without training data
 and identify record linkages with surprising sensitivity and specificity when
-the right settings are used. The OX-LINK system, which was developed to match
-58 million records spanning from the 1960s to the '90s, achieved a false
-positive rate of 0.20% - 0.30% and a false negative rate from 1.0% - 3 .0% on
-several hundred thousand records. This system uses a combination of
+the right settings are used. The OX-LINK system, which was developed to match 58
+million healthcare records spanning from the 1960s to the '90s, achieved a false
+positive rate of 0.20% --- 0.30% and a false negative rate from 1.0% --- 3.0%
+on several hundred thousand records. This system uses a combination of
 probabilistic, weighted matching, lexical analysis, phonemic blocking, and
 manual review.
 
-The approach taken here is influenced in large part by the methods of OX-LINK
+The approach taken here is influenced in large part by the methods of OX-LINK.
 Subsequent improvements to such probabilistic techniques have been incorporated,
 as well.
 
@@ -53,17 +52,17 @@ approximately represent a word or name. There are several common name
 compression schemes in wide use, including Soundex, NYSIIS, metaphone, and
 double metaphone, which appear in chronological order according to their date of
 creation. The purpose of name compression in record linkage is to allow for a
-potential name match when the spelling of two names disagrees but the
+potential name match when the spelling of two names disagree but the
 phonetics are identical. For example, the Soundex code for Catie and Caity
-are both ``C300``, although their spelling is different.
+are both `C300`, although their spelling is different.
 
 Soundex is the oldest method, developed in the early 1900s and used to aid
 the U.S.A. Census Bureau. It is computationally efficient and included in
 several modern databases for fuzzy name matching for that reason, but its
 shortcomings are quite obvious when non-anglosaxan names are used and in other
 scenarios. Continuing the example in the previous paragraph, the Soundex code
-for Katie is ``K300``, although it sounds identical to both Catie and Caity,
-which both have the code ``C300``. After stripping vowels and other
+for Katie is `K300`, although it sounds identical to both Catie and Caity,
+which both have the code `C300`. After stripping vowels and other
 characters in certain situations, Soundex only looks at the initial part of a
 name.
 
