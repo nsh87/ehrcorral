@@ -106,7 +106,7 @@ Record Blocking
 Record blocking is a technique used to eliminate probabilistic matching between
 records that clearly do not match based on some field, such as last name. If
 every record has to be checked against every other record for a probabilistic
-match there are :math:`{n \choose 2}` checks that must occur. For 1,000,000
+match there are :math:`{n \choose 2}` checks that must occur. For n=1,000,000
 records, this would require 499,999,500,000 (499 trillion) record-to-record
 comparisons. If every comparison takes just 1 microsecond, it would still take
 over 5 days for the matching process to complete.
