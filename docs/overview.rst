@@ -35,7 +35,7 @@ A probabilistic method can run immediately on a data set without training data
 and identify record linkages with surprising sensitivity and specificity when
 the right settings are used. The OX-LINK system, which was developed to match 58
 million healthcare records spanning from the 1960s to the '90s, achieved a false
-positive rate of 0.20% --- 0.30% and a false negative rate from 1.0% --- 3.0%
+positive rate of 0.20%---0.30% and a false negative rate from 1.0%---3.0%
 on several hundred thousand records. This system uses a combination of
 probabilistic, weighted matching, lexical analysis, phonemic blocking, and
 manual review.
