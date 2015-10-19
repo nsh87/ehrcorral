@@ -92,7 +92,7 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     All fields should be populated with an int or string and will be coerced
     to the proper type for that field automatically.
 
-    .. py:member:: forename
+    .. py:attribute:: forename
 
         Also known as first name.
 
@@ -124,6 +124,13 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     .. py:attribute:: state_province
 
         State or province.
+
+    .. py:attribute:: postal_code
+
+    .. py:attribute:: country
+
+        Consistent formatting should be used. Do not use USA in one Record
+        and United States of America in another.
 
     .. py:attribute:: sex
 
