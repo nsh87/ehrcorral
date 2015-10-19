@@ -62,9 +62,9 @@ def create_population(N, start_date, end_date):
         birthdate = fake.date_time_between(start_date="-99y", end_date="-1y")
         record['birthdate'] = birthdate.strftime("%Y-%m-%d")
         # Name, Sex, and Gender
-        record['sex'] = 'F' if random.random() < 0.60 else 'M'
-        has_middle_name = True if random.random() < 0.50 else False
-        is_married = True if random.random() < 0.49 else False
+        record['sex'] = 'F' if random.random() <= 0.60 else 'M'
+        has_middle_name = True if random.random() <= 0.50 else False
+        is_married = True if random.random() <= 0.49 else False
         sex = record['sex']
         if sex == 'F':
             record['forename'] = fake.first_name_female()
