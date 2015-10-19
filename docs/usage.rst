@@ -142,5 +142,5 @@ To performing record-linkage on the Herd, simply call:
     herd.corral()
 
 There are some options to consider when corralling a Herd, such as the
-:ref:`record_blocking` method. See :py:method:`ehrcorral.ehrcorral.Herd.corral`
-for documentation of the options.
+:ref:`record-blocking-label` method. See
+:py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of the options.

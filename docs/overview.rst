@@ -101,14 +101,15 @@ to understand in the context of `Record Blocking`_.
 Exploding Data
 --------------
 
-.. _record-blocking:
+TODO: Fill in.
+
+.. _record-blocking-label:
 
 Record Blocking
 ---------------
 
 In the case of double metaphone, both encodings can be used to compressions
 across records, which leads to a slight increase in computation time.
-
 
 Matching
 --------
