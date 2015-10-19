@@ -15,8 +15,6 @@ Modules
    :members:
 
 .. autoclass:: ehrcorral.ehrcorral.Profile
-   :members:
-   :inherited-members:
    :member-order: bysource
 
 .. autofunction:: ehrcorral.ehrcorral.gen_record
