@@ -137,13 +137,14 @@ class Profile(namedtuple('Profile', PROFILE_FIELDS)):
     .. py:attribute:: national_id1
 
         For example, social security number. This should be the same type of
-        number for all patients. Do not mix USA social security with Mexico
-        passport number.
+        number for all patients. Do not use USA social security in one
+        Record and with Mexico passport number in another.
 
     .. py:attribute:: id2
 
         Can be used as an additional identifying ID number, such as driver's
-        license number.
+        license number. Again, define the type of ID number this is for the
+        entire sub-population.
 
     .. py:attribute:: mrn
 
