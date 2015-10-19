@@ -68,7 +68,9 @@ need to interact directly with the Records once they are created.
 In practicality, you won't have just two EHR entries, but thousands or millions
 of them, and there might be multiple entries for John or Jane and many other
 individuals in the sub-population. The Record class is designed to be extremely
-light on memory usage, much more so than a dictionary or list, for example.
+light on memory usage, much more so than a dictionary or list, for example. A
+collection of 10 million Records will occupy about 5---6 GB, whereas 10 million
+dictionaries containing the same data will occupy about three times the memory.
 Therefore, when generating Records it is advisable *not* to build up a large
 dictionary of data to then be sent to :py:func:`ehrcorral.ehrcorral.gen_record`.
 Instead, generate the Records in a loop that operates on a single EHR entry at a
