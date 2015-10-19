@@ -144,16 +144,14 @@ have these errors.
 
 Consider a Record for a man named Bill Taft Robinson:
 
-**Forename:** Bill
+| **Forename:** Bill
+| **Mid-forename:** Taft
+| **Current surname:** Robinson
 
-**Mid-forename:** Taft
-
-**Current surname:** Robinson
-
-Initially, blocking would be performed by taking the phonemic compression of
-the current surname plus the first initial of the forename. The metaphone
-compression of Robinson is **RPNSN**, and adding on the first initial of the
-forename would put this record in block **RPNSNB**. When this record is
+Initially, blocking would be performed by taking the phonemic compression of the
+current surname plus the first initial of the forename. The primary double
+metaphone compression of Robinson is **RPNSN**, and adding on the first initial
+of the forename would put this record in block **RPNSNB**. When this record is
 exploded, it will get the following additional blocking groups:
 
     * **RPNSNT**, using the first initial of the mid-forename
