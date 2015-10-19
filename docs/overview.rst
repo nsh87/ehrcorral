@@ -126,8 +126,8 @@ discarded, increasing the false negative rate.
 
 Soundex, NYSIIS, and metaphone all generate a single encoding, while the more
 robust double metaphone generates two encodings. In the case of double
-metaphone, both encodings are used, effectively creating larger block sizes,
-which can lead to a significant increase in computation time depending on the
+metaphone both encodings are used, effectively creating larger block sizes,
+which can lead to a significant increase in computation time, depending on the
 data set. Therefore, the first initial of the forename is also used to then
 decrease the block size. This also helps reduce the size of blocks for very
 common surnames, such as Smith, which occurs at a rate of about 1% (or 10,000
@@ -137,12 +137,12 @@ Exploding Data
 --------------
 
 Exploding the data set refers to the process of generating additional Records
-from each Record by combining or switching fields. The purpose of exploding the
-data set is to mitigate the effect of certain data entry errors or scenarios
-encountered in EHRs, such as the transposition of first name and middle name, or
-the entry of a nickname in a name field. This process is used in conjunction
-with blocking in order to increase the potential matches of a record that might
-have these errors.
+from each Record by combining, switching, or expanding fields. The purpose of
+exploding the data set is to mitigate the effect of certain data entry errors or
+scenarios encountered in EHRs, such as the transposition of first name and
+middle name, or the entry of a nickname in a name field. This process is used in
+conjunction with blocking in order to increase the potential matches of a record
+that might have these errors.
 
 Consider a Record for a man named Bill Taft Robinson:
 
