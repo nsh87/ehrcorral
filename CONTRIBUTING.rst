@@ -57,7 +57,7 @@ Get Started!
 
 Ready to contribute? Here's how to set up `ehrcorral` for local development.
 
-1. Fork the `ehrcorral` repo on GitHub.
+1. Fork the `ehrcorral` `repo on GitHub <https://github.com/nsh87/ehrcorral>`.
 2. Clone your fork locally::
 
     $ git clone git@github.com:your_name_here/ehrcorral.git
