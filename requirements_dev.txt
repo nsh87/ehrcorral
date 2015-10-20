@@ -1,4 +1,12 @@
 bumpversion==0.5.3
 wheel==0.23.0
+fake-factory==0.5.3
 coverage==4.0
 pylint==1.4.4
+PyYAML==3.11
+future==0.15.2
+tox==2.1.1
+virtualenv==13.1.2
+six==1.9.0
+flake8==2.4.1
+watchdog==0.8.3
