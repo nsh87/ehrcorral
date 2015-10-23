@@ -109,7 +109,10 @@ every record has to be checked against every other record for a probabilistic
 match there are :math:`{n \choose 2}` checks that must occur. For n=1,000,000
 records, this would require 499,999,500,000 (499 trillion) record-to-record
 comparisons. If every comparison takes just 1 microsecond, it would still take
-over 5 days for the matching process to complete.
+over 5 days for the matching process to complete. However, if we were able to
+limit record-to-record comparisons to groups (i.e. blocks) of records that have
+the possibility of matching and ignore other record-to-record combinations, the
+time to completion could be greatly reduced.
 
 By default, EHRCorral blocks data into groups by the phonemic compression of the
 current surname plus the first initial of the forename. Other blocking
@@ -117,21 +120,22 @@ techniques group by phonemic compression of the forename or current surname, or
 by birth month or year. A combinatory approach can be taken, as well, blocking
 by both current surname and birth year, and then by sex and birth month. By
 probabilistically checking only records in the same block, the time until the
-algorithm finishes is greatly reduced. Blocking by phonemic compression has the
-advantage of eliminating checks between two names that have similar spelling but
-different pronunciations, potentially eliminating false positives. On the other
-hand, if the phonemic compression algorithm is inaccurate (as we saw with Caity
-and Katie using Soundex), potential matches are discarded, increasing the false
-negative rate.
+algorithm finishes is greatly reduced if the average block size is manageable.
+Blocking by phonemic compression has the advantage of eliminating checks between
+two names that have similar spelling but different pronunciations, potentially
+eliminating false positives that might match based on word-distance measures
+alone. On the other hand, if the phonemic compression algorithm is inaccurate
+(as we saw with Caity and Katie using Soundex), potential matches are discarded,
+increasing the false negative rate.
 
 Soundex, NYSIIS, and metaphone all generate a single encoding, while the more
-robust double metaphone generates two encodings. In the case of double
-metaphone both encodings are used, effectively creating larger block sizes,
-which can lead to a significant increase in computation time, depending on the
-data set. Therefore, the first initial of the forename is also used to then
-decrease the block size. This also helps reduce the size of blocks for very
-common surnames, such as Smith, which occurs at a rate of about 1% (or 10,000
-for every one million) in the United States of America.
+robust double metaphone generates two encodings. In the case of double metaphone
+both encodings are used, effectively creating larger block sizes. This can lead
+to a significant increase in computation time, depending on the data set.
+Therefore, the first initial of the forename is also used to then decrease the
+block size. This also helps reduce the size of blocks for very common surnames,
+such as Smith, which occurs at a rate of about 1% (or 10,000 for every one
+million) in the United States of America.
 
 Exploding Data
 --------------

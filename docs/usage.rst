@@ -135,12 +135,20 @@ Matching Records
 
 **Ref:** :py:class:`ehrcorral.ehrcorral.Herd`
 
-To performing record-linkage on the Herd, simply call:
+To performing record-linkage on the Herd, you call its ``corral()`` method. This
+method requires as input a function which performs phonemic name compression,
+for Record blocking purposes. For convenience, Soundex, NYSIIS, metaphone, and
+double metaphone implementations have been included. Below, double metaphone is
+used. If you are not yet familiar with blocking methods, please consult
+:ref:`record-blocking-label` in the documentation.
 
 .. code-block:: python
 
-    herd.corral()
+    # from ehrcorral.compressions import soundex
+    # from ehrcorral.compressions import nysiis
+    # from ehrcorral.compressions import metaphone
+    from ehrcorral.compressions import dmetaphone
+    herd.corral(blocking=dmetaphone)
 
-There are some options to consider when corralling a Herd, such as the
-:ref:`record-blocking-label` method. See
-:py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of the options.
+See :py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of additional
+function parameters.

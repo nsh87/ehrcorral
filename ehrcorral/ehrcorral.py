@@ -10,9 +10,6 @@ from __future__ import unicode_literals
 import sys
 from collections import namedtuple, defaultdict
 
-import jellyfish
-import metaphone
-
 PROFILE_FIELDS = (
     'forename',
     'mid_forename',
@@ -48,40 +45,26 @@ META_FIELDS = (
 )
 
 
-PHONEMES = (
-    'soundex',
-    'nysiis',
-    'metaphone',
-    'dmetaphone',
-)
-
-
-compression_dispatch = {
-    'soundex': jellyfish.soundex,
-    'nysiis': jellyfish.nysiis,
-    'metaphone': jellyfish.metaphone,
-    'dmetaphone': metaphone.doublemetaphone
-}
-
-
 def compress(names, method):
     """Compresses surnames using different phonemic algorithms.
 
     Args:
         names (list): A list of names, typically surnames
-        method (str): A phonemic compression algorithm. Must be one of
-            :py:data::PHONEMES.
+        method (func): A function that performs phonemic compression
 
     Returns:
         A list of the compressions.
     """
     if not isinstance(names, list):
         ValueError("Expected a list of names, got a {}.".format(type(names)))
-    compressions = map(compression_dispatch[method], names)
+    compressions = []
+    raw_compressions = map(method, names)
     # Double metaphone returns a list of tuples, so need to unpack it
-    if method == 'dmetaphone':
-        compressions = [compression for dmetaphone in compressions
-                        for compression in dmetaphone if compression != '']
+    for item in raw_compressions:
+        if isinstance(item, (list, tuple)):
+            compressions.extend([sub for sub in item if sub != ''])
+        elif item != '':
+            compressions.append(item)
     return compressions
 
 
@@ -198,7 +181,7 @@ class Record(object):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
-    def gen_blocks(self, blocking_method):
+    def gen_blocks(self, compression):
         """Generate and set the blocking codes for a given record.
 
         Blocking codes are comprised of the phonemic compressions of the
@@ -207,14 +190,14 @@ class Record(object):
         the unique set of blocking codes.
 
         Args:
-            blocking_method (str): Which phonemic compression to use for the
-                generation of blocks. Must be one of :py:data::PHONEMES.
+            compression (func): A function that performs phonemic
+                compression.
         """
         blocks = []
         profile = self.profile
         surnames = [profile.current_surname, profile.birth_surname]
         surnames = [surname for surname in surnames if surname != '']
-        bases = compress(surnames, blocking_method)
+        bases = compress(surnames, compression)
         # Bases are now [PJTR, PHTR] - base phonemic compressions of surnames
         forenames = [profile.forename, profile.mid_forename]
         forenames = [forename for forename in forenames if forename != '']
@@ -274,19 +257,17 @@ class Herd(object):
             records = tuple(records)
         self._population = records
 
-    def corral(self, blocking='dmetaphone'):
+    def corral(self, blocking):
         """Perform record matching on all Records in the Herd.
 
         Args:
-            blocking (str): Blocking method to use. Defaults to double
+            compressions (str): Blocking method to use. Defaults to double
                 metaphone. Must be one of 'soundex', 'nysiis', 'metaphone',
                 'dmetaphone'.
         """
-        if blocking not in PHONEMES:
-            raise ValueError("Blocking must be be one of {}.".format(PHONEMES))
         self._explode(blocking)
 
-    def _explode(self, blocking):
+    def _explode(self, compression):
         """Generates primary and exploded phonemic blocking codes for each
         Record.
 
@@ -296,7 +277,7 @@ class Herd(object):
         """
         try:
             for record in self._population:
-                record.gen_blocks(blocking)
+                record.gen_blocks(compression)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
             raise TypeError("You must populate the Herd first."), None, trace
