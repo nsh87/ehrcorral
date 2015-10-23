@@ -109,7 +109,10 @@ every record has to be checked against every other record for a probabilistic
 match there are :math:`{n \choose 2}` checks that must occur. For n=1,000,000
 records, this would require 499,999,500,000 (499 trillion) record-to-record
 comparisons. If every comparison takes just 1 microsecond, it would still take
-over 5 days for the matching process to complete.
+over 5 days for the matching process to complete. However, if we were able to
+limit record-to-record comparisons to groups (i.e. blocks) of records that have
+the possibility of matching and ignore other record-to-record combinations, the
+time to completion could be greatly reduced.
 
 By default, EHRCorral blocks data into groups by the phonemic compression of the
 current surname plus the first initial of the forename. Other blocking
