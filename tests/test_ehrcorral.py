@@ -19,6 +19,7 @@ from faker import Faker
 from ehrcorral.ehrcorral import Herd
 from ehrcorral.ehrcorral import gen_record
 from ehrcorral.ehrcorral import compress
+from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
 
 fake = Faker()
 
@@ -89,7 +90,7 @@ class TestHerdExplode(unittest.TestCase):
         cls.herd.populate(records)
 
     def test_herd_exploding(self):
-        self.herd._explode(blocking='dmetaphone')
+        self.herd._explode(dmetaphone)
         for record in self.herd._population:
             self.assertIsInstance(record._blocks, tuple)
             self.assertTrue(1 <= len(record._blocks) <= 8)
@@ -124,27 +125,27 @@ class TestPhonemicCompression(unittest.TestCase):
         cls.names = ['Jellyfish', 'Exeter']
 
     def test_soundex_compression(self):
-        single_compression = compress(self.name, 'soundex')
+        single_compression = compress(self.name, soundex)
         self.assertEqual(single_compression, ['J412'])
-        multiple_compressions = compress(self.names, 'soundex')
+        multiple_compressions = compress(self.names, soundex)
         self.assertEqual(multiple_compressions, ['J412', 'E236'])
 
     def test_nysiis_compression(self):
-        single_compression = compress(self.name, 'nysiis')
+        single_compression = compress(self.name, nysiis)
         self.assertEqual(single_compression, ['JALYF'])
-        multiple_compressions = compress(self.names, 'nysiis')
+        multiple_compressions = compress(self.names, nysiis)
         self.assertEqual(multiple_compressions, ['JALYF', 'EXATAR'])
 
     def test_metaphone_compression(self):
-        single_compression = compress(self.name, 'metaphone')
+        single_compression = compress(self.name, metaphone)
         self.assertEqual(single_compression, ['JLFX'])
-        multiple_compressions = compress(self.names, 'metaphone')
+        multiple_compressions = compress(self.names, metaphone)
         self.assertEqual(multiple_compressions, ['JLFX', 'EKSTR'])
 
     def test_dmetaphone_compression(self):
-        single_compression = compress(self.name, 'dmetaphone')
+        single_compression = compress(self.name, dmetaphone)
         self.assertEqual(single_compression, ['JLFX', 'ALFX'])
-        multiple_compressions = compress(self.names, 'dmetaphone')
+        multiple_compressions = compress(self.names, dmetaphone)
         self.assertEqual(multiple_compressions, ['JLFX', 'ALFX', 'AKSTR'])
 
 
@@ -168,11 +169,11 @@ class TestPhonemicBlocking(unittest.TestCase):
         cls.male_record = gen_record(male)
 
     def test_multiple_surnames_and_forenames(self):
-        self.female_record.gen_blocks('dmetaphone')
+        self.female_record.gen_blocks(dmetaphone)
         expected_blocks = ['PRTLA', 'KRLKA', 'JRLKA', 'PRTLH', 'KRLKH', 'JRLKH']
         self.assertItemsEqual(self.female_record._blocks, expected_blocks)
 
     def test_single_forename_and_surname(self):
-        self.male_record.gen_blocks('dmetaphone')
+        self.male_record.gen_blocks(dmetaphone)
         expected_blocks = ['NTRO']
         self.assertItemsEqual(self.male_record._blocks, expected_blocks)
