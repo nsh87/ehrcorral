@@ -123,9 +123,10 @@ probabilistically checking only records in the same block, the time until the
 algorithm finishes is greatly reduced if the average block size is manageable.
 Blocking by phonemic compression has the advantage of eliminating checks between
 two names that have similar spelling but different pronunciations, potentially
-eliminating false positives. On the other hand, if the phonemic compression
-algorithm is inaccurate (as we saw with Caity and Katie using Soundex),
-potential matches are discarded, increasing the false negative rate.
+eliminating false positives that might match based on word-distance measures
+alone. On the other hand, if the phonemic compression algorithm is inaccurate
+(as we saw with Caity and Katie using Soundex), potential matches are discarded,
+increasing the false negative rate.
 
 Soundex, NYSIIS, and metaphone all generate a single encoding, while the more
 robust double metaphone generates two encodings. In the case of double
