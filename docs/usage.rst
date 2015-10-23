@@ -135,10 +135,12 @@ Matching Records
 
 **Ref:** :py:class:`ehrcorral.ehrcorral.Herd`
 
-To performing record-linkage on the Herd, you call its ``corral()`` method.
-This method requires as input a function which performs phonemic name
-compression. For convenience, Soundex, NYSIIS, metaphone, and double metaphone
-implementations have been included. Below, double metaphone is used:
+To performing record-linkage on the Herd, you call its ``corral()`` method. This
+method requires as input a function which performs phonemic name compression,
+for Record blocking purposes. For convenience, Soundex, NYSIIS, metaphone, and
+double metaphone implementations have been included. Below, double metaphone is
+used. If you are not yet familiar with blocking methods, please consult
+:ref:`record-blocking-label` in the documentation.
 
 .. code-block:: python
 
@@ -148,7 +150,5 @@ implementations have been included. Below, double metaphone is used:
     from ehrcorral.compressions import dmetaphone
     herd.corral(blocking=dmetaphone)
 
-If you are not yet familiar with blocking, please consult
-:ref:`record-blocking-label` in the documentation.
-See :py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of
-additional options.
+See :py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of additional
+function parameters.
