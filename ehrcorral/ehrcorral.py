@@ -261,7 +261,7 @@ class Herd(object):
         """Perform record matching on all Records in the Herd.
 
         Args:
-            compressions (str): Blocking method to use. Defaults to double
+            blocking (str): Blocking method to use. Defaults to double
                 metaphone. Must be one of 'soundex', 'nysiis', 'metaphone',
                 'dmetaphone'.
         """
