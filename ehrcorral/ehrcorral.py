@@ -215,6 +215,7 @@ class Herd(object):
     """
     def __init__(self):
         self._population = None
+        self._block_dict = defaultdict(list)
 
     def __unicode__(self):
         population = self._population
@@ -278,12 +279,25 @@ class Herd(object):
         try:
             for record in self._population:
                 record.gen_blocks(compression)
+                self.gen_block_dict(record)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
             raise TypeError("You must populate the Herd first."), None, trace
         finally:
             # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
             sys.exc_info()
+
+    def gen_block_dict(self, record):
+        """Generate dictionary of blocks and associated records for herd.
+
+        The dictionary is keyed based on block. The value of each key is a list
+        of records that have that block.
+
+        Args:
+            record (:py:class:`.Record`): An object of class :py:class:`.Record`
+        """
+        for block in record._blocks:
+            self._block_dict[block].append(record)
 
 
 def gen_record(data):
