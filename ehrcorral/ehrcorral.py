@@ -8,7 +8,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import sys
-from collections import namedtuple, defaultdict
+from collections import namedtuple, defaultdict, Counter
 
 PROFILE_FIELDS = (
     'forename',
@@ -216,6 +216,7 @@ class Herd(object):
     def __init__(self):
         self._population = None
         self._block_dict = defaultdict(list)
+        self._block_freq_dict = Counter()
 
     def __unicode__(self):
         population = self._population
@@ -280,6 +281,7 @@ class Herd(object):
             for record in self._population:
                 record.gen_blocks(compression)
                 self.gen_block_dict(record)
+                self._block_freq_dict += Counter(record._blocks)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
             raise TypeError("You must populate the Herd first."), None, trace
