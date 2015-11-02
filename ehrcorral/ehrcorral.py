@@ -217,6 +217,7 @@ class Herd(object):
         self._population = None
         self._block_dict = defaultdict(list)
         self._surname_freq_dict = Counter()
+        self._forename_freq_dict = Counter()
 
     def __unicode__(self):
         population = self._population
@@ -281,6 +282,7 @@ class Herd(object):
             for record in self._population:
                 record.gen_blocks(compression)
                 self.gen_block_dict(record)
+                self.gen_forename_dict(record)
                 self._surname_freq_dict += Counter(record._blocks)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
@@ -300,6 +302,23 @@ class Herd(object):
         """
         for block in record._blocks:
             self._block_dict[block].append(record)
+
+    def gen_forename_dict(self, record):
+        """Generate a frequency dictionary of the first letter of forenames and
+        and secondary forenames associated with records for herd.
+
+        The dictionary is keyed based on letters. The value of each key is
+        the frequency of that letter appearing in forenames.
+
+        Args:
+            record (:py:class:`.Record`): An object of class :py:class:`.Record`
+        """
+        profile = record.profile
+        forenames = [profile.forename, profile.mid_forename]
+        letters = [forename.lower()[0] for forename in forenames
+                   if forename != '']
+
+        self._forename_freq_dict += Counter(letters)
 
 
 def gen_record(data):
