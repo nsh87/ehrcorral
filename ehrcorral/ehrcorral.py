@@ -212,6 +212,21 @@ class Record(object):
                 blocks.append(block.upper())
         self._blocks = tuple(set(blocks))
 
+    def gen_compressions(self, compression):
+        profile = self.profile
+        surnames = [profile.current_surname, profile.birth_surname]
+        if profile.current_surname != '':
+            self._meta.current_surname_freq_ref = \
+                compress([profile.current_surname], compression)[0]
+        else:
+            self._meta.current_surname_freq_ref = ''
+        if profile.birth_surname != '':
+            self._meta.birth_surname_freq_ref = \
+                compress([profile.birth_surname], compression)[0]
+        else:
+            self._meta.birth_surname_freq_ref = ''
+
+
 
 class Herd(object):
     """A collection of :py:class:`.Record`s with methods for interacting with
@@ -295,7 +310,7 @@ class Herd(object):
             # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
             sys.exc_info()
 
-    def gen_block_dict(self, record):
+    def append_block_dict(self, record):
         """Generate dictionary of blocks and associated records for herd.
 
         The dictionary is keyed based on block. The value of each key is a list
@@ -307,7 +322,7 @@ class Herd(object):
         for block in record._blocks:
             self._block_dict[block].append(record)
 
-    def gen_forename_dict(self, record):
+    def append_forename_dict(self, record):
         """Generate a frequency dictionary of the first letter of forenames and
         and secondary forenames associated with records for herd.
 
