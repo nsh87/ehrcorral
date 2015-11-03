@@ -213,8 +213,18 @@ class Record(object):
         self._blocks = tuple(set(blocks))
 
     def gen_compressions(self, compression):
+        """Generate and set compressions for a given record.
+
+        Compressions are comprised of the phonemic compressions of the
+        profile current and birth surnames. Generated compressions for these
+        respective surnames are stored in self._meta.current_surname_freq_ref
+        and self._meta.birth_surname_freq_ref.
+
+        Args:
+            compression (func): A function that performs phonemic
+                compression.
+        """
         profile = self.profile
-        surnames = [profile.current_surname, profile.birth_surname]
         if profile.current_surname != '':
             self._meta.current_surname_freq_ref = \
                 compress([profile.current_surname], compression)[0]
@@ -300,8 +310,9 @@ class Herd(object):
         try:
             for record in self._population:
                 record.gen_blocks(compression)
-                self.gen_block_dict(record)
-                self.gen_forename_dict(record)
+                self.append_block_dict(record)
+                self.append_forename_dict(record)
+                record.gen_compressions(compression)
                 self._surname_freq_dict += Counter(record._blocks)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
