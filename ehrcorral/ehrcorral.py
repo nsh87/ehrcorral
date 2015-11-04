@@ -186,9 +186,9 @@ class Record(object):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
-    def compress_names(self,
-                       forename_method,
-                       surname_method):
+    def save_name_freq_refs(self,
+                            forename_freq_method,
+                            surname_freq_method):
         """Compress the forenames and surnames and save the compressions to
         the Record.
 
@@ -199,30 +199,22 @@ class Record(object):
                 a single name.
         """
         profile = self.profile
-        meta = self._meta
-        forenames_info = [
-            (profile.forename, meta.forename_compression),
-            (profile.mid_forename, meta.mid_forename_compression)
-        ]
-        surnames_info = [
-            (profile.birth_surname, meta.birth_surname_compression),
-            (profile.current_surname, meta.current_surname_compression)
-        ]
-        for name_item in forenames_info:
-            name = name_item[0]
-            save_compression_to = name_item[1]
-            save_compression_to = compress([name], forename_method)
-        for name_item in forenames_info:
-            name = name_item[0]
-            save_compression_to = name_item[1]
-            save_compression_to = compress([name], surname_method)
+        compressions = {
+            "forename":
+                compress(profile.forename, forename_freq_method)[0],
+            "mid_forename":
+                compress(profile.mid_forename, forename_freq_method)[0],
+            "current_surname":
+                compress(profile.current_surname, surname_freq_method)[0],
+            "birth_surname":
+                compress(profile.birth_surname, surname_freq_method)[0]
+        }
+        self._meta.forename_freq_ref = compressions['forename']
+        self._meta.mid_forename_freq_ref = compressions['mid_forename']
+        self._meta.birth_surname_freq_ref = compressions['current_surname']
+        self._meta.current_surname_freq_ref = compressions['birth_surname']
 
     def gen_blocks(self, compression):
-        # TODO: change compression to be a function that accesses Record \
-        # stuff and returns a string or integer; to re-do your current
-        # blocking, have it access the meta fields you created above.
-        # Don't forget to handle double metaphone returning two compressions
-        # both here and above.
         """Generate and set the blocking codes for a given record.
 
         Blocking codes are comprised of the phonemic compressions of the
@@ -325,25 +317,19 @@ class Herd(object):
                 Blocks are created by compressing the surname and then
                 appending the first initial of the forename. Defaults
                 to double metaphone and then uses the primary compression
-                from that compression.
+                from that compression. By default the first initial of the
+                forenames are appended to the surname compressions to
+                generate block codes.
         """
         try:
             for record in self._population:
                 record.gen_blocks(blocking_compression)  # Explode the record
-                # Save the forename frequency ref to the record
-                record.apply_forename_freq(forename_freq_method)
-                # Append the forename frequency counter with this record's
-                # forename frequency ref.
-                # This was being done with self.gen_forename_dict(record)
-                self._forename_freq_dict.append(record.meta.forename_freq_ref)
-                self._forename_freq_dict.append(record.meta.mid_forename_freq_ref)
-                # Do the same thing with the surname
-                record.apply_surname_freq(surname_freq_method)
-                self._surname_freq_dict.append(record.birth_surname_freq_ref)
-                self._surname_freq_dict.append(record.current_surname_freq_ref)
-                # Do your other stuff with the block_dict
+                # Keep count of each fore/surname compression for weighting
+                record.save_name_freq_refs(forename_freq_method,
+                                           surname_freq_method)
+                self.append_names_freq_counters(record)
+                # Keep track of the Record's blocking codes in the Herd
                 self.append_block_dict(record)
-                self._surname_freq_dict += Counter(record._blocks)
         except TypeError:
             exc_type, trace = sys.exc_info()[:2]
             raise TypeError("You must populate the Herd first."), None, trace
@@ -352,10 +338,11 @@ class Herd(object):
             sys.exc_info()
 
     def append_block_dict(self, record):
-        """Generate dictionary of blocks and associated records for herd.
+        """Appends the herd's block dictionary with the given Record's
+        blocking codes.
 
-        The dictionary is keyed based on block. The value of each key is a list
-        of records that have that block.
+        The dictionary keys are block codes. The value of each key is a list
+        of references to Records that have that block.
 
         Args:
             record (:py:class:`.Record`): An object of class :py:class:`.Record`
@@ -363,22 +350,24 @@ class Herd(object):
         for block in record._blocks:
             self._block_dict[block].append(record)
 
-    def gen_forename_dict(self, record):
-        """Generate a frequency dictionary of the first letter of forenames and
-        and secondary forenames associated with records for herd.
-
-        The dictionary is keyed based on letters. The value of each key is
-        the frequency of that letter appearing in forenames.
+    def append_names_freq_counters(self, record):
+        """Adds the forename and surname for the given Record to the forename
+        and surname counters.
 
         Args:
             record (:py:class:`.Record`): An object of class :py:class:`.Record`
         """
-        profile = record.profile
-        forenames = [profile.forename, profile.mid_forename]
-        letters = [forename.lower()[0] for forename in forenames
-                   if forename != '']
-
-        self._forename_freq_dict += Counter(letters)
+        meta = record._meta
+        forenames = [
+            meta.forename_freq_ref,
+            meta.mid_forename_freq_ref,
+        ]
+        surnames = [
+            meta.birth_surname_freq_ref,
+            meta.current_surname_freq_ref
+        ]
+        self._forename_freq_dict.update(forenames)
+        self._surname_freq_dict.update(surnames)
 
 
 def gen_record(data):
