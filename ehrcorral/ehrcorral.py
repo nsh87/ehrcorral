@@ -241,30 +241,6 @@ class Record(object):
                 blocks.append(block.upper())
         self._blocks = tuple(set(blocks))
 
-    def gen_compressions(self, compression):
-        """Generate and set compressions for a given record.
-
-        Compressions are comprised of the phonemic compressions of the
-        profile current and birth surnames. Generated compressions for these
-        respective surnames are stored in self._meta.current_surname_freq_ref
-        and self._meta.birth_surname_freq_ref.
-
-        Args:
-            compression (func): A function that performs phonemic
-                compression.
-        """
-        profile = self.profile
-        if profile.current_surname != '':
-            self._meta.current_surname_freq_ref = \
-                compress([profile.current_surname], compression)[0]
-        else:
-            self._meta.current_surname_freq_ref = ''
-        if profile.birth_surname != '':
-            self._meta.birth_surname_freq_ref = \
-                compress([profile.birth_surname], compression)[0]
-        else:
-            self._meta.birth_surname_freq_ref = ''
-
 
 class Herd(object):
     """A collection of :py:class:`.Record`s with methods for interacting with
