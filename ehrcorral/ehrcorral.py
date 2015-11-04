@@ -42,9 +42,9 @@ PROFILE_FIELDS = (
 META_FIELDS = (
     'person',  # Unique to this individual, which can be changed if match found
     'accession',  # Unique number in entire herd to identify this record
-    'forename_compression',  # reference to first letter of forename
-    'mid_forename_compression',  # reference to first letter of mid_forename
-    'current_surname_compression',  # reference to current_surname compression
+    'forename_freq_ref',  # reference to first letter of forename
+    'mid_forename_freq_ref',  # reference to first letter of mid_forename
+    'current_surname_freq_ref',  # reference to current_surname compression
     'birth_surname_compression'  # reference to birth_surname compression
 )
 
@@ -235,7 +235,6 @@ class Record(object):
                 compress([profile.birth_surname], compression)[0]
         else:
             self._meta.birth_surname_freq_ref = ''
-
 
 
 class Herd(object):
