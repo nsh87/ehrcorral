@@ -300,7 +300,7 @@ class Herd(object):
         """Perform record matching on all Records in the Herd.
 .
         Args:
-            forename_weight (func): A function that performs some sort of
+            forename_freq_method (func): A function that performs some sort of
                 compression. Compression of forename can be different than
                 compression of surname. The compression information is used to
                 determine weights for certain matching scenarios. For example,
@@ -311,15 +311,14 @@ class Herd(object):
                 the more significant a match between two same or similar
                 forenames that begin with 'F' will be. Defaults to the first
                 initial of the forename.
-            surname_weight (func): A function that performs some sort of
+            surname_freq_method (func): A function that performs some sort of
                 compression. Defaults to double metaphone.
-            blocking (func): Compression method to use when blocking.
-                Blocks are created by compressing the surname and then
-                appending the first initial of the forename. Defaults
-                to double metaphone and then uses the primary compression
-                from that compression. By default the first initial of the
-                forenames are appended to the surname compressions to
-                generate block codes.
+            blocking_compression (func): Compression method to use when
+                blocking. Blocks are created by compressing the surname and then
+                appending the first initial of the forename. Defaults to double
+                metaphone and then uses the primary compression from that
+                compression. By default the first initial of the forenames are
+                appended to the surname compressions to generate block codes.
         """
         try:
             for record in self._population:
