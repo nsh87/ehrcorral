@@ -78,7 +78,7 @@ class TestHerdCreation(unittest.TestCase):
         self.assertEqual(herd.size, 100)
 
 
-class TestHerdExplode(unittest.TestCase):
+class TestHerdCorral(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -89,11 +89,12 @@ class TestHerdExplode(unittest.TestCase):
         cls.herd = Herd()
         cls.herd.populate(records)
 
-    def test_herd_exploding(self):
-        self.herd._explode(dmetaphone)
+    def test_herd_corraling(self):
+        self.herd.corral()
         for record in self.herd._population:
             self.assertIsInstance(record._blocks, tuple)
             self.assertTrue(1 <= len(record._blocks) <= 8)
+            # add tests for other herd attributes added in corral method
 
 
 class TestRecordGeneration(unittest.TestCase):
