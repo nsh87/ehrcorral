@@ -94,6 +94,24 @@ class TestHerdCorral(unittest.TestCase):
         for record in self.herd._population:
             self.assertIsInstance(record._blocks, tuple)
             self.assertTrue(1 <= len(record._blocks) <= 8)
+            self.assertIsInstance(record._meta.forename_freq_ref, str)
+            self.assertIsInstance(record._meta.mid_forename_freq_ref, str)
+            self.assertIsInstance(record._meta.birth_surname_freq_ref, str)
+            self.assertIsInstance(record._meta.current_surname_freq_ref, str)
+            count1 = 0
+            count2 = 0
+            if record._meta.forename_freq_ref:
+                count1 += 1
+            if record._meta.mid_forename_freq_ref:
+                count1 += 1
+            if record._meta.birth_surname_freq_ref:
+                count2 += 1
+            if record._meta.current_surname_freq_ref:
+                count2 += 1
+        self.assertTrue(sum(self.herd._forename_freq_dict.values()) == count1)
+        self.assertTrue(sum(self.herd._surname_freq_dict.values()) == count2)
+        # check that append_block_dict is called properly
+
             # add tests for other herd attributes added in corral method
 
 
