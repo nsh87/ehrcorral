@@ -70,6 +70,8 @@ def compress(names, method):
             compressions.extend([sub for sub in item if sub != ''])
         elif item != '':
             compressions.append(item)
+    if not compressions:
+        return ['']
     return compressions
 
 
