@@ -98,22 +98,51 @@ class TestHerdCorral(unittest.TestCase):
             self.assertIsInstance(record._meta.mid_forename_freq_ref, str)
             self.assertIsInstance(record._meta.birth_surname_freq_ref, str)
             self.assertIsInstance(record._meta.current_surname_freq_ref, str)
-            count1 = 0
-            count2 = 0
-            count3 = 0
-            if record._meta.forename_freq_ref:
-                count1 += 1
-            if record._meta.mid_forename_freq_ref:
-                count1 += 1
-            if record._meta.birth_surname_freq_ref:
-                count2 += 1
-            if record._meta.current_surname_freq_ref:
-                count2 += 1
-            self.assertTrue(count3 <= sum(len(v) for v in
-                                          self.herd._block_dict.itervalues()))
-            count3 = sum(len(v) for v in self.herd._block_dict.itervalues())
-        self.assertTrue(sum(self.herd._forename_freq_dict.values()) == count1)
-        self.assertTrue(sum(self.herd._surname_freq_dict.values()) == count2)
+
+
+class TestHerdFrequencyDictionaries(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        population = (
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Bartell',  # PRTL
+                'birth_surname': 'Gerlach'  # KRLK
+            },
+            {
+                'forename': 'John',
+                'mid_forename': 'Frederich',
+                'current_surname': 'Sanders'  # SNTRS
+            },
+            {
+                'forename': 'Joseph',
+                'current_surname': 'Smith'  # SM0
+            },
+            {
+                'forename': 'John',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Smith',  # SM0
+                'birth_surname': 'Gerlach'  # KRLK
+            }
+        )
+        records = [gen_record(profile) for profile in population]
+        cls.herd = Herd()
+        cls.herd.populate(records)
+        cls.herd.corral()
+
+    def test_forename_freq_dict(self):
+        self.assertEqual(self.herd._forename_freq_dict['J'], 3)
+        self.assertEqual(self.herd._forename_freq_dict['H'], 2)
+        self.assertEqual(self.herd._forename_freq_dict['j'], 0)
+        self.assertEqual(len(self.herd._forename_freq_dict.keys()), 4)
+
+    def test_surname_freq_dict(self):
+        self.assertEqual(self.herd._surname_freq_dict['SM0'], 2)
+        self.assertEqual(self.herd._surname_freq_dict['KRLK'], 2)
+        self.assertEqual(self.herd._forename_freq_dict['smo'], 0)
+        self.assertEqual(len(self.herd._forename_freq_dict.keys()), 4)
 
 
 class TestRecordGeneration(unittest.TestCase):
