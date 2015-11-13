@@ -141,8 +141,8 @@ class TestHerdFrequencyDictionaries(unittest.TestCase):
     def test_surname_freq_dict(self):
         self.assertEqual(self.herd._surname_freq_dict['SM0'], 2)
         self.assertEqual(self.herd._surname_freq_dict['KRLK'], 2)
-        self.assertEqual(self.herd._forename_freq_dict['smo'], 0)
-        self.assertEqual(len(self.herd._forename_freq_dict.keys()), 4)
+        self.assertEqual(self.herd._surname_freq_dict['smo'], 0)
+        self.assertEqual(len(self.herd._surname_freq_dict.keys()), 4)
 
 
 class TestRecordGeneration(unittest.TestCase):
