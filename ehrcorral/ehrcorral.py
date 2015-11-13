@@ -187,12 +187,15 @@ class Record(object):
         return unicode(self).encode('utf-8')
 
     def save_name_freq_refs(self,
+                            record_number,
                             forename_freq_method,
                             surname_freq_method):
         """Compress the forenames and surnames and save the compressions to
         the Record.
 
         Args:
+            record_number (int): An integer to be assigned as initial person
+                and accession number.
             forename (func): A function that performs some sort of
                 compression on a single name.
             surname (func): A function that performs some sort of compression on
@@ -209,10 +212,15 @@ class Record(object):
             "birth_surname":
                 compress(profile.birth_surname, surname_freq_method)[0]
         }
-        self._meta.forename_freq_ref = compressions['forename']
-        self._meta.mid_forename_freq_ref = compressions['mid_forename']
-        self._meta.birth_surname_freq_ref = compressions['current_surname']
-        self._meta.current_surname_freq_ref = compressions['birth_surname']
+        meta = [
+            record_number,  # Person number, can be changed if match found
+            record_number,  # Accession number, unique to this record
+            compressions['forename'],  # forename ref for dict
+            compressions['mid_forename'],  # mid forename ref for dict
+            compressions['current_surname'],  # current surname ref for dict
+            compressions['birth_surname']  # birth surname ref for dict
+        ]
+        self._meta = profile._make(meta)
 
     def gen_blocks(self, compression):
         """Generate and set the blocking codes for a given record.
@@ -321,10 +329,10 @@ class Herd(object):
                 appended to the surname compressions to generate block codes.
         """
         try:
-            for record in self._population:
+            for i, record in enumerate(self._population):
                 record.gen_blocks(blocking_compression)  # Explode the record
                 # Keep count of each fore/surname compression for weighting
-                record.save_name_freq_refs(forename_freq_method,
+                record.save_name_freq_refs(i, forename_freq_method,
                                            surname_freq_method)
                 self.append_names_freq_counters(record)
                 # Keep track of the Record's blocking codes in the Herd
@@ -361,10 +369,12 @@ class Herd(object):
             meta.forename_freq_ref,
             meta.mid_forename_freq_ref,
         ]
+        forenames = [forename for forename in forenames if forename != '']
         surnames = [
             meta.birth_surname_freq_ref,
             meta.current_surname_freq_ref
         ]
+        surnames = [surname for surname in surnames if surname != '']
         self._forename_freq_dict.update(forenames)
         self._surname_freq_dict.update(surnames)
 
