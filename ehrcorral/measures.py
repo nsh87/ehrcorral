@@ -38,6 +38,11 @@ def record_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "mid_fore")
+    birth_surname_similarity = \
+        get_surname_similarity(herd,
+                               [first_record, second_record],
+                               surname_method,
+                               "birth")
 
 
 def get_forename_similarity(herd, records, method, type):
@@ -257,4 +262,17 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     # map prop_diff from (0, 1) to (-23, 14), then flip sign since lower diff
     # implies that the two name are more similar.
     return -(37 * prop_diff - 14)
+
+
+def extract_surname_similarity_info(herd, record, type):
+    profile = record.profile
+    # Add try/except
+    if type == "birth":
+        forename = profile.forename
+    elif type == "current":
+        forename = profile.mid_forename
+    weight = herd._forename_freq_dict[
+                              record._meta.forename_freq_ref] / float(sum(
+        herd._forename_freq_dict.values()))
+    return forename, weight
 
