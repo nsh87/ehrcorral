@@ -196,10 +196,10 @@ class Record(object):
         Args:
             record_number (int): An integer to be assigned as initial person
                 and accession number.
-            forename (func): A function that performs some sort of
+            forename_freq_method (func): A function that performs some sort of
                 compression on a single name.
-            surname (func): A function that performs some sort of compression on
-                a single name.
+            surname_freq_method (func): A function that performs some sort of
+            compression on a single name.
         """
         profile = self.profile
         compressions = {
