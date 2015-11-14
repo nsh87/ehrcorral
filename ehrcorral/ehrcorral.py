@@ -204,13 +204,13 @@ class Record(object):
         profile = self.profile
         compressions = {
             "forename":
-                compress(profile.forename, forename_freq_method)[0],
+                compress([profile.forename], forename_freq_method)[0],
             "mid_forename":
-                compress(profile.mid_forename, forename_freq_method)[0],
+                compress([profile.mid_forename], forename_freq_method)[0],
             "current_surname":
-                compress(profile.current_surname, surname_freq_method)[0],
+                compress([profile.current_surname], surname_freq_method)[0],
             "birth_surname":
-                compress(profile.birth_surname, surname_freq_method)[0]
+                compress([profile.birth_surname], surname_freq_method)[0]
         }
         meta = [
             record_number,  # Person number, can be changed if match found
@@ -220,7 +220,7 @@ class Record(object):
             compressions['current_surname'],  # current surname ref for dict
             compressions['birth_surname']  # birth surname ref for dict
         ]
-        self._meta = profile._make(meta)
+        self._meta = Meta._make(meta)
 
     def gen_blocks(self, compression):
         """Generate and set the blocking codes for a given record.
@@ -328,21 +328,21 @@ class Herd(object):
                 compression. By default the first initial of the forenames are
                 appended to the surname compressions to generate block codes.
         """
-        try:
-            for i, record in enumerate(self._population):
+        for i, record in enumerate(self._population):
+            try:
                 record.gen_blocks(blocking_compression)  # Explode the record
                 # Keep count of each fore/surname compression for weighting
-                record.save_name_freq_refs(i, forename_freq_method,
-                                           surname_freq_method)
-                self.append_names_freq_counters(record)
-                # Keep track of the Record's blocking codes in the Herd
-                self.append_block_dict(record)
-        except TypeError:
-            exc_type, trace = sys.exc_info()[:2]
-            raise TypeError("You must populate the Herd first."), None, trace
-        finally:
-            # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
-            sys.exc_info()
+            except TypeError:
+                exc_type, trace = sys.exc_info()[:2]
+                raise TypeError("You must populate the Herd first."), None, trace
+            finally:
+                # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
+                sys.exc_info()
+            record.save_name_freq_refs(i, forename_freq_method,
+                                       surname_freq_method)
+            self.append_names_freq_counters(record)
+            # Keep track of the Record's blocking codes in the Herd
+            self.append_block_dict(record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
