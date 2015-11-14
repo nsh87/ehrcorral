@@ -16,4 +16,4 @@ def first_letter(name):
     Returns:
         (str): The upper case of the first letter of the name
     """
-    return name[0].upper()
+    return name[0].upper() if name else unicode('')
