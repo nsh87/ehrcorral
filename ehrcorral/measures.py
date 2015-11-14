@@ -93,10 +93,11 @@ def extract_surname_similarity_info(herd, record, type):
     # Add try/except
     if type == "birth":
         surname = profile.birth_surname
+        weight = herd._surname_freq_dict[record._meta.birth_surname_freq_ref]\
+            / float(sum(herd._surname_freq_dict.values()))
     elif type == "current":
         surname = profile.current_surname
-    weight = herd._surname_freq_dict[
-                              record._meta.surname_freq_ref] / float(sum(
-        herd._forename_freq_dict.values()))
-    return forename, weight
+        weight = herd._surname_freq_dict[record._meta.current_surname_freq_ref]\
+            / float(sum(herd._surname_freq_dict.values()))
+    return surname, weight
 
