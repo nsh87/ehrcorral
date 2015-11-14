@@ -28,10 +28,11 @@ def record_similarity(herd,
         """
     # look into how to use weights properly since S in the table seems to
     # already account for some of this.
-    forename_similarity = get_forename_similarity(herd,
-                                                  [first_record, second_record],
-                                                  forename_method,
-                                                  "fore")
+    forename_similarity = \
+        get_forename_similarity(herd,
+                                [first_record, second_record],
+                                forename_method,
+                                "fore")
     mid_forename_similarity = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
@@ -47,11 +48,21 @@ def get_forename_similarity(herd, records, method, type):
     forename_weight = max(first_weight, second_weight, 1.0 / 1000)
     forename_cutoff = 5.0 / 26
     difference = damerau_levenshtein(first_forename, second_forename)
+    max_length = max(len(first_forename), len(second_forename))
     # investigate use of weights
     if forename_weight > forename_cutoff:
         F = 3
     else:
         F = 12
+    if difference == 0:
+        similarity = 2 * F
+    elif float(difference) / max_length < 0.3:
+        similarity = F
+    elif float(difference) / max_length < 0.6:
+        similarity = -F
+    else:
+        similarity = -2 * F
+    return similarity
 
 
 def extract_forename_similarity_info(herd, record, type):
@@ -65,4 +76,6 @@ def extract_forename_similarity_info(herd, record, type):
                               record._meta.forename_freq_ref] / float(sum(
         herd._forename_freq_dict.values()))
     return forename, weight
+
+
 
