@@ -75,11 +75,12 @@ def extract_forename_similarity_info(herd, record, type):
     # Add try/except
     if type == "fore":
         forename = profile.forename
+        weight = herd._forename_freq_dict[record._meta.forename_freq_ref] / \
+            float(sum(herd._forename_freq_dict.values()))
     elif type == "mid_fore":
         forename = profile.mid_forename
-    weight = herd._forename_freq_dict[
-                              record._meta.forename_freq_ref] / float(sum(
-        herd._forename_freq_dict.values()))
+        weight = herd._forename_freq_dict[record._meta.mid_forename_freq_ref]\
+            / float(sum(herd._forename_freq_dict.values()))
     return forename, weight
 
 
@@ -91,11 +92,11 @@ def extract_surname_similarity_info(herd, record, type):
     profile = record.profile
     # Add try/except
     if type == "birth":
-        forename = profile.forename
+        surname = profile.birth_surname
     elif type == "current":
-        forename = profile.mid_forename
-    weight = herd._forename_freq_dict[
-                              record._meta.forename_freq_ref] / float(sum(
+        surname = profile.current_surname
+    weight = herd._surname_freq_dict[
+                              record._meta.surname_freq_ref] / float(sum(
         herd._forename_freq_dict.values()))
     return forename, weight
 
