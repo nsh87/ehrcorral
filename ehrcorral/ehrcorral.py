@@ -353,7 +353,6 @@ class Herd(object):
 
         Args:
             record (:py:class:`.Record`): An object of class :py:class:`.Record`
-                add_record_hashtable_to_herd
         """
         for block in record._blocks:
             self._block_dict[block].append(record)
