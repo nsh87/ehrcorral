@@ -8,7 +8,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import sys
-from collections import namedtuple
+from collections import namedtuple, defaultdict, Counter
+from .compressions import first_letter, dmetaphone
 
 PROFILE_FIELDS = (
     'forename',
@@ -42,6 +43,10 @@ PROFILE_FIELDS = (
 META_FIELDS = (
     'person',  # Unique to this individual, which can be changed if match found
     'accession',  # Unique number in entire herd to identify this record
+    'forename_freq_ref',  # Often phonemic compression, but not necessarily
+    'mid_forename_freq_ref',  # Same as above
+    'birth_surname_freq_ref',  # same as above
+    'current_surname_freq_ref',  # Same as above
 )
 
 
@@ -65,7 +70,7 @@ def compress(names, method):
             compressions.extend([sub for sub in item if sub != ''])
         elif item != '':
             compressions.append(item)
-    return compressions
+    return compressions if compressions else ['']
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
@@ -181,6 +186,42 @@ class Record(object):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    def save_name_freq_refs(self,
+                            record_number,
+                            forename_freq_method,
+                            surname_freq_method):
+        """Compress the forenames and surnames and save the compressions to
+        the Record.
+
+        Args:
+            record_number (int): An integer to be assigned as initial person
+                and accession number.
+            forename_freq_method (func): A function that performs some sort of
+                compression on a single name.
+            surname_freq_method (func): A function that performs some sort of
+            compression on a single name.
+        """
+        profile = self.profile
+        compressions = {
+            "forename":
+                compress([profile.forename], forename_freq_method)[0],
+            "mid_forename":
+                compress([profile.mid_forename], forename_freq_method)[0],
+            "current_surname":
+                compress([profile.current_surname], surname_freq_method)[0],
+            "birth_surname":
+                compress([profile.birth_surname], surname_freq_method)[0]
+        }
+        meta = [
+            record_number,  # Person number, can be changed if match found
+            record_number,  # Accession number, unique to this record
+            compressions['forename'],  # forename ref for dict
+            compressions['mid_forename'],  # mid forename ref for dict
+            compressions['current_surname'],  # current surname ref for dict
+            compressions['birth_surname']  # birth surname ref for dict
+        ]
+        self._meta = Meta._make(meta)
+
     def gen_blocks(self, compression):
         """Generate and set the blocking codes for a given record.
 
@@ -215,6 +256,9 @@ class Herd(object):
     """
     def __init__(self):
         self._population = None
+        self._block_dict = defaultdict(list)
+        self._surname_freq_dict = Counter()
+        self._forename_freq_dict = Counter()
 
     def __unicode__(self):
         population = self._population
@@ -257,33 +301,83 @@ class Herd(object):
             records = tuple(records)
         self._population = records
 
-    def corral(self, blocking):
+    def corral(self,
+               forename_freq_method=first_letter,
+               surname_freq_method=dmetaphone,
+               blocking_compression=dmetaphone):
         """Perform record matching on all Records in the Herd.
+.
+        Args:
+            forename_freq_method (func): A function that performs some sort of
+                compression. Compression of forename can be different than
+                compression of surname. The compression information is used to
+                determine weights for certain matching scenarios. For example,
+                if forename is compressed to be just the first initial, matching
+                a name that begins with the letter 'F' will result in a weight
+                equal to the fraction of names that begin with the letter 'F' in
+                the entire Herd. The less common names that begin with 'F' are,
+                the more significant a match between two same or similar
+                forenames that begin with 'F' will be. Defaults to the first
+                initial of the forename.
+            surname_freq_method (func): A function that performs some sort of
+                compression. Defaults to double metaphone.
+            blocking_compression (func): Compression method to use when
+                blocking. Blocks are created by compressing the surname and then
+                appending the first initial of the forename. Defaults to double
+                metaphone and then uses the primary compression from that
+                compression. By default the first initial of the forenames are
+                appended to the surname compressions to generate block codes.
+        """
+        for i, record in enumerate(self._population):
+            try:
+                record.gen_blocks(blocking_compression)  # Explode the record
+                # Keep count of each fore/surname compression for weighting
+            except TypeError:
+                exc_type, trace = sys.exc_info()[:2]
+                raise TypeError("You must populate the Herd first."), None, trace
+            finally:
+                # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
+                sys.exc_info()
+            record.save_name_freq_refs(i, forename_freq_method,
+                                       surname_freq_method)
+            self.append_names_freq_counters(record)
+            # Keep track of the Record's blocking codes in the Herd
+            self.append_block_dict(record)
+
+    def append_block_dict(self, record):
+        """Appends the herd's block dictionary with the given Record's
+        blocking codes.
+
+        The dictionary keys are block codes. The value of each key is a list
+        of references to Records that have that block.
 
         Args:
-            blocking (str): Blocking method to use. Defaults to double
-                metaphone. Must be one of 'soundex', 'nysiis', 'metaphone',
-                'dmetaphone'.
+            record (:py:class:`.Record`): An object of class :py:class:`.Record`
+                add_record_hashtable_to_herd
         """
-        self._explode(blocking)
+        for block in record._blocks:
+            self._block_dict[block].append(record)
 
-    def _explode(self, compression):
-        """Generates primary and exploded phonemic blocking codes for each
-        Record.
+    def append_names_freq_counters(self, record):
+        """Adds the forename and surname for the given Record to the forename
+        and surname counters.
 
-        The primary blocking code uses the current surname and first forename
-        and exploded blocking codes use various combinations of birth surname,
-        first surname, and middle name.
+        Args:
+            record (:py:class:`.Record`): An object of class :py:class:`.Record`
         """
-        try:
-            for record in self._population:
-                record.gen_blocks(compression)
-        except TypeError:
-            exc_type, trace = sys.exc_info()[:2]
-            raise TypeError("You must populate the Herd first."), None, trace
-        finally:
-            # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
-            sys.exc_info()
+        meta = record._meta
+        forenames = [
+            meta.forename_freq_ref,
+            meta.mid_forename_freq_ref,
+        ]
+        forenames = [forename for forename in forenames if forename != '']
+        surnames = [
+            meta.birth_surname_freq_ref,
+            meta.current_surname_freq_ref
+        ]
+        surnames = [surname for surname in surnames if surname != '']
+        self._forename_freq_dict.update(forenames)
+        self._surname_freq_dict.update(surnames)
 
 
 def gen_record(data):
