@@ -67,10 +67,10 @@ def compress(names, method):
     # Double metaphone returns a list of tuples, so need to unpack it
     for item in raw_compressions:
         if isinstance(item, (list, tuple)):
-            compressions.extend([sub for sub in item if sub != ''])
+            compressions.extend([unicode(sub) for sub in item if sub != ''])
         elif item != '':
-            compressions.append(item)
-    return compressions if compressions else ['']
+            compressions.append(unicode(item))
+    return compressions if compressions else [unicode('')]
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
