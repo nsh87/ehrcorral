@@ -43,6 +43,17 @@ def record_similarity(herd,
                                [first_record, second_record],
                                surname_method,
                                "birth")
+    current_surname_similarity = \
+        get_surname_similarity(herd,
+                               [first_record, second_record],
+                               surname_method,
+                               "current")
+    # no place of birth field for similarity
+    address_similarity = get_address_similarity([first_record, second_record])
+    post_code_similarity = get_post_code_similarity([first_record,
+                                                     second_record])
+    sex_similarity = get_sex_similarity([first_record, second_record])
+
 
 
 def get_forename_similarity(herd, records, method, type):
@@ -277,4 +288,41 @@ def extract_surname_similarity_info(herd, record, type):
         weight = herd._surname_freq_dict[record._meta.current_surname_freq_ref]\
             / float(sum(herd._surname_freq_dict.values()))
     return surname, weight
+
+
+def get_address_similarity(records):
+    # ox-link only takes first 8 characters and greps for things like "flat"
+    first_profile = records[0].profile
+    second_profile = records[1].profile
+    first_address = [first_profile.address1, first_profile.address2]
+    second_address = [first_profile.address1, first_profile.address2]
+    diff1 = damerau_levenshtein(first_address[0], second_address[0])
+    if diff1 == 0:
+        diff2 = damerau_levenshtein(first_address[1], second_address[1])
+        if diff2 == 0:
+            return 7
+        else:
+            return 2
+    else:
+        return 0
+
+
+def get_post_code_similarity(records):
+    first_profile = records[0].profile
+    second_profile = records[1].profile
+    first_post_code = first_profile.postal_code  # must be a string
+    second_post_code = second_profile.postal_code  # must be a string
+    difference = damerau_levenshtein(first_post_code, second_post_code)
+    if difference == 0:
+        return 4
+    elif difference == 1: # for transposition, ox-link does not do this
+        return 1
+    else:
+        return 0
+
+
+def get_sex_similarity(records):
+    first_profile = records[0].profile
+    second_profile = records[1].profile
+
 
