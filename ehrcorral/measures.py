@@ -53,7 +53,7 @@ def record_similarity(herd,
     post_code_similarity = get_post_code_similarity([first_record,
                                                      second_record])
     sex_similarity = get_sex_similarity([first_record, second_record])
-
+    dob_similarity = get_dob_similarity([first_record, second_record])
 
 
 def get_forename_similarity(herd, records, method, type):
@@ -331,4 +331,13 @@ def get_sex_similarity(records):
     else:
         return -10
 
+
+def get_dob_similarity(records):
+    first_profile = records[0].profile
+    second_profile = records[1].profile
+    first_dob = first_profile.birth_year, first_profile.birth_month, \
+                first_profile.birth_day
+    second_dob = second_profile.birth_year, second_profile.birth_month, \
+                second_profile.birth_day
+    
 
