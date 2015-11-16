@@ -167,5 +167,11 @@ def get_post_code_similarity(records):
 def get_sex_similarity(records):
     first_profile = records[0].profile
     second_profile = records[1].profile
+    first_sex = first_profile.sex
+    second_sex = second_profile.sex
+    if first_sex == second_sex:
+        return 1
+    else:
+        return -10
 
 
