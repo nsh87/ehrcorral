@@ -57,28 +57,20 @@ def record_similarity(herd,
 
 
 def get_forename_similarity(herd, records, method, type):
-    first_forename, first_weight = \
+    first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], type)
-    second_forename, second_weight = \
+    second_forename, second_freq = \
         extract_forename_similarity_info(herd, records[1], type)
-    forename_weight = max(first_weight, second_weight, 1.0 / 1000)
-    forename_cutoff = 5.0 / 26
+    prop_freq = max(first_freq, second_freq, 1.0 / 1000)
+    cutoff = 5.0 / 26  # arbitrary, could be improved
+    F = 3 if prop_freq > cutoff else 12
     difference = damerau_levenshtein(first_forename, second_forename)
     max_length = max(len(first_forename), len(second_forename))
-    # investigate use of weights
-    if forename_weight > forename_cutoff:
-        F = 3
-    else:
-        F = 12
-    if difference == 0:
-        similarity = 2 * F
-    elif float(difference) / max_length < 0.3:
-        similarity = F
-    elif float(difference) / max_length < 0.6:
-        similarity = -F
-    else:
-        similarity = -2 * F
-    return similarity
+    prop_diff = float(difference) / max_length
+    # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
+    # implies that the two name are more similar.
+    weight = -(4 * prop_diff - 2)
+    return weight * F
 
 
 def extract_forename_similarity_info(herd, record, type):
@@ -315,7 +307,7 @@ def get_post_code_similarity(records):
     difference = damerau_levenshtein(first_post_code, second_post_code)
     if difference == 0:
         return 4
-    elif difference == 1: # for transposition, ox-link does not do this
+    elif difference == 1:  # for transposition, ox-link does not do this
         return 1
     else:
         return 0
@@ -343,5 +335,5 @@ def get_dob_similarity(records):
         if first_dob[1] == second_dob[1]:
             if first_dob[2] == second_dob[2]:
                 return 14
-            
+
 
