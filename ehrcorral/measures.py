@@ -56,11 +56,11 @@ def record_similarity(herd,
     dob_similarity = get_dob_similarity([first_record, second_record])
 
 
-def get_forename_similarity(herd, records, method, type):
+def get_forename_similarity(herd, records, method, name_type):
     first_forename, first_freq = \
-        extract_forename_similarity_info(herd, records[0], type)
+        extract_forename_similarity_info(herd, records[0], name_type)
     second_forename, second_freq = \
-        extract_forename_similarity_info(herd, records[1], type)
+        extract_forename_similarity_info(herd, records[1], name_type)
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
     cutoff = 5.0 / 26  # arbitrary, could be improved
     F = 3 if prop_freq > cutoff else 12
@@ -73,25 +73,25 @@ def get_forename_similarity(herd, records, method, type):
     return weight * F
 
 
-def extract_forename_similarity_info(herd, record, type):
+def extract_forename_similarity_info(herd, record, name_type):
     profile = record.profile
     # Add try/except
-    if type == "fore":
+    if name_type == "fore":
         forename = profile.forename
         weight = herd._forename_freq_dict[record._meta.forename_freq_ref] / \
             float(sum(herd._forename_freq_dict.values()))
-    elif type == "mid_fore":
+    elif name_type == "mid_fore":
         forename = profile.mid_forename
         weight = herd._forename_freq_dict[record._meta.mid_forename_freq_ref]\
             / float(sum(herd._forename_freq_dict.values()))
     return forename, weight
 
 
-def get_surname_similarity(herd, records, method, type):
+def get_surname_similarity(herd, records, method, name_type):
     first_surname, first_freq = \
-        extract_surname_similarity_info(herd, records[0], type)
+        extract_surname_similarity_info(herd, records[0], name_type)
     second_surname, second_freq = \
-        extract_surname_similarity_info(herd, records[1], type)
+        extract_surname_similarity_info(herd, records[1], name_type)
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
     cutoff = 1.0 / 500  # arbitrary, could be improved
     S = 6 if prop_freq > cutoff else 17
@@ -104,14 +104,14 @@ def get_surname_similarity(herd, records, method, type):
     return weight * S
 
 
-def extract_surname_similarity_info(herd, record, type):
+def extract_surname_similarity_info(herd, record, name_type):
     profile = record.profile
     # Add try/except
-    if type == "birth":
+    if name_type == "birth":
         surname = profile.birth_surname
         weight = herd._surname_freq_dict[record._meta.birth_surname_freq_ref]\
             / float(sum(herd._surname_freq_dict.values()))
-    elif type == "current":
+    elif name_type == "current":
         surname = profile.current_surname
         weight = herd._surname_freq_dict[record._meta.current_surname_freq_ref]\
             / float(sum(herd._surname_freq_dict.values()))
@@ -125,14 +125,16 @@ def get_address_similarity(records):
     first_address = [first_profile.address1, first_profile.address2]
     second_address = [first_profile.address1, first_profile.address2]
     diff1 = damerau_levenshtein(first_address[0], second_address[0])
+    diff2 = damerau_levenshtein(first_address[1], second_address[1])
     if diff1 == 0:
-        diff2 = damerau_levenshtein(first_address[1], second_address[1])
         if diff2 == 0:
             return 7
         else:
             return 2
     else:
         return 0
+    # ox-link method
+    # return 7 if diff1 == 0 else 0
 
 
 def get_post_code_similarity(records):
