@@ -88,27 +88,20 @@ def extract_forename_similarity_info(herd, record, type):
 
 
 def get_surname_similarity(herd, records, method, type):
-    first_surname, first_weight = \
+    first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], type)
-    second_surname, second_weight = \
+    second_surname, second_freq = \
         extract_surname_similarity_info(herd, records[1], type)
-    surname_weight = max(first_weight, second_weight, 1.0 / 1000)
-    surname_cutoff = 1.0 / 500
+    prop_freq = max(first_freq, second_freq, 1.0 / 1000)
+    cutoff = 1.0 / 500  # arbitrary, could be improved
+    S = 6 if prop_freq > cutoff else 17
     difference = damerau_levenshtein(first_surname, second_surname)
     max_length = max(len(first_surname), len(second_surname))
-    if surname_weight > surname_cutoff:
-        S = 6
-    else:
-        S = 17
-    if difference == 0:
-        similarity = 2 * S
-    elif float(difference) / max_length < 0.3:
-        similarity = S
-    elif float(difference) / max_length < 0.6:
-        similarity = -S
-    else:
-        similarity = -2 * S
-    return similarity
+    prop_diff = float(difference) / max_length
+    # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
+    # implies that the two name are more similar.
+    weight = -(4 * prop_diff - 2)
+    return weight * S
 
 
 def extract_surname_similarity_info(herd, record, type):
