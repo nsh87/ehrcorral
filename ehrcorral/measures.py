@@ -313,6 +313,8 @@ def get_post_code_similarity(records):
         return 1
     else:
         return 0
+    # ox-link method
+    # return 4 if difference == 0 else 0
 
 
 def get_sex_similarity(records):
