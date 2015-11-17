@@ -182,5 +182,9 @@ def get_dob_similarity(records):
                 first_profile.birth_day
     second_dob = second_profile.birth_year, second_profile.birth_month, \
                 second_profile.birth_day
-    
+    if first_dob[0] == second_dob[0]:
+        if first_dob[1] == second_dob[1]:
+            if first_dob[2] == second_dob[2]:
+                return 14
+            
 
