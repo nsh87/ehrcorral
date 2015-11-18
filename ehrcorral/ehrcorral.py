@@ -82,7 +82,7 @@ def compress(names, method):
             compressions.extend([unicode(sub) for sub in item if sub != ''])
         elif item != '':
             compressions.append(unicode(item))
-    return compressions if compressions else [unicode('')]
+    return compressions if compressions else ['']
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
