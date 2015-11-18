@@ -54,6 +54,9 @@ def record_similarity(herd,
                                                      second_record])
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
+    # did not include GP (doctor), place of birth, hospital and hospital number
+
+    # Do figure out how to threshold this
 
 
 def get_forename_similarity(herd, records, method, name_type):
@@ -140,8 +143,8 @@ def get_address_similarity(records):
 def get_post_code_similarity(records):
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_post_code = first_profile.postal_code  # must be a string
-    second_post_code = second_profile.postal_code  # must be a string
+    first_post_code = str(first_profile.postal_code)  # must be a string
+    second_post_code = str(second_profile.postal_code)  # must be a string
     difference = damerau_levenshtein(first_post_code, second_post_code)
     if difference == 0:
         return 4
@@ -164,13 +167,23 @@ def get_sex_similarity(records):
 def get_dob_similarity(records):
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_dob = first_profile.birth_year, first_profile.birth_month, \
-                first_profile.birth_day
-    second_dob = second_profile.birth_year, second_profile.birth_month, \
-                second_profile.birth_day
-    if first_dob[0] == second_dob[0]:
-        if first_dob[1] == second_dob[1]:
-            if first_dob[2] == second_dob[2]:
-                return 14
+    first_dob = str(first_profile.birth_year), \
+        str(first_profile.birth_month), \
+        str(first_profile.birth_day)
+    second_dob = str(second_profile.birth_year), \
+        str(second_profile.birth_month), \
+        str(second_profile.birth_day)
+    year_diff = damerau_levenshtein(first_dob[0], second_dob[0])
+    month_diff = damerau_levenshtein(first_dob[1], second_dob[1])
+    month_length = max(len(first_dob[1]), len(second_dob[1]))
+    day_diff = damerau_levenshtein(first_dob[2], second_dob[2])
+    # could add more complexity here based off of ox-link
+    year_prop = 0.5  # slightly arbitrary choice because year means more
+    month_prop = 0.25
+    day_prop = 0.25
+    prop_diff = year_prop * (year_diff / 4.0) + \
+        month_prop * (month_diff / float(month_length)) + \
+        day_prop * (day_diff / 2.0)
+    return -(37 * prop_diff - 14)
 
 
