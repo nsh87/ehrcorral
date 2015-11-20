@@ -13,8 +13,8 @@ from pylev import levenshtein, damerau_levenshtein
 def record_similarity(herd,
                       first_record,
                       second_record,
-                      forename_method=levenshtein,
-                      surname_method=levenshtein):
+                      forename_method=damerau_levenshtein,
+                      surname_method=damerau_levenshtein):
     """Determine probability of two records being the same.
 
     Args:
@@ -76,7 +76,7 @@ def get_forename_similarity(herd, records, method, name_type):
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
     cutoff = 5.0 / 26  # arbitrary, could be improved
     F = 3 if prop_freq > cutoff else 12
-    difference = damerau_levenshtein(first_forename, second_forename)
+    difference = method(first_forename, second_forename)
     max_length = max(len(first_forename), len(second_forename))
     prop_diff = float(difference) / max_length
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
