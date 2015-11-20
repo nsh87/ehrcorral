@@ -114,16 +114,30 @@ def extract_forename_similarity_info(herd, record, name_type):
 
 
 def get_surname_similarity(herd, records, method, name_type):
+    name_types = ["birth", "current"]
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
-    second_surname, second_freq = \
-        extract_surname_similarity_info(herd, records[1], name_type)
+    # Get both names and frequencies from second record to compare to first
+    second_surname = [
+        extract_surname_similarity_info(herd, records[1], name)[0]
+        for name in name_types
+        ]
+    second_freq = [
+        extract_surname_similarity_info(herd, records[1], name)[1]
+        for name in name_types
+        ]
+    # Get difference between first record name and both second record names,
+    # then find the one that has the minimum difference and keep that one
+    diffs = [method(first_surname, name) for name in second_surname]
+    difference = min(diffs)
+    min_index = diffs.index(min(diffs))
+    second_surname = second_surname[min_index]
+    second_freq = second_freq[min_index]
+    max_length = max(len(first_surname), len(second_surname))
+    prop_diff = float(difference) / max_length
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
     cutoff = 1.0 / 500  # arbitrary, could be improved
     S = 6 if prop_freq > cutoff else 17
-    difference = method(first_surname, second_surname)
-    max_length = max(len(first_surname), len(second_surname))
-    prop_diff = float(difference) / max_length
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
     # implies that the two name are more similar.
     weight = -(4 * prop_diff - 2)
