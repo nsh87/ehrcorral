@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from ehrcorral.ehrcorral import Herd, Record
 from pylev import levenshtein, damerau_levenshtein
 
+
 def record_similarity(herd,
                       first_record,
                       second_record,
@@ -17,6 +18,8 @@ def record_similarity(herd,
     """Determine probability of two records being the same.
 
     Args:
+        herd (Herd): An object of :py:class:`.Herd` which contains the two
+            records being compared.
         first_record (Record): An object of :py:class:`.Record` to be
             compared to the other one.
         second_record (Record): An object of :py:class:`.Record` to be
@@ -25,9 +28,10 @@ def record_similarity(herd,
             comparison between strings.
         surname_method (func): A function that performs some sort of
             comparison between strings.
+
+    Returns:
+        A tuple of the sum of name weights and the sum of non-name weights.
         """
-    # look into how to use weights properly since S in the table seems to
-    # already account for some of this.
     forename_similarity = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
@@ -55,8 +59,13 @@ def record_similarity(herd,
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
     # did not include GP (doctor), place of birth, hospital and hospital number
-
-    # Do figure out how to threshold this
+    name_sum = forename_similarity + mid_forename_similarity +\
+        birth_surname_similarity + current_surname_similarity
+    # since we are not using a few of the ox-link weights, the non-name
+    # numbers will be different
+    non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
+        dob_similarity
+    return name_sum, non_name_sum
 
 
 def get_forename_similarity(herd, records, method, name_type):
