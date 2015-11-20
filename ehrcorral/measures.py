@@ -69,16 +69,30 @@ def record_similarity(herd,
 
 
 def get_forename_similarity(herd, records, method, name_type):
+    name_types = ["fore", "mid_fore"]
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
-    second_forename, second_freq = \
-        extract_forename_similarity_info(herd, records[1], name_type)
+    # Get both names and frequencies from second record to compare to first
+    second_forename = [
+        extract_forename_similarity_info(herd, records[1], name)[0]
+        for name in name_types
+        ]
+    second_freq = [
+        extract_forename_similarity_info(herd, records[1], name)[1]
+        for name in name_types
+        ]
+    # Get difference between first record name and both second record names,
+    # then find the one that has the minimum difference and keep that one
+    diffs = [method(first_forename, name) for name in second_forename]
+    difference = min(diffs)
+    min_index = diffs.index(min(diffs))
+    second_forename = second_forename[min_index]
+    second_freq = second_freq[min_index]
+    max_length = max(len(first_forename), len(second_forename))
+    prop_diff = float(difference) / max_length
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
     cutoff = 5.0 / 26  # arbitrary, could be improved
     F = 3 if prop_freq > cutoff else 12
-    difference = method(first_forename, second_forename)
-    max_length = max(len(first_forename), len(second_forename))
-    prop_diff = float(difference) / max_length
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
     # implies that the two name are more similar.
     weight = -(4 * prop_diff - 2)
