@@ -74,10 +74,11 @@ def get_forename_similarity(herd, records, method, name_type):
     Args:
         herd (Herd): An object of :py:class:`.Herd` which contains the two
             records being compared.
-        records (Record): Two objects of :py:class:`.Record` to be
-            compared to one another.
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
         method (func): A function to be used to compare the forenames.
-        name_type (str): A string to indicate which forename is being compared.
+        name_type (unicode): A unicode string to indicate which forename is
+            being compared.
 
     Returns:
         The forename weight for the similarity of the forenames.
@@ -113,6 +114,19 @@ def get_forename_similarity(herd, records, method, name_type):
 
 
 def extract_forename_similarity_info(herd, record, name_type):
+    """Extract desired forename and associated frequency weight.
+
+    Args:
+        herd (Herd): An object of :py:class:`.Herd` which contains the
+            frequency dictionary used for the frequency weight.
+        record (Record): An object of :py:class:`.Record` from which to
+            extract the forename.
+        name_type (unicode): A unicode string to indicate which forename is
+            being extracted.
+
+    Returns:
+        The forename and associated frequency weight for requested name.
+    """
     profile = record.profile
     # Add try/except
     if name_type == "fore":
@@ -326,7 +340,7 @@ def get_address_similarity(records):
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_address = [first_profile.address1, first_profile.address2]
-    second_address = [first_profile.address1, first_profile.address2]
+    second_address = [second_profile.address1, second_profile.address2]
     diff1 = damerau_levenshtein(first_address[0], second_address[0])
     diff2 = damerau_levenshtein(first_address[1], second_address[1])
     if diff1 == 0:
