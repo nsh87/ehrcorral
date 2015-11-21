@@ -53,9 +53,11 @@ def record_similarity(herd,
                                surname_method,
                                "current")
     # no place of birth field for similarity
-    address_similarity = get_address_similarity([first_record, second_record])
+    address_similarity = get_address_similarity([first_record, second_record],
+                                                damerau_levenshtein)
     post_code_similarity = get_post_code_similarity([first_record,
-                                                     second_record])
+                                                     second_record],
+                                                    damerau_levenshtein)
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
     # did not include GP (doctor), place of birth, hospital and hospital number
@@ -212,14 +214,24 @@ def extract_surname_similarity_info(herd, record, name_type):
     return surname, weight
 
 
-def get_address_similarity(records):
+def get_address_similarity(records, method=damerau_levenshtein):
+    """Determine weights for the likelihood of two addresses being the same.
+
+    Args:
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
+        method (func): A function to be used to compare the addresses.
+
+    Returns:
+        The address weight for the similarity of the addresses.
+    """
     # ox-link only takes first 8 characters and greps for things like "flat"
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_address = [first_profile.address1, first_profile.address2]
     second_address = [second_profile.address1, second_profile.address2]
-    diff1 = damerau_levenshtein(first_address[0], second_address[0])
-    diff2 = damerau_levenshtein(first_address[1], second_address[1])
+    diff1 = method(first_address[0], second_address[0])
+    diff2 = method(first_address[1], second_address[1])
     if diff1 == 0:
         if diff2 == 0:
             return 7
@@ -231,12 +243,22 @@ def get_address_similarity(records):
     # return 7 if diff1 == 0 else 0
 
 
-def get_post_code_similarity(records):
+def get_post_code_similarity(records, method=damerau_levenshtein):
+    """Determine weights for the likelihood of two postal codes being the same.
+
+    Args:
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
+        method (func): A function to be used to compare the postal codes.
+
+    Returns:
+        The postal code weight for the similarity of the postal codes.
+    """
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_post_code = str(first_profile.postal_code)  # must be a string
     second_post_code = str(second_profile.postal_code)  # must be a string
-    difference = damerau_levenshtein(first_post_code, second_post_code)
+    difference = method(first_post_code, second_post_code)
     if difference == 0:
         return 4
     elif difference == 1:  # for transposition, ox-link does not do this
@@ -248,14 +270,35 @@ def get_post_code_similarity(records):
 
 
 def get_sex_similarity(records):
+    """Determine weights for the likelihood of two sexes being the same.
+
+    Args:
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
+
+    Returns:
+        The sex weight for the similarity of the sexes.
+    """
+    # consider how better to account for sexes besides male and female
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_sex = first_profile.sex
-    second_sex = second_profile.sex
-    return -1 if first_sex == second_sex else -10
+    first_sex = str(first_profile.sex)  # must be a string
+    second_sex = str(second_profile.sex)  # must be a string
+    return 1 if first_sex == second_sex else -10
 
 
-def get_dob_similarity(records):
+def get_dob_similarity(records, method=damerau_levenshtein):
+    """Determine weights for the likelihood of two dates of birth being the
+    same.
+
+    Args:
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
+        method (func): A function to be used to compare the dates of birth.
+
+    Returns:
+        The date of birth weight for the similarity of the dates of birth.
+    """
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_dob = str(first_profile.birth_year), \
@@ -264,10 +307,10 @@ def get_dob_similarity(records):
     second_dob = str(second_profile.birth_year), \
         str(second_profile.birth_month), \
         str(second_profile.birth_day)
-    year_diff = damerau_levenshtein(first_dob[0], second_dob[0])
-    month_diff = damerau_levenshtein(first_dob[1], second_dob[1])
+    year_diff = method(first_dob[0], second_dob[0])
+    month_diff = method(first_dob[1], second_dob[1])
     month_length = max(len(first_dob[1]), len(second_dob[1]))
-    day_diff = damerau_levenshtein(first_dob[2], second_dob[2])
+    day_diff = method(first_dob[2], second_dob[2])
     # could add more complexity here based off of ox-link
     year_prop = 0.5  # slightly arbitrary choice because year means more
     month_prop = 0.25
@@ -275,6 +318,8 @@ def get_dob_similarity(records):
     prop_diff = year_prop * (year_diff / 4.0) + \
         month_prop * (month_diff / float(month_length)) + \
         day_prop * (day_diff / 2.0)
+    # map prop_diff from (0, 1) to (-23, 14), then flip sign since lower diff
+    # implies that the two name are more similar.
     return -(37 * prop_diff - 14)
 
 
