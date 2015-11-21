@@ -15,7 +15,7 @@ def record_similarity(herd,
                       second_record,
                       forename_method=damerau_levenshtein,
                       surname_method=damerau_levenshtein):
-    """Determine probability of two records being the same.
+    """Determine weights for the likelihood of two records being the same.
 
     Args:
         herd (Herd): An object of :py:class:`.Herd` which contains the two
@@ -31,7 +31,7 @@ def record_similarity(herd,
 
     Returns:
         A tuple of the sum of name weights and the sum of non-name weights.
-        """
+    """
     forename_similarity = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
@@ -69,6 +69,19 @@ def record_similarity(herd,
 
 
 def get_forename_similarity(herd, records, method, name_type):
+    """Determine weights for the likelihood of two forenames being the same.
+
+    Args:
+        herd (Herd): An object of :py:class:`.Herd` which contains the two
+            records being compared.
+        records (Record): Two objects of :py:class:`.Record` to be
+            compared to one another.
+        method (func): A function to be used to compare the forenames.
+        name_type (str): A string to indicate which forename is being compared.
+
+    Returns:
+        The forename weight for the similarity of the forenames.
+    """
     name_types = ["fore", "mid_fore"]
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
