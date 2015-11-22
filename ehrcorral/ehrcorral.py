@@ -338,7 +338,8 @@ class Herd(object):
                 # Keep count of each fore/surname compression for weighting
             except TypeError:
                 exc_type, trace = sys.exc_info()[:2]
-                raise TypeError("You must populate the Herd first."), trace
+                raise TypeError("{0}\nYou must populate the Herd "
+                                "first.".format(trace))
             finally:
                 # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
                 sys.exc_info()
