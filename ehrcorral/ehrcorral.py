@@ -8,7 +8,11 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import sys
-from collections import namedtuple, defaultdict, Counter
+from collections import namedtuple, defaultdict
+try:
+    from collections import Counter
+except ImportError:
+    from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
 
 PROFILE_FIELDS = (
