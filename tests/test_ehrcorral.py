@@ -33,14 +33,13 @@ except NameError:
 
 class TestHerdProperties(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
             population = tuple(json.load(data_file))
         records = [gen_record(profile) for profile in population]
-        cls.herd = Herd()
-        cls.herd.populate(records)
+        self.herd = Herd()
+        self.herd.populate(records)
 
     def test_herd_str_method(self):
         try:
@@ -69,11 +68,10 @@ class TestHerdProperties(unittest.TestCase):
 
 class TestHerdCreation(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
-            cls.profiles = tuple(json.load(data_file))
+            self.profiles = tuple(json.load(data_file))
 
     def test_population_loaded_correctly(self):
         self.assertEqual(len(self.profiles), 100)
@@ -87,14 +85,13 @@ class TestHerdCreation(unittest.TestCase):
 
 class TestHerdCorral(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
             population = tuple(json.load(data_file))
         records = [gen_record(profile) for profile in population]
-        cls.herd = Herd()
-        cls.herd.populate(records)
+        self.herd = Herd()
+        self.herd.populate(records)
 
     def test_herd_corraling(self):
         self.herd.corral()
@@ -117,8 +114,7 @@ class TestHerdCorral(unittest.TestCase):
 
 class TestHerdFrequencyDictionaries(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         population = (
             {
                 'forename': 'Adelyn',
@@ -143,9 +139,9 @@ class TestHerdFrequencyDictionaries(unittest.TestCase):
             }
         )
         records = [gen_record(profile) for profile in population]
-        cls.herd = Herd()
-        cls.herd.populate(records)
-        cls.herd.corral()
+        self.herd = Herd()
+        self.herd.populate(records)
+        self.herd.corral()
 
     def test_forename_freq_dict(self):
         self.assertEqual(self.herd._forename_freq_dict['J'], 3)
@@ -162,11 +158,10 @@ class TestHerdFrequencyDictionaries(unittest.TestCase):
 
 class TestRecordGeneration(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__), 'profiles_100.json')
         with open(data_path, 'r') as data_file:
-            cls.profiles = tuple(json.load(data_file))
+            self.profiles = tuple(json.load(data_file))
 
     def test_record_generation_from_fake_profiles(self):
         records = [gen_record(profile) for profile in self.profiles]
@@ -183,11 +178,10 @@ class TestRecordGeneration(unittest.TestCase):
 
 class TestPhonemicCompression(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.name = ['Jellyfish']
-        cls.names = ['Jellyfish', 'Exeter']
-        cls.empty = ['']
+    def setUp(self):
+        self.name = ['Jellyfish']
+        self.names = ['Jellyfish', 'Exeter']
+        self.empty = ['']
 
     def test_soundex_compression(self):
         single_compression = compress(self.name, soundex)
@@ -224,8 +218,7 @@ class TestPhonemicCompression(unittest.TestCase):
 
 class TestPhonemicBlocking(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         # Female profile with different birth surname and current surname
         female = {
             'forename': 'Adelyn',
@@ -233,13 +226,13 @@ class TestPhonemicBlocking(unittest.TestCase):
             'current_surname': 'Bartell',
             'birth_surname': 'Gerlach'
         }
-        cls.female_record = gen_record(female)
+        self.female_record = gen_record(female)
         # Male profile with some missing name fields
         male = {
             'forename': 'Oliver',
             'current_surname': 'Nader'
         }
-        cls.male_record = gen_record(male)
+        self.male_record = gen_record(male)
 
     def test_multiple_surnames_and_forenames(self):
         self.female_record.gen_blocks(dmetaphone)
