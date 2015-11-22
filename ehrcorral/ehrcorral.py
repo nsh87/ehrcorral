@@ -15,6 +15,14 @@ except ImportError:
     from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
 
+# Make unicode compatible with Python 2 and 3
+try:
+    unicode = unicode
+except NameError:
+    # Using Python 3
+    unicode = str
+    basestring = (str, bytes)
+
 PROFILE_FIELDS = (
     'forename',
     'mid_forename',
