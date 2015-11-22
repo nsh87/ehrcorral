@@ -61,7 +61,7 @@ def compress(names, method):
         A list of the compressions.
     """
     if not isinstance(names, list):
-        ValueError("Expected a list of names, got a {}.".format(type(names)))
+        ValueError("Expected a list of names, got a {0}.".format(type(names)))
     compressions = []
     raw_compressions = map(method, names)
     # Double metaphone returns a list of tuples, so need to unpack it
@@ -265,7 +265,7 @@ class Herd(object):
         if population is None:
             return str(())
         elif len(population) >= 4:
-            return "({},\n {}\n ...,\n {},\n {})".format(
+            return "({0},\n {1}\n ...,\n {2},\n {3})".format(
                 population[0],
                 population[1],
                 population[-2],

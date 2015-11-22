@@ -10,7 +10,7 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import unittest
+import unittest2 as unittest
 import json
 import os
 
@@ -40,13 +40,13 @@ class TestHerdProperties(unittest.TestCase):
             herd = Herd()
             str(herd)
         except Exception as e:
-            self.fail("Getting string of empty herd raised: {}.".format(e))
+            self.fail("Getting string of empty herd raised: {0}.".format(e))
         self.assertEqual(str(herd), '()')
         try:
             herd = self.herd
             str(herd)
         except Exception as e:
-            self.fail("Getting string of herd raised: {}.".format(e))
+            self.fail("Getting string of herd raised: {0}.".format(e))
         self.assertNotEqual(str(herd), '()')
 
     def test_retrieving_populated_herd_size(self):
@@ -56,7 +56,7 @@ class TestHerdProperties(unittest.TestCase):
         try:
             herd = Herd()
         except Exception as e:
-            self.fail("Creating herd with no population raised: {}.".format(e))
+            self.fail("Creating herd with no population raised: {0}.".format(e))
         self.assertEqual(herd.size, 0)
 
 
