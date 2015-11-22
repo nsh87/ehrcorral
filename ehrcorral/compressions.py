@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from jellyfish import soundex, nysiis, metaphone
-from metaphone import doublemetaphone as dmetaphone
+from .metaphone import doublemetaphone as dmetaphone
 
 
 def first_letter(name):

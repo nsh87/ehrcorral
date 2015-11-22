@@ -16,11 +16,12 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'jellyfish',
-    'metaphone',
+    'backport_collections',
 ]
 
 test_requirements = [
    'fake-factory',
+   'unittest2',
 ]
 
 setup(

@@ -8,7 +8,11 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import sys
-from collections import namedtuple, defaultdict, Counter
+from collections import namedtuple, defaultdict
+try:
+    from collections import Counter
+except ImportError:
+    from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
 
 PROFILE_FIELDS = (
@@ -61,7 +65,7 @@ def compress(names, method):
         A list of the compressions.
     """
     if not isinstance(names, list):
-        ValueError("Expected a list of names, got a {}.".format(type(names)))
+        ValueError("Expected a list of names, got a {0}.".format(type(names)))
     compressions = []
     raw_compressions = map(method, names)
     # Double metaphone returns a list of tuples, so need to unpack it
@@ -184,7 +188,7 @@ class Record(object):
             return str(self.profile._asdict())
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return self.__unicode__()
 
     def save_name_freq_refs(self,
                             record_number,
@@ -265,7 +269,7 @@ class Herd(object):
         if population is None:
             return str(())
         elif len(population) >= 4:
-            return "({},\n {}\n ...,\n {},\n {})".format(
+            return "({0},\n {1}\n ...,\n {2},\n {3})".format(
                 population[0],
                 population[1],
                 population[-2],
@@ -275,7 +279,7 @@ class Herd(object):
             return str(population)
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return self.__unicode__()
 
     @property
     def size(self):
@@ -334,7 +338,7 @@ class Herd(object):
                 # Keep count of each fore/surname compression for weighting
             except TypeError:
                 exc_type, trace = sys.exc_info()[:2]
-                raise TypeError("You must populate the Herd first."), None, trace
+                raise TypeError("You must populate the Herd first."), trace
             finally:
                 # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
                 sys.exc_info()
