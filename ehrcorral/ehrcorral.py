@@ -188,7 +188,7 @@ class Record(object):
             return str(self.profile._asdict())
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return self.__unicode__()
 
     def save_name_freq_refs(self,
                             record_number,
@@ -279,7 +279,7 @@ class Herd(object):
             return str(population)
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return self.__unicode__()
 
     @property
     def size(self):
@@ -338,7 +338,7 @@ class Herd(object):
                 # Keep count of each fore/surname compression for weighting
             except TypeError:
                 exc_type, trace = sys.exc_info()[:2]
-                raise TypeError("You must populate the Herd first."), None, trace
+                raise TypeError("You must populate the Herd first."), trace
             finally:
                 # Clear per https://docs.python.org/2/library/sys.html#sys.exc_info
                 sys.exc_info()
