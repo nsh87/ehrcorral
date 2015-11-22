@@ -4,7 +4,6 @@
 
 Tests for `ehrcorral` module.
 """
-
 from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
@@ -22,6 +21,14 @@ from ehrcorral.ehrcorral import compress
 from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
 
 fake = Faker()
+
+
+try:
+    unicode = unicode
+except NameError:
+    # Using Python 3
+    unicode = str
+    basestring = (str, bytes)
 
 
 class TestHerdProperties(unittest.TestCase):
@@ -94,11 +101,18 @@ class TestHerdCorral(unittest.TestCase):
         for record in self.herd._population:
             self.assertIsInstance(record._blocks, tuple)
             self.assertTrue(1 <= len(record._blocks) <= 8)
-            self.assertIsInstance(record._meta.forename_freq_ref, unicode)
-            self.assertIsInstance(record._meta.mid_forename_freq_ref, unicode)
-            self.assertIsInstance(record._meta.birth_surname_freq_ref, unicode)
-            self.assertIsInstance(record._meta.current_surname_freq_ref,
-                                  unicode)
+            self.assertIsInstance(
+                record._meta.forename_freq_ref, unicode
+            )
+            self.assertIsInstance(
+                record._meta.mid_forename_freq_ref, unicode
+            )
+            self.assertIsInstance(
+                record._meta.birth_surname_freq_ref, unicode
+            )
+            self.assertIsInstance(
+                record._meta.current_surname_freq_ref, unicode
+            )
 
 
 class TestHerdFrequencyDictionaries(unittest.TestCase):
