@@ -9,12 +9,13 @@ from __future__ import unicode_literals
 
 import sys
 from collections import namedtuple, defaultdict
+from pylev import levenshtein, damerau_levenshtein
 try:
     from collections import Counter
 except ImportError:
     from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
-from .measures import *
+from .measures import record_similarity
 
 # Make unicode compatible with Python 2 and 3
 try:
@@ -272,6 +273,7 @@ class Herd(object):
         self._block_dict = defaultdict(list)
         self._surname_freq_dict = Counter()
         self._forename_freq_dict = Counter()
+        self._similarity_dict = defaultdict(list)
 
     def __unicode__(self):
         population = self._population
@@ -357,6 +359,7 @@ class Herd(object):
             self.append_names_freq_counters(record)
             # Keep track of the Record's blocking codes in the Herd
             self.append_block_dict(record)
+            self.append_similarity_dict(record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
@@ -391,6 +394,17 @@ class Herd(object):
         surnames = [surname for surname in surnames if surname != '']
         self._forename_freq_dict.update(forenames)
         self._surname_freq_dict.update(surnames)
+
+    def append_similarity_dict(self, record):
+        meta = record._meta
+        accession = meta.accession
+        for comparison_record in self._population:
+            name_weight, non_name_weight = record_similarity(self,
+                                                           record,
+                                                           comparison_record,
+                                                           damerau_levenshtein,
+                                                           damerau_levenshtein)
+            self._similarity_dict[accession] = [name_weight, non_name_weight]
 
 
 def gen_record(data):
