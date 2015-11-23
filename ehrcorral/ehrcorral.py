@@ -14,6 +14,7 @@ try:
 except ImportError:
     from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
+from .measures import *
 
 # Make unicode compatible with Python 2 and 3
 try:
