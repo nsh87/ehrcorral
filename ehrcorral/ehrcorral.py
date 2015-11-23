@@ -10,7 +10,6 @@ from __future__ import unicode_literals
 import sys
 from collections import namedtuple, defaultdict
 from pylev import levenshtein, damerau_levenshtein
-import numpy as np
 try:
     from collections import Counter
 except ImportError:
@@ -274,7 +273,7 @@ class Herd(object):
         self._block_dict = defaultdict(list)
         self._surname_freq_dict = Counter()
         self._forename_freq_dict = Counter()
-        self._similarity_matrix = None
+        self._similarity_dict = defaultdict(list)
 
     def __unicode__(self):
         population = self._population
@@ -363,8 +362,7 @@ class Herd(object):
             self.append_names_freq_counters(record)
             # Keep track of the Record's blocking codes in the Herd
             self.append_block_dict(record)
-        for record in self._population:
-            self.append_similarity_matrix_row(record)
+            self.append_similarity_dict(record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
@@ -400,17 +398,16 @@ class Herd(object):
         self._forename_freq_dict.update(forenames)
         self._surname_freq_dict.update(surnames)
 
-    def append_similarity_matrix_row(self, comparison_record):
-        row = comparison_record._meta.accession
-        for block in comparison_record._blocks:
-            for record in self._block_dict[block]:
-                col = record._meta.accession
-                self._similarity_matrix[row][col] = \
-                    record_similarity(self,
-                                      comparison_record,
-                                      record,
-                                      damerau_levenshtein,
-                                      damerau_levenshtein)
+    def append_similarity_dict(self, record):
+        meta = record._meta
+        accession = meta.accession
+        for comparison_record in self._population:
+            name_weight, non_name_weight = record_similarity(self,
+                                                           record,
+                                                           comparison_record,
+                                                           damerau_levenshtein,
+                                                           damerau_levenshtein)
+            self._similarity_dict[accession] = [name_weight, non_name_weight]
 
 
 def gen_record(data):
