@@ -67,7 +67,9 @@ def record_similarity(herd,
     # numbers will be different
     non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
         dob_similarity
-    return name_sum, non_name_sum
+    name_max = 150.0  # sum of max weights for name fields
+    non_name_max = 26.0  # sum of max weights for non-name fields
+    return name_sum / name_max, non_name_sum / non_name_max
 
 
 def get_forename_similarity(herd, records, method, name_type):
