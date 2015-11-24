@@ -67,9 +67,8 @@ def record_similarity(herd,
     # numbers will be different
     non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
         dob_similarity
-    name_max = 150.0  # sum of max weights for name fields
-    non_name_max = 26.0  # sum of max weights for non-name fields
-    return name_sum / name_max, non_name_sum / non_name_max
+    max_similarity = 176.0  # sum of max weights for all fields
+    return (name_sum + non_name_sum) / max_similarity
 
 
 def get_forename_similarity(herd, records, method, name_type):
@@ -109,6 +108,7 @@ def get_forename_similarity(herd, records, method, name_type):
     max_length = max(len(first_forename), len(second_forename))
     prop_diff = float(difference) / max_length
     prop_freq = max(first_freq, second_freq, 1.0 / 1000)
+    # scale instead of using cutoff
     cutoff = 5.0 / 26  # arbitrary, could be improved
     F = 3 if prop_freq > cutoff else 12
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
@@ -163,6 +163,8 @@ def get_surname_similarity(herd, records, method, name_type):
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
     # Get both names and frequencies from second record to compare to first
+
+    # TODO: list comprehension for both, then extract out individual parts
     second_surname = [
         extract_surname_similarity_info(herd, records[1], name)[0]
         for name in name_types
@@ -228,6 +230,8 @@ def get_address_similarity(records, method=damerau_levenshtein):
         The address weight for the similarity of the addresses.
     """
     # ox-link only takes first 8 characters and greps for things like "flat"
+    # TODO: combine both address lines and grep out things like punctuation
+    # and words like "st"
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_address = [first_profile.address1, first_profile.address2]
