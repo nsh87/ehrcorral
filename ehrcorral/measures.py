@@ -88,6 +88,9 @@ def get_forename_similarity(herd, records, method, name_type):
     name_types = ["fore", "mid_fore"]
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
+    # if there is no forename for our first record, we do not need to compare
+    if first_forename == '':
+        return 0
     # Get both names and frequencies from second record to compare to first
     second_forename = [
         extract_forename_similarity_info(herd, records[1], name)[0]
@@ -161,8 +164,10 @@ def get_surname_similarity(herd, records, method, name_type):
     name_types = ["birth", "current"]
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
+    # if there is no surname for our first record, we do not need to compare
+    if first_surname == '':
+        return 0
     # Get both names and frequencies from second record to compare to first
-
     # TODO: list comprehension for both, then extract out individual parts
     second_surname = [
         extract_surname_similarity_info(herd, records[1], name)[0]
@@ -312,6 +317,10 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     second_dob = str(second_profile.birth_year), \
         str(second_profile.birth_month), \
         str(second_profile.birth_day)
+    # just return 0 if either dob is empty
+    if first_dob[0] == first_dob[1] == first_dob[2] == '' or \
+        second_dob[0] == second_dob[1] == second_dob[2]:
+        return 0
     year_diff = method(first_dob[0], second_dob[0])
     month_diff = method(first_dob[1], second_dob[1])
     month_length = max(len(first_dob[1]), len(second_dob[1]))
@@ -321,7 +330,7 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     month_prop = 0.25
     day_prop = 0.25
     prop_diff = year_prop * (year_diff / 4.0) + \
-        month_prop * (month_diff / float(month_length)) + \
+        month_prop * (month_diff / 2.0) + \
         day_prop * (day_diff / 2.0)
     # map prop_diff from (0, 1) to (-23, 14), then flip sign since lower diff
     # implies that the two name are more similar.
