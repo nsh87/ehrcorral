@@ -90,6 +90,9 @@ def get_forename_similarity(herd, records, method, name_type):
     name_types = ["fore", "mid_fore"]
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
+    # if there is no forename for our first record, we do not need to compare
+    if first_forename == '':
+        return 0
     # Get both names and frequencies from second record to compare to first
     second_forename = [
         extract_forename_similarity_info(herd, records[1], name)[0]
@@ -170,8 +173,10 @@ def get_surname_similarity(herd, records, method, name_type):
     name_types = ["birth", "current"]
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
+    # if there is no surname for our first record, we do not need to compare
+    if first_surname == '':
+        return 0
     # Get both names and frequencies from second record to compare to first
-
     # TODO: list comprehension for both, then extract out individual parts
     second_surname = [
         extract_surname_similarity_info(herd, records[1], name)[0]
@@ -357,7 +362,6 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     if first_dob[0] == first_dob[1] == first_dob[2] == '' or \
         second_dob[0] == second_dob[1] == second_dob[2]:
         return 0
-    # TODO: penalize for year diffs like 1983 to 1975
     year_diff = method(first_dob[0], second_dob[0])
     month_diff = method(first_dob[1], second_dob[1])
     day_diff = method(first_dob[2], second_dob[2])
