@@ -6,7 +6,6 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from ehrcorral.ehrcorral import Herd, Record
 from pylev import levenshtein, damerau_levenshtein
 
 
