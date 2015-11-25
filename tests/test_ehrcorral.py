@@ -119,23 +119,23 @@ class TestHerdFrequencyDictionaries(unittest.TestCase):
             {
                 'forename': 'Adelyn',
                 'mid_forename': 'Heidenreich',
-                'current_surname': 'Bartell',  # PRTL
-                'birth_surname': 'Gerlach'  # KRLK
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach'
             },
             {
                 'forename': 'John',
                 'mid_forename': 'Frederich',
-                'current_surname': 'Sanders'  # SNTRS
+                'current_surname': 'Sanders'
             },
             {
                 'forename': 'Joseph',
-                'current_surname': 'Smith'  # SM0
+                'current_surname': 'Smith'
             },
             {
                 'forename': 'John',
                 'mid_forename': 'Heidenreich',
-                'current_surname': 'Smith',  # SM0
-                'birth_surname': 'Gerlach'  # KRLK
+                'current_surname': 'Smith',
+                'birth_surname': 'Gerlach'
             }
         )
         records = [gen_record(profile) for profile in population]
