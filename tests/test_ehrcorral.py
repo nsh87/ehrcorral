@@ -246,6 +246,7 @@ class TestPhonemicBlocking(unittest.TestCase):
         expected_blocks = ['NTRO']
         self.assertItemsEqual(self.male_record._blocks, expected_blocks)
 
+
 class TestMeasuresSimilarityFunctions(unittest.TestCase):
 
     def setUp(self):
@@ -305,9 +306,6 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         self.herd.populate(records)
         self.herd.corral()
 
-    def test_record_similarity(self):
-        pass
-
     def test_extract_forename_info(self):
         record = self.herd._population[0]
         forename, weight = extract_forename_similarity_info(self.herd,
@@ -331,3 +329,30 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                                                             'mid_fore')
         self.assertEqual(forename, '')
         self.assertEqual(weight, 0.0)
+
+    def test_extract_surname_info(self):
+        record = self.herd._population[0]
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'birth')
+        self.assertEqual(surname, 'Gerlach')
+        self.assertEqual(round(weight, 5), 0.42857)
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'current')
+        self.assertEqual(surname, 'Bartell')
+        self.assertEqual(round(weight, 5), 0.14286)
+        record = self.herd._population[4]
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'birth')
+        self.assertEqual(surname, '')
+        self.assertEqual(weight, 0.0)
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'current')
+        self.assertEqual(surname, 'Sanders')
+        self.assertEqual(round(weight, 5), 0.14286)
+
+    def test_record_similarity(self):
+        pass
