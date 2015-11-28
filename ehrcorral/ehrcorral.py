@@ -363,7 +363,8 @@ class Herd(object):
             self.append_names_freq_counters(record)
             # Keep track of the Record's blocking codes in the Herd
             self.append_block_dict(record)
-            self.append_similarity_matrix_row(i, record)
+            # TODO: incorporate block_dict into generating similarity matrix
+            # self.append_similarity_matrix_row(i, record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
