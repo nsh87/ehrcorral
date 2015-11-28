@@ -19,6 +19,7 @@ from ehrcorral.ehrcorral import Herd
 from ehrcorral.ehrcorral import gen_record
 from ehrcorral.ehrcorral import compress
 from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
+from ehrcorral.measures import *
 
 fake = Faker()
 
@@ -243,3 +244,89 @@ class TestPhonemicBlocking(unittest.TestCase):
         self.male_record.gen_blocks(dmetaphone)
         expected_blocks = ['NTRO']
         self.assertItemsEqual(self.male_record._blocks, expected_blocks)
+
+class TestMeasuresSimilarityFunctions(unittest.TestCase):
+
+    def setUp(self):
+        population = (
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'M',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Frederich',
+                'current_surname': 'Gerlach'
+            },
+            {
+                'forename': 'Joseph',
+                'current_surname': 'Smith',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'M',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'John',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Smith',
+                'birth_surname': 'Gerlach',
+                'address1': '484 Jones Avenue',
+                'postal_code': '97856',
+                'sex': 'F',
+                'birth_year': '1986',
+                'birth_month': '10',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Jason',
+                'current_surname': 'Sanders',
+                'address1': '484 Jones Avenue',
+                'postal_code': '97856',
+                'sex': 'F',
+                'birth_year': '1986',
+                'birth_month': '10',
+                'birth_day': '27'
+            }
+        )
+        records = [gen_record(profile) for profile in population]
+        self.herd = Herd()
+        self.herd.populate(records)
+        self.herd.corral()
+
+    def test_record_similarity(self):
+        pass
+
+    def test_extract_forename_info(self):
+        record = self.herd._population[0]
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'fore')
+        self.assertEqual(forename, 'Adelyn')
+        self.assertEqual(weight, 0.25)
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'mid_fore')
+        self.assertEqual(forename, 'Heidenreich')
+        self.assertEqual(weight, 0.25)
+        record = self.herd._population[4]
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'fore')
+        self.assertEqual(forename, 'Jason')
+        self.assertEqual(weight, 0.375)
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'mid_fore')
+        self.assertEqual(forename, '')
+        self.assertEqual(weight, 0.0)
