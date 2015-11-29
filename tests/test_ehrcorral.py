@@ -354,5 +354,13 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         self.assertEqual(surname, 'Sanders')
         self.assertEqual(round(weight, 5), 0.14286)
 
+    def test_forename_similarity(self):
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_forename_similarity(self.herd,
+                                         records,
+                                         damerau_levenshtein,
+                                         "fore")
+        self.assertEqual(weight, -4.0)
+
     def test_record_similarity(self):
         pass
