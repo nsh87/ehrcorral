@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import unittest2 as unittest
+import numpy as np
 import json
 import os
 
@@ -486,3 +487,78 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                                    damerau_levenshtein,
                                    damerau_levenshtein)
         self.assertEqual(round(weight, 5), -0.16081)
+
+
+class TestHerdSimilarityMatrix(unittest.TestCase):
+
+    def setUp(self):
+        population = (
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Jane',
+                'current_surname': 'Doe',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Adelyn',
+                'current_surname': 'Bartell',
+                'address1': '612 Johson Ave',
+                'postal_code': '92436',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            }
+        )
+        records = [gen_record(profile) for profile in population]
+        self.herd = Herd()
+        self.herd.populate(records)
+        self.herd.corral()
+
+    def test_similarity_matrix(self):
+        test_similarity = np.array([
+            [
+                record_similarity(self.herd, self.herd._population[0],
+                                  self.herd._population[0],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0,
+                record_similarity(self.herd, self.herd._population[0],
+                                  self.herd._population[2],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein)],
+            [
+                0,
+                record_similarity(self.herd, self.herd._population[1],
+                                  self.herd._population[1],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0],
+            [
+                record_similarity(self.herd, self.herd._population[2],
+                                  self.herd._population[0],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0,
+                record_similarity(self.herd, self.herd._population[2],
+                                  self.herd._population[2],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein)]],
+            dtype=np.float32)
+        self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
