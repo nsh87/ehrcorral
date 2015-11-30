@@ -294,7 +294,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'current_surname': 'Sanders',
                 'address1': '448 Jones Street',
                 'address2': 'Apt. A',
-                'postal_code': '97856',
+                'postal_code': '97586',
                 'sex': 'F',
                 'birth_year': '1986',
                 'birth_month': '10',
@@ -419,7 +419,18 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         self.assertEqual(weight, 7)
 
     def test_post_code_similarity(self):
-        pass
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 1)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 4)
 
     def test_record_similarity(self):
         pass
