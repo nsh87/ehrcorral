@@ -363,8 +363,8 @@ class Herd(object):
             self.append_names_freq_counters(record)
             # Keep track of the Record's blocking codes in the Herd
             self.append_block_dict(record)
-            # TODO: incorporate block_dict into generating similarity matrix
-            # self.append_similarity_matrix_row(i, record)
+        for record in self._population:
+            self.append_similarity_matrix_row(record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
@@ -400,14 +400,17 @@ class Herd(object):
         self._forename_freq_dict.update(forenames)
         self._surname_freq_dict.update(surnames)
 
-    def append_similarity_matrix_row(self, row, comparison_record):
-        for i, record in enumerate(self._population):
-            self._similarity_matrix[row][i] = \
-                record_similarity(self,
-                                  comparison_record,
-                                  record,
-                                  damerau_levenshtein,
-                                  damerau_levenshtein)
+    def append_similarity_matrix_row(self, comparison_record):
+        row = comparison_record._meta.accession
+        for block in comparison_record._blocks:
+            for record in self._block_dict[block]:
+                col = record._meta.accession
+                self._similarity_matrix[row][col] = \
+                    record_similarity(self,
+                                      comparison_record,
+                                      record,
+                                      damerau_levenshtein,
+                                      damerau_levenshtein)
 
 
 def gen_record(data):
