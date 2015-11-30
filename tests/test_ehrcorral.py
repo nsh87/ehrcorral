@@ -433,5 +433,16 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         weight = get_post_code_similarity(records, damerau_levenshtein)
         self.assertEqual(weight, 4)
 
+    def test_sex_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, -10)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, -10)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, 1)
+
     def test_record_similarity(self):
         pass
