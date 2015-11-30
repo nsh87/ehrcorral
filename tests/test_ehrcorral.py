@@ -459,4 +459,31 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         self.assertEqual(weight, 4.75)
 
     def test_record_similarity(self):
-        pass
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.00015)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.00546)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.05154)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.16081)
