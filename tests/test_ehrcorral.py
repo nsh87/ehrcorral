@@ -296,7 +296,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'address2': 'Apt. A',
                 'postal_code': '97586',
                 'sex': 'F',
-                'birth_year': '1986',
+                'birth_year': '1977',
                 'birth_month': '10',
                 'birth_day': '27'
             }
@@ -442,6 +442,20 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         records = [self.herd._population[0], self.herd._population[2]]
         weight = get_sex_similarity(records)
         self.assertEqual(weight, 1)
+
+    def test_dob_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 14)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, -4.5)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 4.75)
 
     def test_record_similarity(self):
         pass
