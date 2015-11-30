@@ -102,9 +102,10 @@ def get_forename_similarity(herd, records, method, name_type):
         ]
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
+    # TODO: Compare names as all UPPERCASE, or lowercase.
     diffs = [method(first_forename, name) for name in second_forename]
     difference = min(diffs)
-    min_index = diffs.index(min(diffs))
+    min_index = diffs.index(difference)
     second_forename = second_forename[min_index]
     second_freq = second_freq[min_index]
     max_length = max(len(first_forename), len(second_forename))
@@ -181,7 +182,7 @@ def get_surname_similarity(herd, records, method, name_type):
     # then find the one that has the minimum difference and keep that one
     diffs = [method(first_surname, name) for name in second_surname]
     difference = min(diffs)
-    min_index = diffs.index(min(diffs))
+    min_index = diffs.index(difference)
     second_surname = second_surname[min_index]
     second_freq = second_freq[min_index]
     max_length = max(len(first_surname), len(second_surname))
@@ -323,7 +324,6 @@ def get_dob_similarity(records, method=damerau_levenshtein):
         return 0
     year_diff = method(first_dob[0], second_dob[0])
     month_diff = method(first_dob[1], second_dob[1])
-    month_length = max(len(first_dob[1]), len(second_dob[1]))
     day_diff = method(first_dob[2], second_dob[2])
     # could add more complexity here based off of ox-link
     year_prop = 0.5  # slightly arbitrary choice because year means more
