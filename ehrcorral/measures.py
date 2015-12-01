@@ -233,15 +233,13 @@ def get_address_similarity(records, method=damerau_levenshtein):
     # and words like "st"
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_address = [first_profile.address1, first_profile.address2]
-    second_address = [second_profile.address1, second_profile.address2]
-    diff1 = method(first_address[0], second_address[0])
-    diff2 = method(first_address[1], second_address[1])
-    if diff1 == 0:
-        if diff2 == 0:
-            return 7
-        else:
-            return 2
+    first_address = first_profile.address1 + ' ' + first_profile.address2
+    second_address = second_profile.address1 + ' ' + second_profile.address2
+    difference = method(first_address[:8], second_address[:8])
+    if difference == 0:
+        return 7
+    elif difference <= 2:
+        return 2
     else:
         return 0
     # ox-link method
@@ -287,8 +285,10 @@ def get_sex_similarity(records):
     # consider how better to account for sexes besides male and female
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_sex = str(first_profile.sex)  # must be a string
-    second_sex = str(second_profile.sex)  # must be a string
+    # just take first letter so that male = m
+    # TODO: Consider robust way to consider non-binary sexes
+    first_sex = str(first_profile.sex.lower()[0])  # must be a string
+    second_sex = str(second_profile.sex.lower()[0])  # must be a string
     return 1 if first_sex == second_sex else -10
 
 
