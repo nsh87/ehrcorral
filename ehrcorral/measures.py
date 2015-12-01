@@ -94,23 +94,14 @@ def get_forename_similarity(herd, records, method, name_type):
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
     # Get both names and frequencies from second record to compare to first
-    second_forename = [
-        extract_forename_similarity_info(herd, records[1], name)[0]
-        for name in name_types
-        ]
-    second_freq = [
-        extract_forename_similarity_info(herd, records[1], name)[1]
+    second_forefreq = [
+        extract_forename_similarity_info(herd, records[1], name)
         for name in name_types
         ]
     second_forename = [item[0] for item in second_forefreq]
     second_freq = [item[1] for item in second_forefreq]
-    # if there is no surname for our first record, or both second record
-    # surnames, then we do not need to compare
-    if first_forename == '' or second_forename[0] == second_forename[1] == '':
-        return 0, 6
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
-    # TODO: Compare names as all UPPERCASE, or lowercase.
     diffs = [method(first_forename, name) for name in second_forename]
     difference = min(diffs)
     min_index = diffs.index(difference)
@@ -174,21 +165,12 @@ def get_surname_similarity(herd, records, method, name_type):
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
     # Get both names and frequencies from second record to compare to first
-    # TODO: list comprehension for both, then extract out individual parts
-    second_surname = [
-        extract_surname_similarity_info(herd, records[1], name)[0]
-        for name in name_types
-        ]
-    second_freq = [
-        extract_surname_similarity_info(herd, records[1], name)[1]
+    second_forefreq = [
+        extract_surname_similarity_info(herd, records[1], name)
         for name in name_types
         ]
     second_surname = [item[0] for item in second_forefreq]
     second_freq = [item[1] for item in second_forefreq]
-    # if there is no surname for our first record, or both second record
-    # surnames, then we do not need to compare
-    if first_surname == '' or second_surname[0] == second_surname[1] == '':
-        return 0, 12
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
     diffs = [method(first_surname, name) for name in second_surname]
