@@ -17,6 +17,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'jellyfish',
     'backport_collections',
+    'numpy',
+    'pylev'
 ]
 
 test_requirements = [
