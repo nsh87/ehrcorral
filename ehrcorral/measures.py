@@ -230,14 +230,8 @@ def get_address_similarity(records, method=damerau_levenshtein):
     # ox-link only takes first 8 characters and greps for things like "flat"
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_address = first_profile.address1.lower() +\
-        ' ' +\
-        first_profile.address2.lower()
-    second_address = second_profile.address1.lower() +\
-        ' ' +\
-        second_profile.address2.lower()
-    first_address = clean_address(first_address)
-    second_address = clean_address(second_address)
+    first_address = first_profile.address1 + ' ' + first_profile.address2
+    second_address = second_profile.address1 + ' ' + second_profile.address2
     difference = method(first_address[:8], second_address[:8])
     if difference == 0:
         return 7
@@ -310,8 +304,8 @@ def get_sex_similarity(records):
     second_profile = records[1].profile
     # just take first letter so that male = m
     # TODO: Consider robust way to consider non-binary sexes
-    first_sex = str(first_profile.sex.lower())  # should be a string
-    second_sex = str(second_profile.sex.lower())  # should be a string
+    first_sex = str(first_profile.sex.lower()[0])  # must be a string
+    second_sex = str(second_profile.sex.lower()[0])  # must be a string
     return 1 if first_sex == second_sex else -10
 
 
