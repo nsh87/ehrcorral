@@ -312,18 +312,18 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         forename, weight = extract_forename_similarity_info(self.herd,
                                                             record,
                                                             'fore')
-        self.assertEqual(forename, 'Adelyn')
+        self.assertEqual(forename, 'adelyn')
         self.assertEqual(weight, 0.25)
         forename, weight = extract_forename_similarity_info(self.herd,
                                                             record,
                                                             'mid_fore')
-        self.assertEqual(forename, 'Heidenreich')
+        self.assertEqual(forename, 'heidenreich')
         self.assertEqual(weight, 0.25)
         record = self.herd._population[4]
         forename, weight = extract_forename_similarity_info(self.herd,
                                                             record,
                                                             'fore')
-        self.assertEqual(forename, 'Jason')
+        self.assertEqual(forename, 'jason')
         self.assertEqual(weight, 0.375)
         forename, weight = extract_forename_similarity_info(self.herd,
                                                             record,
@@ -336,12 +336,12 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         surname, weight = extract_surname_similarity_info(self.herd,
                                                           record,
                                                           'birth')
-        self.assertEqual(surname, 'Gerlach')
+        self.assertEqual(surname, 'gerlach')
         self.assertEqual(round(weight, 5), 0.42857)
         surname, weight = extract_surname_similarity_info(self.herd,
                                                           record,
                                                           'current')
-        self.assertEqual(surname, 'Bartell')
+        self.assertEqual(surname, 'bartell')
         self.assertEqual(round(weight, 5), 0.14286)
         record = self.herd._population[4]
         surname, weight = extract_surname_similarity_info(self.herd,
@@ -352,7 +352,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         surname, weight = extract_surname_similarity_info(self.herd,
                                                           record,
                                                           'current')
-        self.assertEqual(surname, 'Sanders')
+        self.assertEqual(surname, 'sanders')
         self.assertEqual(round(weight, 5), 0.14286)
 
     def test_forename_similarity(self):
@@ -562,3 +562,4 @@ class TestHerdSimilarityMatrix(unittest.TestCase):
                                   damerau_levenshtein)]],
             dtype=np.float32)
         self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
+
