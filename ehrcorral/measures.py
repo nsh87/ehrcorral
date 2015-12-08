@@ -34,22 +34,22 @@ def record_similarity(herd,
     Returns:
         A tuple of the sum of name weights and the sum of non-name weights.
     """
-    fore_sim, fore_max = \
+    forename_similarity, fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "fore")
-    mid_fore_sim, mid_fore_max = \
+    mid_forename_similarity, mid_fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "mid_fore")
-    bir_sur_sim, bir_sur_max = \
+    birth_surname_similarity, bir_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
                                "birth")
-    cur_sur_sim, cur_sur_max = \
+    current_surname_similarity, cur_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
@@ -62,13 +62,15 @@ def record_similarity(herd,
                                                     damerau_levenshtein)
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
-    # TODO: Add national_id1 similarity
+    id_similarity = get_id_similarity([first_record, second_record],
+                                      damerau_levenshtein)
     # did not include GP (doctor), place of birth, hospital and hospital number
-    name_sum = fore_sim + mid_fore_sim + bir_sur_sim + cur_sur_sim
+    name_sum = forename_similarity + mid_forename_similarity + \
+        birth_surname_similarity + current_surname_similarity
     # since we are not using a few of the ox-link weights, the non-name
     # numbers will be different
     non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
-        dob_similarity
+        dob_similarity + id_similarity
     # sum of max weights for all fields
     max_similarity = fore_max + mid_fore_max + bir_sur_max + cur_sur_max + 33.0
     return (name_sum + non_name_sum) / max_similarity
@@ -309,8 +311,8 @@ def get_sex_similarity(records):
     second_profile = records[1].profile
     # just take first letter so that male = m
     # TODO: Consider robust way to consider non-binary sexes
-    first_sex = str(first_profile.sex.lower())  # must be a string
-    second_sex = str(second_profile.sex.lower())  # must be a string
+    first_sex = str(first_profile.sex.lower())  # should be a string
+    second_sex = str(second_profile.sex.lower())  # should be a string
     return 1 if first_sex == second_sex else -10
 
 
@@ -379,8 +381,4 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # ox-link method
     # return 7 if difference == 0 else 0
 
-def get_json(file):
-    with open(file) as f:
-        data = json.loads(f.read())
-    return data
 
