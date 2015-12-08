@@ -101,6 +101,10 @@ def get_forename_similarity(herd, records, method, name_type):
         ]
     second_forename = [item[0] for item in second_forefreq]
     second_freq = [item[1] for item in second_forefreq]
+    # if there is no surname for our first record, or both second record
+    # surnames, then we do not need to compare
+    if first_forename == '' or second_forename[0] == second_forename[1] == '':
+        return 0, 6
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
     diffs = [method(first_forename, name) for name in second_forename]
@@ -172,6 +176,10 @@ def get_surname_similarity(herd, records, method, name_type):
         ]
     second_surname = [item[0] for item in second_forefreq]
     second_freq = [item[1] for item in second_forefreq]
+    # if there is no surname for our first record, or both second record
+    # surnames, then we do not need to compare
+    if first_surname == '' or second_surname[0] == second_surname[1] == '':
+        return 0, 12
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
     diffs = [method(first_surname, name) for name in second_surname]
