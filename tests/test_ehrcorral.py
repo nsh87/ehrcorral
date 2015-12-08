@@ -259,6 +259,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'address1': '448 Jones Street',
                 'postal_code': '95786',
                 'sex': 'M',
+                'national_id1': 'D599776',
                 'birth_year': '1977',
                 'birth_month': '08',
                 'birth_day': '27'
@@ -274,6 +275,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'address1': '448 Jones Street',
                 'postal_code': '95786',
                 'sex': 'M',
+                'national_id1': 'D599776',
                 'birth_year': '1977',
                 'birth_month': '08',
                 'birth_day': '27'
@@ -286,6 +288,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'address1': '484 Jones Avenue',
                 'postal_code': '97856',
                 'sex': 'F',
+                'national_id1': 'D599886',
                 'birth_year': '1986',
                 'birth_month': '10',
                 'birth_day': '27'
@@ -297,6 +300,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'address2': 'Apt. A',
                 'postal_code': '97586',
                 'sex': 'F',
+                'national_id1': 'D597976',
                 'birth_year': '1977',
                 'birth_month': '10',
                 'birth_day': '27'
@@ -457,6 +461,20 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         records = [self.herd._population[0], self.herd._population[4]]
         weight = get_dob_similarity(records, damerau_levenshtein)
         self.assertEqual(weight, 4.75)
+
+    def test_id_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 2)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 7)
 
     def test_record_similarity(self):
         records = [self.herd._population[0], self.herd._population[1]]
