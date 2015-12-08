@@ -34,22 +34,22 @@ def record_similarity(herd,
     Returns:
         A tuple of the sum of name weights and the sum of non-name weights.
     """
-    forename_similarity, fore_max = \
+    fore_sim, fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "fore")
-    mid_forename_similarity, mid_fore_max = \
+    mid_fore_sim, mid_fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "mid_fore")
-    birth_surname_similarity, bir_sur_max = \
+    bir_sur_sim, bir_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
                                "birth")
-    current_surname_similarity, cur_sur_max = \
+    cur_sur_sim, cur_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
@@ -62,15 +62,13 @@ def record_similarity(herd,
                                                     damerau_levenshtein)
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
-    id_similarity = get_id_similarity([first_record, second_record],
-                                      damerau_levenshtein)
+    # TODO: Add national_id1 similarity
     # did not include GP (doctor), place of birth, hospital and hospital number
-    name_sum = forename_similarity + mid_forename_similarity + \
-        birth_surname_similarity + current_surname_similarity
+    name_sum = fore_sim + mid_fore_sim + bir_sur_sim + cur_sur_sim
     # since we are not using a few of the ox-link weights, the non-name
     # numbers will be different
     non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
-        dob_similarity + id_similarity
+        dob_similarity
     # sum of max weights for all fields
     max_similarity = fore_max + mid_fore_max + bir_sur_max + cur_sur_max + 33.0
     return (name_sum + non_name_sum) / max_similarity
