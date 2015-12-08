@@ -7,6 +7,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from pylev import levenshtein, damerau_levenshtein
+import string
 
 
 def record_similarity(herd,
@@ -249,8 +250,6 @@ def get_address_similarity(records, method=damerau_levenshtein):
         The address weight for the similarity of the addresses.
     """
     # ox-link only takes first 8 characters and greps for things like "flat"
-    # TODO: combine both address lines and grep out things like punctuation
-    # and words like "st"
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_address = first_profile.address1.lower() +\
@@ -274,10 +273,10 @@ def get_address_similarity(records, method=damerau_levenshtein):
 
 def clean_address(address):
     new_address = ' ' + address + ' '
-    generic_abbrevs = get_json('generic_abbrevs.json')
-    generics = get_json('generics.json')
-    unit_abbrevs = get_json('unit_abbrevs.json')
-    designators = get_json('designators.json')
+    generic_abbrevs = []  # read in json/pickle file
+    generics = []  # read in json/pickle file
+    unit_abbrevs = []  # read in json/pickle file
+    designators = []  # read in json/pickle file
     for char in string.punctuation:
         new_address = new_address.replace(char, ' ')
     for i, generic in enumerate(generics):
@@ -333,8 +332,8 @@ def get_sex_similarity(records):
     second_profile = records[1].profile
     # just take first letter so that male = m
     # TODO: Consider robust way to consider non-binary sexes
-    first_sex = str(first_profile.sex.lower())  # should be a string
-    second_sex = str(second_profile.sex.lower())  # should be a string
+    first_sex = str(first_profile.sex.lower())  # must be a string
+    second_sex = str(second_profile.sex.lower())  # must be a string
     return 1 if first_sex == second_sex else -10
 
 
