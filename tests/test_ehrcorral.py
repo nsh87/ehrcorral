@@ -423,6 +423,19 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         weight = get_address_similarity(records, damerau_levenshtein)
         self.assertEqual(weight, 7)
 
+    def test_clean_address(self):
+        address = u'448 Jones Street'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 jones st')
+        address = u'448 Jones Avenue, Apartment 2'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 jones ave apt 2')
+        address = u'448-A Stromme Strt;; Building G'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 a stromme st bldg g')
+        self.assertEqual(clean_address(u''), u'')
+        self.assertEqual(clean_address(u' '), u'')
+
     def test_post_code_similarity(self):
         records = [self.herd._population[0], self.herd._population[1]]
         weight = get_post_code_similarity(records, damerau_levenshtein)
