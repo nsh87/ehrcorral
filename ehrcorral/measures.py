@@ -235,7 +235,7 @@ def get_address_similarity(records, method=damerau_levenshtein):
     Returns:
         The address weight for the similarity of the addresses.
     """
-    # ox-link only takes first 8 characters and greps for things like "flat"
+    # ox-link only takes first 8 characters
     first_profile = records[0].profile
     second_profile = records[1].profile
     first_address = first_profile.address1.lower() +\
@@ -258,6 +258,16 @@ def get_address_similarity(records, method=damerau_levenshtein):
 
 
 def clean_address(address):
+    """Clean unicode string that contains an address of all punctuation and
+    standardize all street suffixes and unit designators.
+
+    Args:
+        address (unicode): A unicode string that contains an address to be
+            cleaned and standardized.
+
+    Returns:
+        The cleaned unicode address string.
+    """
     new_address = ' ' + address + ' '
     generic_abbrevs = get_json('generic_abbrevs.json')
     generics = get_json('generics.json')
