@@ -365,24 +365,24 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                                          records,
                                          damerau_levenshtein,
                                          "fore")
-        self.assertEqual(weight, -4.0)
+        self.assertEqual(weight, (-4.0, 6))
         weight = get_forename_similarity(self.herd,
                                          records,
                                          damerau_levenshtein,
                                          "mid_fore")
-        self.assertEqual(round(weight, 5), -4.90909)
+        self.assertEqual((round(weight[0], 5), weight[1]), (-4.90909, 6))
         records = [self.herd._population[4], self.herd._population[0]]
         weight = get_forename_similarity(self.herd,
                                          records,
                                          damerau_levenshtein,
                                          "mid_fore")
-        self.assertEqual(weight, 0)
+        self.assertEqual(weight, (0, 6))
         records = [self.herd._population[0], self.herd._population[3]]
         weight = get_forename_similarity(self.herd,
                                          records,
                                          damerau_levenshtein,
                                          "mid_fore")
-        self.assertEqual(weight, 6.0)
+        self.assertEqual(weight, (6.0, 6))
 
     def test_surname_similarity(self):
         records = [self.herd._population[0], self.herd._population[4]]
@@ -390,24 +390,24 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                                         records,
                                         damerau_levenshtein,
                                         "current")
-        self.assertEqual(round(weight, 5), -5.14286)
+        self.assertEqual((round(weight[0], 5), weight[1]), (-5.14286, 12))
         weight = get_surname_similarity(self.herd,
                                         records,
                                         damerau_levenshtein,
                                         "birth")
-        self.assertEqual(weight, -12.0)
+        self.assertEqual(weight, (-12.0, 12))
         records = [self.herd._population[4], self.herd._population[0]]
         weight = get_surname_similarity(self.herd,
                                         records,
                                         damerau_levenshtein,
                                         "birth")
-        self.assertEqual(weight, 0)
+        self.assertEqual(weight, (0, 12))
         records = [self.herd._population[0], self.herd._population[1]]
         weight = get_surname_similarity(self.herd,
                                         records,
                                         damerau_levenshtein,
                                         "birth")
-        self.assertEqual(weight, 12.0)
+        self.assertEqual(weight, (12.0, 12))
 
     def test_address_similarity(self):
         records = [self.herd._population[0], self.herd._population[1]]
