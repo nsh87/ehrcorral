@@ -285,7 +285,7 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
                 'mid_forename': 'Heidenreich',
                 'current_surname': 'Smith',
                 'birth_surname': 'Gerlach',
-                'address1': '484 Jones Avenue',
+                'address1': '448 Jones Avenue',
                 'postal_code': '97856',
                 'sex': 'F',
                 'national_id1': 'D599886',
@@ -415,10 +415,10 @@ class TestMeasuresSimilarityFunctions(unittest.TestCase):
         self.assertEqual(weight, 0)
         records = [self.herd._population[0], self.herd._population[3]]
         weight = get_address_similarity(records, damerau_levenshtein)
-        self.assertEqual(weight, 0)
+        self.assertEqual(weight, 2)
         records = [self.herd._population[0], self.herd._population[4]]
         weight = get_address_similarity(records, damerau_levenshtein)
-        self.assertEqual(weight, 2)
+        self.assertEqual(weight, 7)
         records = [self.herd._population[0], self.herd._population[2]]
         weight = get_address_similarity(records, damerau_levenshtein)
         self.assertEqual(weight, 7)
