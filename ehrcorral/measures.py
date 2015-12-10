@@ -6,8 +6,9 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from pylev import levenshtein, damerau_levenshtein
+import json
 import string
+from pylev import levenshtein, damerau_levenshtein
 
 
 def record_similarity(herd,
@@ -268,10 +269,10 @@ def get_address_similarity(records, method=damerau_levenshtein):
 
 def clean_address(address):
     new_address = ' ' + address + ' '
-    generic_abbrevs = []  # read in json/pickle file
-    generics = []  # read in json/pickle file
-    unit_abbrevs = []  # read in json/pickle file
-    designators = []  # read in json/pickle file
+    generic_abbrevs = get_json('generic_abbrevs.json')
+    generics = get_json('generics.json')
+    unit_abbrevs = get_json('unit_abbrevs.json')
+    designators = get_json('designators.json')
     for char in string.punctuation:
         new_address = new_address.replace(char, ' ')
     for i, generic in enumerate(generics):
@@ -356,6 +357,7 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     if first_dob[0] == first_dob[1] == first_dob[2] == '' or \
         second_dob[0] == second_dob[1] == second_dob[2]:
         return 0
+    # TODO: penalize for year diffs like 1983 to 1975
     year_diff = method(first_dob[0], second_dob[0])
     month_diff = method(first_dob[1], second_dob[1])
     day_diff = method(first_dob[2], second_dob[2])
@@ -396,4 +398,8 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # ox-link method
     # return 7 if difference == 0 else 0
 
+def get_json(file):
+    with open(file) as f:
+        data = json.loads(f.read())
+    return data
 
