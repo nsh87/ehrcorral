@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 import json
 import string
 from pylev import levenshtein, damerau_levenshtein
-import string
 
 
 def record_similarity(herd,
@@ -260,10 +259,10 @@ def get_address_similarity(records, method=damerau_levenshtein):
 
 def clean_address(address):
     new_address = ' ' + address + ' '
-    generic_abbrevs = []  # read in json/pickle file
-    generics = []  # read in json/pickle file
-    unit_abbrevs = []  # read in json/pickle file
-    designators = []  # read in json/pickle file
+    generic_abbrevs = get_json('generic_abbrevs.json')
+    generics = get_json('generics.json')
+    unit_abbrevs = get_json('unit_abbrevs.json')
+    designators = get_json('designators.json')
     for char in string.punctuation:
         new_address = new_address.replace(char, ' ')
     for i, generic in enumerate(generics):
@@ -389,4 +388,8 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # ox-link method
     # return 7 if difference == 0 else 0
 
+def get_json(file):
+    with open(file) as f:
+        data = json.loads(f.read())
+    return data
 
