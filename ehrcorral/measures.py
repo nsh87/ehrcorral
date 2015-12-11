@@ -246,7 +246,7 @@ def get_address_similarity(records, method=damerau_levenshtein):
         second_profile.address2.lower()
     first_address = clean_address(first_address)
     second_address = clean_address(second_address)
-    difference = method(first_address[:8], second_address[:8])
+    difference = method(first_address[:12], second_address[:12])
     if difference == 0:
         return 7
     elif difference <= 2:
