@@ -6,6 +6,7 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import os
 import json
 import string
 from pylev import levenshtein, damerau_levenshtein
@@ -284,7 +285,7 @@ def clean_address(address):
         old = ' ' + designator + ' '
         new = ' ' + unit_abbrevs[i] + ' '
         new_address = new_address.replace(old, new)
-    return string.join(new_address.split())
+    return ' '.join(new_address.split())
 
 
 def get_post_code_similarity(records, method=damerau_levenshtein):
@@ -398,8 +399,10 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # ox-link method
     # return 7 if difference == 0 else 0
 
-def get_json(file):
-    with open(file) as f:
-        data = json.loads(f.read())
+def get_json(file_name):
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, file_name)
+    with open(file_path) as f:
+        data = json.load(f)
     return data
 
