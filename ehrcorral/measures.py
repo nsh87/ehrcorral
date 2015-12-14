@@ -400,7 +400,7 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # return 7 if difference == 0 else 0
 
 def get_json(file_name):
-    current_dir = os.path.dirname(__file__)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, file_name)
     with open(file_path) as f:
         data = json.load(f)
