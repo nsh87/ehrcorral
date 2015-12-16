@@ -18,7 +18,7 @@ requirements = [
     'jellyfish',
     'backport_collections',
     'numpy',
-    'pylev'
+    'pylev',
 ]
 
 test_requirements = [
@@ -37,9 +37,9 @@ setup(
     packages=[
         'ehrcorral',
     ],
-    package_dir={'ehrcorral':
-                 'ehrcorral'},
+    package_dir={'ehrcorral': 'ehrcorral'},
     include_package_data=True,
+    package_data={'ehrcorral': ['*.json']},
     install_requires=requirements,
     license="ISCL",
     zip_safe=False,

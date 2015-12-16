@@ -10,6 +10,7 @@ import os
 import json
 import string
 from pylev import levenshtein, damerau_levenshtein
+import pkgutil
 
 
 def record_similarity(herd,
@@ -399,10 +400,8 @@ def get_id_similarity(records, method=damerau_levenshtein):
     # ox-link method
     # return 7 if difference == 0 else 0
 
+
 def get_json(file_name):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, file_name)
-    with open(file_path) as f:
-        data = json.load(f)
-    return data
+    data = pkgutil.get_data('ehrcorral', file_name)
+    return json.loads(data)
 
