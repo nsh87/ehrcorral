@@ -403,5 +403,5 @@ def get_id_similarity(records, method=damerau_levenshtein):
 
 def get_json(file_name):
     data = pkgutil.get_data('ehrcorral', file_name)
-    return json.loads(data)
+    return json.loads(data.decode())
 
