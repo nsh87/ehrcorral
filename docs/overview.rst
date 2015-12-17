@@ -216,7 +216,12 @@ However, there are many types entry errors [#typo_errors]_.
     * **character transposition**: 55414 :math:`{\Rightarrow}` 55441
     * **gender misclassification**: M :math:`{\Rightarrow}` F
 
-
+To deal with the first four errors, EHRCorral uses the damerau-levenshtein
+edit distance measurement on most of its data fields [#matching_records_nmpi]_.
+Thus, if any of those errors occur, the similarity between the two fields
+compared is still high. To avoid the issue of gender misclassification as
+best as possible, EHRCorral focuses on sex in comparisons. Further work may
+be done in this area to better handle gender misclassification in the future.
 
 Weighting
 ^^^^^^^^^
