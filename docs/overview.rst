@@ -209,6 +209,13 @@ Weighting
    current research problems." Statistical Research Division, US Census Bureau.
    1999.
 
+.. [#final_report] Morris, Genevieve et al. "Patient Identification And
+   Matching Final Report". HealthIT.gov. N.p., 2014. Web. 17 Sept. 2015.
+
+.. [#deterministic_vs_probabilistic] Zhu, Ying, et al. "When to conduct
+   probabilistic linkage vs. deterministic linkage? A simulation study." Journal
+   of Biomedical Informatics 56.C (2015): 80-86. 
+
 .. [#integrity_patient_data] Just, B. H., et al. "Managing the integrity of
    patient identity in health information exchange." Journal of AHIMA/American
    Health Information Management Association 80.7 (2009): 62-69.
@@ -243,16 +250,9 @@ Weighting
 .. [#metaphone] Lawrence, Philips. "Hanging on the metaphone." Computer
    Language 7.12 (1990): 39-43.
 
-.. [#deterministic_vs_probabilistic] Zhu, Ying, et al. "When to conduct
-   probabilistic linkage vs. deterministic linkage? A simulation study." Journal
-   of Biomedical Informatics 56.C (2015): 80-86. 
-
 .. [#blocking_considerations] Kelley, Robert Patrick. Blocking considerations
    for record linkage under conditions of uncertainty. Bureau of the Census,
    1984.
 
 .. [#practical_introduction] Clark, D. E. "Practical introduction to record
    linkage for injury research." Injury Prevention 10.3 (2004): 186-191.
-
-.. [#final_report] Morris, Genevieve et al. "Patient Identification And
-   Matching Final Report". HealthIT.gov. N.p., 2014. Web. 17 Sept. 2015.
