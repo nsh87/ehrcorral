@@ -4,7 +4,7 @@ Overview
 
 Significant effort has been put into developing record-linkage algorithms
 using deterministic, probabilistic, or machine learning methods, or
-a combination of approaches [#current_practice]_[#state_of_linkage]_.
+a combination of approaches [#current_practice]_ [#state_of_linkage]_.
 EHRCorral takes a probabilistic approach, wherein certain fields are weighted
 based on their match-level, which is determined using numerical or lexical
 analysis in the context of two records or the entire set of records.
@@ -20,7 +20,7 @@ Purely deterministic models, which attempt to find identical values in
 certain fields, are unideal for many healthcare data sets
 [#deterministic_vs_probabilistic]_. Keying errors, misspellings, and
 transpositions of first name and last name are all too common in EHRs
-[#integrity_patient_data]_[#data_accuracy]_, and some institutions are only
+[#integrity_patient_data]_ [#data_accuracy]_, and some institutions are only
 able to record minimal identifying information about patients, such as is
 often the case with transient, homeless, and under-served populations. This
 makes it difficult to identify a field or fields which can reliably be
@@ -58,7 +58,7 @@ approximately represent a word or name. There are several common name
 compression schemes in wide use, including Soundex, NYSIIS, metaphone, and
 double metaphone, which appear here in chronological order according to their
 date of creation
-[#record_linkage_proceedings]_[#algorithm_variable_compression]_. The purpose
+[#record_linkage_proceedings]_ [#algorithm_variable_compression]_. The purpose
 of name compression in record linkage is to allow for a potential name match
 when the spelling of two names disagree but the phonetics are identical. For
 example, the Soundex code for Catie and Caity are both **C300**, although
@@ -84,7 +84,7 @@ Caity, and Katie are all **CATY**. The improvement can be seen here since NYSIIS
 correctly identifies the same code for these phonetically identical names.
 
 Metaphone, and then double metaphone, are the most recent phonemic
-compressions available in EHRCorral [#metaphone]_[#double_metaphone]_.
+compressions available in EHRCorral [#metaphone]_ [#double_metaphone]_.
 Metaphone was first published in 1990 and is the first algorithm here to
 consider the sequences of letters and sounds rather than just individual
 characters. It also performs its compression based on the entire name, not
@@ -114,7 +114,7 @@ Record Blocking
 
 Record blocking is a technique used to eliminate probabilistic matching
 between records that clearly do not match based on some field, such as last
-name [#blocking_considerations]_[#practical_introduction]_. If every record
+name [#blocking_considerations]_ [#practical_introduction]_. If every record
 has to be checked against every other record for a probabilistic match there
 are :math:`{n \choose 2}` checks that must occur. For n=1,000,000 records,
 this would require 499,999,500,000 (499 trillion) record-to-record
