@@ -686,3 +686,18 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.corral()
         print()
         print(herd._similarity_matrix)
+
+    def test_gender_misclassification(self):
+        """See how gender misclassification impacts probability matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'gender_misclassification_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
