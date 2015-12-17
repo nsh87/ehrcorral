@@ -191,7 +191,10 @@ Matching
 --------
 
 The matching that EHRCorral does is heavily based on the Oxford Record
-Linkage System (OX-Link) [#ox_link]_.
+Linkage System (OX-Link) [#ox_link]_. It takes a number of name and non-name
+fields and determines the similarities between two respective records. Based
+on the similarity weight calculated for each individual field, an aggregate
+similarity for the two records is determined.
 
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
