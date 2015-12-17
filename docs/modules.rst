@@ -2,6 +2,8 @@
 Modules
 ========
 
+.. autosummary::
+
 .. autoclass:: ehrcorral.ehrcorral.Herd
    :members:
 
