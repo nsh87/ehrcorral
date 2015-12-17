@@ -23,7 +23,7 @@ addons:
     - python-numpy
     - gfortran
 # Command to install dependencies on Travis environment
-install: pip install -r requirements.txt
+install: pip install -r requirements_dev.txt
 # Command to run tests, e.g. python setup.py test
 script:
   - if [[ "$TESTENV" != "docs" ]]; then
