@@ -639,3 +639,18 @@ class TestCommonCharacterErrors(unittest.TestCase):
         print()
         print(herd._similarity_matrix)
 
+    def test_character_omission(self):
+        """See how character omission in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_omission_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
