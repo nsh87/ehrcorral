@@ -15,6 +15,8 @@
 
 import sys
 import os
+import sphinx.environment
+from docutils.utils import get_source_line
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -308,3 +310,10 @@ def setup(app):
     """Call the above namedtuple auto-processors."""
     app.connect( 'autodoc-process-docstring', no_namedtuple_attrib_docstring,)
     app.connect( 'autodoc-skip-member', no_namedtuple_private_attrib,)
+
+
+# Ignore warnings about GitHub PyPi/Coverage shields being nonlocal image URIs
+def _warn_node(self, msg, node):
+    if not msg.startswith('nonlocal image URI found:'):
+        self._warnfunc(msg, '%s:%s' % get_source_line(node))
+sphinx.environment.BuildEnvironment.warn_node = _warn_node
