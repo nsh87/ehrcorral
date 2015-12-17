@@ -654,3 +654,19 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.corral()
         print()
         print(herd._similarity_matrix)
+
+    def test_character_substitution(self):
+        """See how character substitution in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_substitution_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
