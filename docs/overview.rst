@@ -180,12 +180,12 @@ William Taft Robinson, a potential match can be found with this Record. Note
 that the blocking group is only used to determine which Records are checked. It
 does not modify the forename, nor does it insert William in place of Bill.
 
-A standard set of names and their nicknames is included with EHRCorral, but one
-can be supplied to customize the explosion to names from a different region. For
-example, instead of Bill and William, when dealing with records containing
-Hispanic and Western European names perhaps the European name Elizabeth should
-also be considered as Isabel, the accepted Spanish version
-of Elizabeth, for blocking purposes.
+A standard set of names and their nicknames is not yet included with
+EHRCorral, but in the future one can be supplied to customize the explosion
+to names from a different region. For example, instead of Bill and William,
+when dealing with records containing Hispanic and Western European names
+perhaps the European name Elizabeth should also be considered as Isabel, the
+accepted Spanish version of Elizabeth, for blocking purposes.
 
 Matching
 --------
