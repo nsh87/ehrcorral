@@ -20,8 +20,10 @@ matrix:
 addons:
   apt:
     packages:
-    - python-numpy
-    - gfortran
+    - texlive-latex-recommended
+    - texlive-fonts-recommended
+    - texlive-latex-extra
+    - dvipng
 # Command to install dependencies on Travis environment
 install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
