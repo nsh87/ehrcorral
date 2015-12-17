@@ -375,35 +375,3 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     # map prop_diff from (0, 1) to (-23, 14), then flip sign since lower diff
     # implies that the two name are more similar.
     return -(37 * prop_diff - 14)
-
-
-def get_id_similarity(records, method=damerau_levenshtein):
-    """Determine weights for the likelihood of two national IDs being the same.
-
-    Args:
-        records (List[Record]): A list of two objects of :py:class:`.Record`
-            to be compared to one another.
-        method (func): A function to be used to compare the national IDs.
-
-    Returns:
-        The national ID weight for the similarity of the two national IDs.
-    """
-    first_profile = records[0].profile
-    second_profile = records[1].profile
-    first_id = str(first_profile.national_id1.lower())  # must be a string
-    second_id = str(second_profile.national_id1.lower())  # must be a string
-    difference = method(first_id, second_id)
-    if difference == 0:
-        return 7
-    elif difference == 1:  # for transposition, ox-link does not do this
-        return 2
-    else:
-        return 0
-    # ox-link method
-    # return 7 if difference == 0 else 0
-
-def get_json(file):
-    with open(file) as f:
-        data = json.loads(f.read())
-    return data
-
