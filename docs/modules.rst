@@ -5,6 +5,12 @@ Modules
 ehrcorral.ehrcorral
 -------------------
 
+.. autosummary::
+   :toctree:
+
+   ehrcorral.ehrcorral.Herd
+   ehrcorral.ehrcorral.Record
+
 Herd
 ^^^^
 
@@ -27,3 +33,8 @@ gen_record()
 ^^^^^^^^^^^^
 
 .. autofunction:: ehrcorral.ehrcorral.gen_record
+
+compress()
+^^^^^^^^^^
+
+.. autofunction:: ehrcorral.ehrcorral.compress
