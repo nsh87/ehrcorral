@@ -7,8 +7,8 @@ Release Log
 ^^^^^^^^^^^^^^^^^^
 
 * First release on PyPI.
-  + Docs need updating and more usage.
-  + Corralling is functional, but does not use nickname expansions.
-  + Some tweaking of probabilities could be attempted for certain scenarios.
-  + Probabilities are generated using birth year, name fields, address, and
-    zip code.
+   + Docs need updating and more usage.
+   + Corralling is functional, but does not use nickname expansions.
+   + Some tweaking of probabilities could be attempted for certain scenarios.
+   + Probabilities are generated using birth year, name fields, address, and
+     zip code.
