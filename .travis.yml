@@ -1,7 +1,5 @@
 # Config file for automatic testing at travis-ci.org
-
 language: python
-
 python:
   - "3.5"
   - "3.4"
@@ -24,9 +22,12 @@ addons:
     packages:
     - python-numpy
     - gfortran
-
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+# Command to install dependencies on Travis environment
 install: pip install -r requirements.txt
-
-# command to run tests, e.g. python setup.py test
-script: python setup.py test
+# Command to run tests, e.g. python setup.py test
+script:
+  - if [[ "$TESTENV" != "docs" ]]; then
+      python setup.py test;
+    else
+      cd docs && sphinx-build -W -T -b html . ../html;
+    fi
