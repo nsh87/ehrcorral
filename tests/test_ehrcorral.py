@@ -9,6 +9,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
+
 import numpy as np
 import unittest2 as unittest
 from faker import Faker
@@ -597,4 +599,43 @@ class TestHerdSimilarityMatrix(unittest.TestCase):
                                   damerau_levenshtein)]],
             dtype=np.float32)
         self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
+
+
+class TestCommonCharacterErrors(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_no_errors(self):
+        """See how the probability matrix looks with no textual errors."""
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'error_free_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_character_insertion(self):
+        """See how character insertion in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_insertion_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
 
