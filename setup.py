@@ -16,11 +16,16 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'jellyfish',
-    'metaphone',
+    'backport_collections',
+    'numpy',
+    'pylev',
 ]
 
 test_requirements = [
    'fake-factory',
+   'unittest2',
+   'sphinx',
+   'sphinx_rtd_theme',
 ]
 
 setup(
@@ -34,9 +39,9 @@ setup(
     packages=[
         'ehrcorral',
     ],
-    package_dir={'ehrcorral':
-                 'ehrcorral'},
+    package_dir={'ehrcorral': 'ehrcorral'},
     include_package_data=True,
+    package_data={'ehrcorral': ['*.json']},
     install_requires=requirements,
     license="ISCL",
     zip_safe=False,
