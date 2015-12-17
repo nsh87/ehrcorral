@@ -5,15 +5,6 @@ Modules
 ehrcorral.ehrcorral
 -------------------
 
-.. autosummary::
-   :toctree:
-
-   ehrcorral.ehrcorral.Herd
-   ehrcorral.ehrcorral.Record
-   ehrcorral.ehrcorral.Profile
-   ehrcorral.ehrcorral.gen_record
-   ehrcorral.ehrcorral.compress
-
 Herd
 ^^^^
 
@@ -44,21 +35,6 @@ compress()
 
 ehrcorral.measures
 ------------------
-
-.. autosummary::
-   :toctree:
-
-   ehrcorral.measures.record_similarity
-   ehrcorral.measures.get_forename_similarity
-   ehrcorral.measures.extract_forename_similarity_info
-   ehrcorral.measures.get_surname_similarity
-   ehrcorral.measures.extract_surname_similarity_info
-   ehrcorral.measures.get_address_similarity
-   ehrcorral.measures.clean_address
-   ehrcorral.measures.get_post_code_similarity
-   ehrcorral.measures.get_sex_similarity
-   ehrcorral.measures.get_dob_similarity
-   ehrcorral.measures.get_id_similarity
 
 record_similarity()
 ^^^^^^^^^^^^^^^^^^^
