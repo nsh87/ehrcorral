@@ -425,7 +425,7 @@ def gen_record(data):
 
     Args:
         data (dict): A dictionary containing at least one of fields in
-            :py:data::PROFILE_FIELDS.
+            :py:data:`PROFILE_FIELDS`.
 
     Returns:
         A object of class :py:class:`.Record`.
