@@ -10,6 +10,9 @@ ehrcorral.ehrcorral
 
    ehrcorral.ehrcorral.Herd
    ehrcorral.ehrcorral.Record
+   ehrcorral.ehrcorral.Profile
+   ehrcorral.ehrcorral.gen_record
+   ehrcorral.ehrcorral.compress
 
 Herd
 ^^^^
