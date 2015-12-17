@@ -204,6 +204,20 @@ a link between records with similarities above the threshold.
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
 
+EHRCorral separates record similarity into two sections: name fields and
+non-name fields. Name fields alone have a high degree of accuracy in
+determining the similarity of two records [#accuracy_matching]_
+[#simple_heuristic]_. Thus, EHRCorral heavily weights matching based on names.
+However, there are many types entry errors [#typo_errors]_.
+
+    * **character insertion**: Richard :math:`{\Rightarrow}` Ricthard
+    * **character omission**: Sullivan :math:`{\Rightarrow}` Sulivan
+    * **character substitution**: Robert :math:`{\Rightarrow}` Rodert
+    * **character transposition**: 55414 :math:`{\Rightarrow}` 55441
+    * **gender misclassification**: M :math:`{\Rightarrow}` F
+
+
+
 Weighting
 ^^^^^^^^^
 
@@ -264,4 +278,17 @@ Weighting
 
 .. [#practical_introduction] Clark, D. E. "Practical introduction to record
    linkage for injury research." Injury Prevention 10.3 (2004): 186-191.
+
+.. [#accuracy_matching] Aldridge, Robert W., et al. "Accuracy of
+   Probabilistic Linkage Using the Enhanced Matching System for Public Health
+   and Epidemiological Studies." PloS one 10.8 (2015): e0136179.
+
+.. [#simple_heuristic] Weber, Susan C., et al. "A simple heuristic for
+   blindfolded record linkage." Journal of the American Medical Informatics
+   Association 19.e1 (2012): e157-e161.
+
+.. [#typo_errors] Theera-Ampornpunt, Nawanan, Boonchai Kijsanayotin, and
+   Stuart M. Speedie. "Creating a large database test bed with typographical
+   errors for record linkage evaluation." AMIA... Annual Symposium
+   proceedings/AMIA Symposium. AMIA Symposium. 2007.
 
