@@ -196,6 +196,11 @@ fields and determines the similarities between two respective records. Based
 on the similarity weight calculated for each individual field, an aggregate
 similarity for the two records is determined.
 
+EHRCorral cycles through every record to build a square symmetric similarity
+matrix. Thus, the similarity between any two records can be determined by
+looking at the matrix. By thresholding the similarity matrix, one can create
+a link between records with similarities above the threshold.
+
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
 
