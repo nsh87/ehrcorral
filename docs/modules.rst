@@ -41,3 +41,77 @@ compress()
 ^^^^^^^^^^
 
 .. autofunction:: ehrcorral.ehrcorral.compress
+
+ehrcorral.measures
+------------------
+
+.. autosummary::
+   :toctree:
+
+   ehrcorral.measures.record_similarity
+   ehrcorral.measures.get_forename_similarity
+   ehrcorral.measures.extract_forename_similarity_info
+   ehrcorral.measures.get_surname_similarity
+   ehrcorral.measures.extract_surname_similarity_info
+   ehrcorral.measures.get_address_similarity
+   ehrcorral.measures.clean_address
+   ehrcorral.measures.get_post_code_similarity
+   ehrcorral.measures.get_sex_similarity
+   ehrcorral.measures.get_dob_similarity
+   ehrcorral.measures.get_id_similarity
+
+record_similarity()
+^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.record_similarity
+
+get_forename_similarity()
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_forename_similarity
+
+extract_forename_similarity_info()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.extract_forename_similarity_info
+
+get_surname_similarity()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_surname_similarity
+
+extract_surname_similarity_info()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.extract_surname_similarity_info
+
+get_address_similarity()
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_address_similarity
+
+clean_address()
+^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.clean_address
+
+get_post_code_similarity()
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_post_code_similarity
+
+get_sex_similarity()
+^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_sex_similarity
+
+
+get_dob_similarity()
+^^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_dob_similarity
+
+get_id_similarity()
+^^^^^^^^^^^^^^^^^^^
+
+.. autofunction:: ehrcorral.measures.get_id_similarity
