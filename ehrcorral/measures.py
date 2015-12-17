@@ -6,7 +6,12 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import os
+import json
+import string
 from pylev import levenshtein, damerau_levenshtein
+import pkgutil
+
 
 
 def record_similarity(herd,
@@ -31,22 +36,22 @@ def record_similarity(herd,
     Returns:
         A tuple of the sum of name weights and the sum of non-name weights.
     """
-    forename_similarity = \
+    forename_similarity, fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "fore")
-    mid_forename_similarity = \
+    mid_forename_similarity, mid_fore_max = \
         get_forename_similarity(herd,
                                 [first_record, second_record],
                                 forename_method,
                                 "mid_fore")
-    birth_surname_similarity = \
+    birth_surname_similarity, bir_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
                                "birth")
-    current_surname_similarity = \
+    current_surname_similarity, cur_sur_max = \
         get_surname_similarity(herd,
                                [first_record, second_record],
                                surname_method,
@@ -59,14 +64,17 @@ def record_similarity(herd,
                                                     damerau_levenshtein)
     sex_similarity = get_sex_similarity([first_record, second_record])
     dob_similarity = get_dob_similarity([first_record, second_record])
+    id_similarity = get_id_similarity([first_record, second_record],
+                                      damerau_levenshtein)
     # did not include GP (doctor), place of birth, hospital and hospital number
-    name_sum = forename_similarity + mid_forename_similarity +\
+    name_sum = forename_similarity + mid_forename_similarity + \
         birth_surname_similarity + current_surname_similarity
     # since we are not using a few of the ox-link weights, the non-name
     # numbers will be different
     non_name_sum = address_similarity + post_code_similarity + sex_similarity +\
-        dob_similarity
-    max_similarity = 176.0  # sum of max weights for all fields
+        dob_similarity + id_similarity
+    # sum of max weights for all fields
+    max_similarity = fore_max + mid_fore_max + bir_sur_max + cur_sur_max + 33.0
     return (name_sum + non_name_sum) / max_similarity
 
 
@@ -88,21 +96,19 @@ def get_forename_similarity(herd, records, method, name_type):
     name_types = ["fore", "mid_fore"]
     first_forename, first_freq = \
         extract_forename_similarity_info(herd, records[0], name_type)
-    # if there is no forename for our first record, we do not need to compare
-    if first_forename == '':
-        return 0
     # Get both names and frequencies from second record to compare to first
-    second_forename = [
-        extract_forename_similarity_info(herd, records[1], name)[0]
+    second_forefreq = [
+        extract_forename_similarity_info(herd, records[1], name)
         for name in name_types
         ]
-    second_freq = [
-        extract_forename_similarity_info(herd, records[1], name)[1]
-        for name in name_types
-        ]
+    second_forename = [item[0] for item in second_forefreq]
+    second_freq = [item[1] for item in second_forefreq]
+    # if there is no surname for our first record, or both second record
+    # surnames, then we do not need to compare
+    if first_forename == '' or second_forename[0] == second_forename[1] == '':
+        return 0, 6
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
-    # TODO: Compare names as all UPPERCASE, or lowercase.
     diffs = [method(first_forename, name) for name in second_forename]
     difference = min(diffs)
     min_index = diffs.index(difference)
@@ -117,7 +123,7 @@ def get_forename_similarity(herd, records, method, name_type):
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
     # implies that the two name are more similar.
     weight = -(4 * prop_diff - 2)
-    return weight * F
+    return weight * F, 2 * F
 
 
 def extract_forename_similarity_info(herd, record, name_type):
@@ -137,11 +143,11 @@ def extract_forename_similarity_info(herd, record, name_type):
     profile = record.profile
     # Add try/except
     if name_type == "fore":
-        forename = profile.forename
+        forename = profile.forename.lower()
         weight = herd._forename_freq_dict[record._meta.forename_freq_ref] / \
             float(sum(herd._forename_freq_dict.values()))
     elif name_type == "mid_fore":
-        forename = profile.mid_forename
+        forename = profile.mid_forename.lower()
         weight = herd._forename_freq_dict[record._meta.mid_forename_freq_ref]\
             / float(sum(herd._forename_freq_dict.values()))
     return forename, weight
@@ -165,19 +171,17 @@ def get_surname_similarity(herd, records, method, name_type):
     name_types = ["birth", "current"]
     first_surname, first_freq = \
         extract_surname_similarity_info(herd, records[0], name_type)
-    # if there is no surname for our first record, we do not need to compare
-    if first_surname == '':
-        return 0
     # Get both names and frequencies from second record to compare to first
-    # TODO: list comprehension for both, then extract out individual parts
-    second_surname = [
-        extract_surname_similarity_info(herd, records[1], name)[0]
+    second_forefreq = [
+        extract_surname_similarity_info(herd, records[1], name)
         for name in name_types
         ]
-    second_freq = [
-        extract_surname_similarity_info(herd, records[1], name)[1]
-        for name in name_types
-        ]
+    second_surname = [item[0] for item in second_forefreq]
+    second_freq = [item[1] for item in second_forefreq]
+    # if there is no surname for our first record, or both second record
+    # surnames, then we do not need to compare
+    if first_surname == '' or second_surname[0] == second_surname[1] == '':
+        return 0, 12
     # Get difference between first record name and both second record names,
     # then find the one that has the minimum difference and keep that one
     diffs = [method(first_surname, name) for name in second_surname]
@@ -193,7 +197,7 @@ def get_surname_similarity(herd, records, method, name_type):
     # map prop_diff from (0, 1) to (-2, 2), then flip sign since lower diff
     # implies that the two name are more similar.
     weight = -(4 * prop_diff - 2)
-    return weight * S
+    return weight * S, 2 * S
 
 
 def extract_surname_similarity_info(herd, record, name_type):
@@ -213,11 +217,11 @@ def extract_surname_similarity_info(herd, record, name_type):
     profile = record.profile
     # Add try/except
     if name_type == "birth":
-        surname = profile.birth_surname
+        surname = profile.birth_surname.lower()
         weight = herd._surname_freq_dict[record._meta.birth_surname_freq_ref]\
             / float(sum(herd._surname_freq_dict.values()))
     elif name_type == "current":
-        surname = profile.current_surname
+        surname = profile.current_surname.lower()
         weight = herd._surname_freq_dict[record._meta.current_surname_freq_ref]\
             / float(sum(herd._surname_freq_dict.values()))
     return surname, weight
@@ -234,24 +238,56 @@ def get_address_similarity(records, method=damerau_levenshtein):
     Returns:
         The address weight for the similarity of the addresses.
     """
-    # ox-link only takes first 8 characters and greps for things like "flat"
-    # TODO: combine both address lines and grep out things like punctuation
-    # and words like "st"
+    # ox-link only takes first 8 characters
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_address = [first_profile.address1, first_profile.address2]
-    second_address = [second_profile.address1, second_profile.address2]
-    diff1 = method(first_address[0], second_address[0])
-    diff2 = method(first_address[1], second_address[1])
-    if diff1 == 0:
-        if diff2 == 0:
-            return 7
-        else:
-            return 2
+    first_address = first_profile.address1.lower() +\
+        ' ' +\
+        first_profile.address2.lower()
+    second_address = second_profile.address1.lower() +\
+        ' ' +\
+        second_profile.address2.lower()
+    first_address = clean_address(first_address)
+    second_address = clean_address(second_address)
+    difference = method(first_address[:12], second_address[:12])
+    if difference == 0:
+        return 7
+    elif difference <= 2:
+        return 2
     else:
         return 0
     # ox-link method
     # return 7 if diff1 == 0 else 0
+
+
+def clean_address(address):
+    """Clean unicode string that contains an address of all punctuation and
+    standardize all street suffixes and unit designators.
+
+    Args:
+        address (unicode): A unicode string that contains an address to be
+            cleaned and standardized.
+
+    Returns:
+        The cleaned unicode address string.
+    """
+    new_address = ' ' + address + ' '
+    generic_abbrevs = get_json('generic_abbrevs.json')
+    generics = get_json('generics.json')
+    unit_abbrevs = get_json('unit_abbrevs.json')
+    designators = get_json('designators.json')
+    for char in string.punctuation:
+        new_address = new_address.replace(char, ' ')
+    for i, generic in enumerate(generics):
+        for g in generic:
+            old = ' ' + g + ' '
+            new = ' ' + generic_abbrevs[i] + ' '
+            new_address = new_address.replace(old, new)
+    for i, designator in enumerate(designators):
+        old = ' ' + designator + ' '
+        new = ' ' + unit_abbrevs[i] + ' '
+        new_address = new_address.replace(old, new)
+    return ' '.join(new_address.split())
 
 
 def get_post_code_similarity(records, method=damerau_levenshtein):
@@ -293,8 +329,10 @@ def get_sex_similarity(records):
     # consider how better to account for sexes besides male and female
     first_profile = records[0].profile
     second_profile = records[1].profile
-    first_sex = str(first_profile.sex)  # must be a string
-    second_sex = str(second_profile.sex)  # must be a string
+    # just take first letter so that male = m
+    # TODO: Consider robust way to consider non-binary sexes
+    first_sex = str(first_profile.sex.lower())  # should be a string
+    second_sex = str(second_profile.sex.lower())  # should be a string
     return 1 if first_sex == second_sex else -10
 
 
@@ -322,6 +360,7 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     if first_dob[0] == first_dob[1] == first_dob[2] == '' or \
         second_dob[0] == second_dob[1] == second_dob[2]:
         return 0
+    # TODO: penalize for year diffs like 1983 to 1975
     year_diff = method(first_dob[0], second_dob[0])
     month_diff = method(first_dob[1], second_dob[1])
     day_diff = method(first_dob[2], second_dob[2])
@@ -335,3 +374,35 @@ def get_dob_similarity(records, method=damerau_levenshtein):
     # map prop_diff from (0, 1) to (-23, 14), then flip sign since lower diff
     # implies that the two name are more similar.
     return -(37 * prop_diff - 14)
+
+
+def get_id_similarity(records, method=damerau_levenshtein):
+    """Determine weights for the likelihood of two national IDs being the same.
+
+    Args:
+        records (List[Record]): A list of two objects of :py:class:`.Record`
+            to be compared to one another.
+        method (func): A function to be used to compare the national IDs.
+
+    Returns:
+        The national ID weight for the similarity of the two national IDs.
+    """
+    first_profile = records[0].profile
+    second_profile = records[1].profile
+    first_id = str(first_profile.national_id1.lower())  # must be a string
+    second_id = str(second_profile.national_id1.lower())  # must be a string
+    difference = method(first_id, second_id)
+    if difference == 0:
+        return 7
+    elif difference == 1:  # for transposition, ox-link does not do this
+        return 2
+    else:
+        return 0
+    # ox-link method
+    # return 7 if difference == 0 else 0
+
+
+def get_json(file_name):
+    data = pkgutil.get_data('ehrcorral', file_name)
+    return json.loads(data.decode())
+
