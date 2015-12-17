@@ -268,7 +268,7 @@ class Record(object):
 
 
 class Herd(object):
-    """A collection of :py:class:`.Record`s with methods for interacting with
+    """A collection of :py:class:`~.Record` with methods for interacting with
     and linking records in the herd.
     """
     def __init__(self):
@@ -309,7 +309,7 @@ class Herd(object):
 
         Args:
             records (list, tuple): A list or tuple containing multiple
-                :py:class:`.Record`
+                :py:class:`~.Record`
         """
         if self._population is not None:
             raise AttributeError("The herd is already populated.")
@@ -324,7 +324,7 @@ class Herd(object):
                surname_freq_method=dmetaphone,
                blocking_compression=dmetaphone):
         """Perform record matching on all Records in the Herd.
-.
+
         Args:
             forename_freq_method (func): A function that performs some sort of
                 compression. Compression of forename can be different than
@@ -376,7 +376,8 @@ class Herd(object):
         of references to Records that have that block.
 
         Args:
-            record (:py:class:`.Record`): An object of class :py:class:`.Record`
+            record (:py:class:`~.Record`): An object of class
+                :py:class:`~.Record`
         """
         for block in record._blocks:
             self._block_dict[block].append(record)
@@ -386,7 +387,8 @@ class Herd(object):
         and surname counters.
 
         Args:
-            record (:py:class:`.Record`): An object of class :py:class:`.Record`
+            record (:py:class:`~.Record`): An object of class
+                :py:class:`~.Record`
         """
         meta = record._meta
         forenames = [
@@ -416,8 +418,8 @@ class Herd(object):
 
 
 def gen_record(data):
-    """Generate a :py:class:`.Record` which can be used to populate a
-    :py:class:`Herd`.
+    """Generate a :py:class:`~.Record` which can be used to populate a
+    :py:class:`~Herd`.
 
     In addition to extracting the profile information for
 
@@ -426,7 +428,7 @@ def gen_record(data):
             :py:data::PROFILE_FIELDS.
 
     Returns:
-        A object of class :py:class:`.Record`.
+        A object of class :py:class:`~.Record`.
     """
     fields = [data.get(field, '') for field in PROFILE_FIELDS]
     profile = Profile._make(fields)

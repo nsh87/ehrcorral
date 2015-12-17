@@ -2,12 +2,6 @@
 Modules
 ========
 
-.. autosummary::
-   :toctree:
-
-   ehrcorral.ehrcorral.Herd
-   ehrcorral.ehrcorral.Record
-
 .. autoclass:: ehrcorral.ehrcorral.Herd
    :members:
 
