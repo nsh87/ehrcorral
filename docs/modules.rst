@@ -5,6 +5,8 @@ Modules
 ehrcorral.ehrcorral
 -------------------
 
+Test
+
 Herd
 ^^^^
 
