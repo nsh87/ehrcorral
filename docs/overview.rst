@@ -207,8 +207,10 @@ Similarity Measures
 EHRCorral separates record similarity into two sections: name fields and
 non-name fields. Name fields alone have a high degree of accuracy in
 determining the similarity of two records [#accuracy_matching]_
-[#simple_heuristic]_. Thus, EHRCorral heavily weights matching based on names.
-However, there are many types entry errors [#typo_errors]_.
+[#simple_heuristic]_. Thus, EHRCorral heavily weights matching based on names
+and uses the non-name fields for fine-tuning.
+
+However, there are many types of entry errors [#typo_errors]_.
 
     * **character insertion**: Richard :math:`{\Rightarrow}` Ricthard
     * **character omission**: Sullivan :math:`{\Rightarrow}` Sulivan
@@ -221,7 +223,20 @@ edit distance measurement on most of its data fields [#matching_records_nmpi]_.
 Thus, if any of those errors occur, the similarity between the two fields
 compared is still high. To avoid the issue of gender misclassification as
 best as possible, EHRCorral focuses on sex in comparisons. Further work may
-be done in this area to better handle gender misclassification in the future.
+be done in this area to handle better gender misclassification in the future.
+Birth date and zip code are converted to character fields to handle
+all of the character errors above and better understand the similarity of the
+fields between records.
+
+The name fields have the potential for a different type of transposition
+error than other fields. One may enter a forename as a mid-forename or vice
+versa. This can happen with current and birth surname as well. To account for
+this, EHRCorral checks both forename or surname fields in the second record
+when comparing it with the respective field from the first. Also, this has the
+benefit of handling the case where a surname is changed, e.g. in marriage,
+much better.
+
+
 
 Weighting
 ^^^^^^^^^
