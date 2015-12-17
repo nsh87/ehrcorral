@@ -1,7 +1,5 @@
 # Config file for automatic testing at travis-ci.org
-
 language: python
-
 python:
   - "3.5"
   - "3.4"
@@ -22,11 +20,40 @@ matrix:
 addons:
   apt:
     packages:
-    - python-numpy
-    - gfortran
-
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -r requirements.txt
-
-# command to run tests, e.g. python setup.py test
-script: python setup.py test
+    - texlive-latex-recommended
+    - texlive-fonts-recommended
+    - texlive-latex-extra
+    - dvipng
+# Command to install dependencies on Travis environment
+install:
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "pypy" ]]; then
+      conda create -q -n test-environment python=2.7 numpy;
+    elif [[ "$TRAVIS_PYTHON_VERSION" == "pypy3" ]]; then
+      conda create -q -n test-environment python=3.5 numpy;
+    else
+      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy;
+    fi
+  - source activate test-environment
+  - pip install -U pip
+  - pip install -U wheel
+  - pip install -U unittest2 coverage sphinx sphinx_rtd_theme tox
+  - python setup.py install;
+# Command to run tests, e.g. python setup.py test
+script:
+  - if [[ "$TESTENV" != "docs" ]]; then
+      python setup.py test;
+    else
+      cd docs && sphinx-build -W -T -b html . ../html;
+    fi

@@ -2,6 +2,6 @@
 Project Info
 ============
 
-.. include:: history.rst
+.. include:: ../HISTORY.rst
 
 .. include:: ../AUTHORS.rst

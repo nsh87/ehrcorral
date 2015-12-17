@@ -4,22 +4,21 @@
 
 Tests for `ehrcorral` module.
 """
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
-import unittest2 as unittest
-import numpy as np
-import json
 import os
 
+import numpy as np
+import unittest2 as unittest
 from faker import Faker
 
-from ehrcorral.ehrcorral import Herd
-from ehrcorral.ehrcorral import gen_record
-from ehrcorral.ehrcorral import compress
 from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
+from ehrcorral.ehrcorral import Herd
+from ehrcorral.ehrcorral import compress
+from ehrcorral.ehrcorral import gen_record
 from ehrcorral.measures import *
 
 fake = Faker()
@@ -601,3 +600,104 @@ class TestHerdSimilarityMatrix(unittest.TestCase):
             dtype=np.float32)
         self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
 
+
+class TestCommonCharacterErrors(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_no_errors(self):
+        """See how the probability matrix looks with no textual errors."""
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'error_free_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_character_insertion(self):
+        """See how character insertion in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_insertion_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_character_omission(self):
+        """See how character omission in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_omission_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_character_substitution(self):
+        """See how character substitution in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_substitution_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_character_transposition(self):
+        """See how character transposition in someone's name impacts probability
+        matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'character_transposition_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
+
+    def test_gender_misclassification(self):
+        """See how gender misclassification impacts probability matrix.
+        """
+        herd = Herd()
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 'gender_misclassification_3x2.json')
+        with open(data_path, 'r') as data_file:
+            population = tuple(json.load(data_file))
+        records = [gen_record(profile) for profile in population]
+        herd = Herd()
+        herd.populate(records)
+        herd.corral()
+        print()
+        print(herd._similarity_matrix)
