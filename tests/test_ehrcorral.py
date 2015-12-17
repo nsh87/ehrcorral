@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import unittest2 as unittest
+import numpy as np
 import json
 import os
 
@@ -19,6 +20,7 @@ from ehrcorral.ehrcorral import Herd
 from ehrcorral.ehrcorral import gen_record
 from ehrcorral.ehrcorral import compress
 from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
+from ehrcorral.measures import *
 
 fake = Faker()
 
@@ -119,23 +121,23 @@ class TestHerdFrequencyDictionaries(unittest.TestCase):
             {
                 'forename': 'Adelyn',
                 'mid_forename': 'Heidenreich',
-                'current_surname': 'Bartell',  # PRTL
-                'birth_surname': 'Gerlach'  # KRLK
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach'
             },
             {
                 'forename': 'John',
                 'mid_forename': 'Frederich',
-                'current_surname': 'Sanders'  # SNTRS
+                'current_surname': 'Sanders'
             },
             {
                 'forename': 'Joseph',
-                'current_surname': 'Smith'  # SM0
+                'current_surname': 'Smith'
             },
             {
                 'forename': 'John',
                 'mid_forename': 'Heidenreich',
-                'current_surname': 'Smith',  # SM0
-                'birth_surname': 'Gerlach'  # KRLK
+                'current_surname': 'Smith',
+                'birth_surname': 'Gerlach'
             }
         )
         records = [gen_record(profile) for profile in population]
@@ -243,3 +245,359 @@ class TestPhonemicBlocking(unittest.TestCase):
         self.male_record.gen_blocks(dmetaphone)
         expected_blocks = ['NTRO']
         self.assertItemsEqual(self.male_record._blocks, expected_blocks)
+
+
+class TestMeasuresSimilarityFunctions(unittest.TestCase):
+
+    def setUp(self):
+        population = (
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'M',
+                'national_id1': 'D599776',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Frederich',
+                'current_surname': 'Gerlach'
+            },
+            {
+                'forename': 'Joseph',
+                'current_surname': 'Smith',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'M',
+                'national_id1': 'D599776',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'John',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Smith',
+                'birth_surname': 'Gerlach',
+                'address1': '448 Jones Avenue',
+                'postal_code': '97856',
+                'sex': 'F',
+                'national_id1': 'D599886',
+                'birth_year': '1986',
+                'birth_month': '10',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Jason',
+                'current_surname': 'Sanders',
+                'address1': '448 Jones Street',
+                'address2': 'Apt. A',
+                'postal_code': '97586',
+                'sex': 'F',
+                'national_id1': 'D597976',
+                'birth_year': '1977',
+                'birth_month': '10',
+                'birth_day': '27'
+            }
+        )
+        records = [gen_record(profile) for profile in population]
+        self.herd = Herd()
+        self.herd.populate(records)
+        self.herd.corral()
+
+    def test_extract_forename_info(self):
+        record = self.herd._population[0]
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'fore')
+        self.assertEqual(forename, 'adelyn')
+        self.assertEqual(weight, 0.25)
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'mid_fore')
+        self.assertEqual(forename, 'heidenreich')
+        self.assertEqual(weight, 0.25)
+        record = self.herd._population[4]
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'fore')
+        self.assertEqual(forename, 'jason')
+        self.assertEqual(weight, 0.375)
+        forename, weight = extract_forename_similarity_info(self.herd,
+                                                            record,
+                                                            'mid_fore')
+        self.assertEqual(forename, '')
+        self.assertEqual(weight, 0.0)
+
+    def test_extract_surname_info(self):
+        record = self.herd._population[0]
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'birth')
+        self.assertEqual(surname, 'gerlach')
+        self.assertEqual(round(weight, 5), 0.42857)
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'current')
+        self.assertEqual(surname, 'bartell')
+        self.assertEqual(round(weight, 5), 0.14286)
+        record = self.herd._population[4]
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'birth')
+        self.assertEqual(surname, '')
+        self.assertEqual(weight, 0.0)
+        surname, weight = extract_surname_similarity_info(self.herd,
+                                                          record,
+                                                          'current')
+        self.assertEqual(surname, 'sanders')
+        self.assertEqual(round(weight, 5), 0.14286)
+
+    def test_forename_similarity(self):
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_forename_similarity(self.herd,
+                                         records,
+                                         damerau_levenshtein,
+                                         "fore")
+        self.assertEqual(weight, (-4.0, 6))
+        weight = get_forename_similarity(self.herd,
+                                         records,
+                                         damerau_levenshtein,
+                                         "mid_fore")
+        self.assertEqual((round(weight[0], 5), weight[1]), (-4.90909, 6))
+        records = [self.herd._population[4], self.herd._population[0]]
+        weight = get_forename_similarity(self.herd,
+                                         records,
+                                         damerau_levenshtein,
+                                         "mid_fore")
+        self.assertEqual(weight, (0, 6))
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_forename_similarity(self.herd,
+                                         records,
+                                         damerau_levenshtein,
+                                         "mid_fore")
+        self.assertEqual(weight, (6.0, 6))
+
+    def test_surname_similarity(self):
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_surname_similarity(self.herd,
+                                        records,
+                                        damerau_levenshtein,
+                                        "current")
+        self.assertEqual((round(weight[0], 5), weight[1]), (-5.14286, 12))
+        weight = get_surname_similarity(self.herd,
+                                        records,
+                                        damerau_levenshtein,
+                                        "birth")
+        self.assertEqual(weight, (-12.0, 12))
+        records = [self.herd._population[4], self.herd._population[0]]
+        weight = get_surname_similarity(self.herd,
+                                        records,
+                                        damerau_levenshtein,
+                                        "birth")
+        self.assertEqual(weight, (0, 12))
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_surname_similarity(self.herd,
+                                        records,
+                                        damerau_levenshtein,
+                                        "birth")
+        self.assertEqual(weight, (12.0, 12))
+
+    def test_address_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_address_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_address_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 2)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_address_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 7)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_address_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 7)
+
+    def test_clean_address(self):
+        address = u'448 Jones Street'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 jones st')
+        address = u'448 Jones Avenue, Apartment 2'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 jones ave apt 2')
+        address = u'448-A Stromme Strt;; Building G'.lower()
+        cleaned_address = clean_address(address)
+        self.assertEqual(cleaned_address, u'448 a stromme st bldg g')
+        self.assertEqual(clean_address(u''), u'')
+        self.assertEqual(clean_address(u' '), u'')
+
+    def test_post_code_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 1)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_post_code_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 4)
+
+    def test_sex_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, -10)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, -10)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_sex_similarity(records)
+        self.assertEqual(weight, 1)
+
+    def test_dob_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 14)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, -4.5)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_dob_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 4.75)
+
+    def test_id_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 0)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 2)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = get_id_similarity(records, damerau_levenshtein)
+        self.assertEqual(weight, 7)
+
+    def test_record_similarity(self):
+        records = [self.herd._population[0], self.herd._population[1]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.00038)
+        records = [self.herd._population[0], self.herd._population[2]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), 0.08752)
+        records = [self.herd._population[0], self.herd._population[3]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.10248)
+        records = [self.herd._population[0], self.herd._population[4]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), -0.30872)
+        records = [self.herd._population[0], self.herd._population[0]]
+        weight = record_similarity(self.herd,
+                                   records[0],
+                                   records[1],
+                                   damerau_levenshtein,
+                                   damerau_levenshtein)
+        self.assertEqual(round(weight, 5), 1.0)
+
+
+class TestHerdSimilarityMatrix(unittest.TestCase):
+
+    def setUp(self):
+        population = (
+            {
+                'forename': 'Adelyn',
+                'mid_forename': 'Heidenreich',
+                'current_surname': 'Bartell',
+                'birth_surname': 'Gerlach',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Jane',
+                'current_surname': 'Doe',
+                'address1': '448 Jones Street',
+                'postal_code': '95786',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            },
+            {
+                'forename': 'Adelyn',
+                'current_surname': 'Bartell',
+                'address1': '612 Johson Ave',
+                'postal_code': '92436',
+                'sex': 'F',
+                'birth_year': '1977',
+                'birth_month': '08',
+                'birth_day': '27'
+            }
+        )
+        records = [gen_record(profile) for profile in population]
+        self.herd = Herd()
+        self.herd.populate(records)
+        self.herd.corral()
+
+    def test_similarity_matrix(self):
+        test_similarity = np.array([
+            [
+                record_similarity(self.herd, self.herd._population[0],
+                                  self.herd._population[0],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0,
+                record_similarity(self.herd, self.herd._population[0],
+                                  self.herd._population[2],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein)],
+            [
+                0,
+                record_similarity(self.herd, self.herd._population[1],
+                                  self.herd._population[1],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0],
+            [
+                record_similarity(self.herd, self.herd._population[2],
+                                  self.herd._population[0],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein),
+                0,
+                record_similarity(self.herd, self.herd._population[2],
+                                  self.herd._population[2],
+                                  damerau_levenshtein,
+                                  damerau_levenshtein)]],
+            dtype=np.float32)
+        self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
+
