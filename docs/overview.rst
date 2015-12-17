@@ -190,8 +190,8 @@ accepted Spanish version of Elizabeth, for blocking purposes.
 Matching
 --------
 
-Lexical Analysis
-^^^^^^^^^^^^^^^^
+The matching that EHRCorral does is heavily based on the Oxford Record
+Linkage System (OX-Link) [#ox_link]_.
 
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
@@ -214,7 +214,7 @@ Weighting
 
 .. [#deterministic_vs_probabilistic] Zhu, Ying, et al. "When to conduct
    probabilistic linkage vs. deterministic linkage? A simulation study." Journal
-   of Biomedical Informatics 56.C (2015): 80-86. 
+   of Biomedical Informatics 56.C (2015): 80-86.
 
 .. [#integrity_patient_data] Just, B. H., et al. "Managing the integrity of
    patient identity in health information exchange." Journal of AHIMA/American
@@ -256,3 +256,4 @@ Weighting
 
 .. [#practical_introduction] Clark, D. E. "Practical introduction to record
    linkage for injury research." Injury Prevention 10.3 (2004): 186-191.
+
