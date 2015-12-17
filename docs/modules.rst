@@ -2,8 +2,6 @@
 Modules
 ========
 
-.. rubric:: Herd
-
 .. autoclass:: ehrcorral.ehrcorral.Herd
    :members:
 
