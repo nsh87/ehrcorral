@@ -9,11 +9,14 @@ from __future__ import unicode_literals
 
 import sys
 from collections import namedtuple, defaultdict
+from pylev import levenshtein, damerau_levenshtein
+import numpy as np
 try:
     from collections import Counter
 except ImportError:
     from backport_collections import Counter
 from .compressions import first_letter, dmetaphone
+from .measures import record_similarity
 
 # Make unicode compatible with Python 2 and 3
 try:
@@ -82,7 +85,7 @@ def compress(names, method):
             compressions.extend([unicode(sub) for sub in item if sub != ''])
         elif item != '':
             compressions.append(unicode(item))
-    return compressions if compressions else [unicode('')]
+    return compressions if compressions else ['']
 
 
 class Profile(namedtuple('Profile', PROFILE_FIELDS)):
@@ -229,8 +232,8 @@ class Record(object):
             record_number,  # Accession number, unique to this record
             compressions['forename'],  # forename ref for dict
             compressions['mid_forename'],  # mid forename ref for dict
-            compressions['current_surname'],  # current surname ref for dict
-            compressions['birth_surname']  # birth surname ref for dict
+            compressions['birth_surname'],  # birth surname ref for dict
+            compressions['current_surname']  # current surname ref for dict
         ]
         self._meta = Meta._make(meta)
 
@@ -271,6 +274,7 @@ class Herd(object):
         self._block_dict = defaultdict(list)
         self._surname_freq_dict = Counter()
         self._forename_freq_dict = Counter()
+        self._similarity_matrix = None
 
     def __unicode__(self):
         population = self._population
@@ -340,6 +344,9 @@ class Herd(object):
                 compression. By default the first initial of the forenames are
                 appended to the surname compressions to generate block codes.
         """
+        pop_length = len(self._population)
+        self._similarity_matrix = np.zeros((pop_length, pop_length),
+                                           dtype=np.float32)
         for i, record in enumerate(self._population):
             try:
                 record.gen_blocks(blocking_compression)  # Explode the record
@@ -356,6 +363,8 @@ class Herd(object):
             self.append_names_freq_counters(record)
             # Keep track of the Record's blocking codes in the Herd
             self.append_block_dict(record)
+        for record in self._population:
+            self.append_similarity_matrix_row(record)
 
     def append_block_dict(self, record):
         """Appends the herd's block dictionary with the given Record's
@@ -390,6 +399,18 @@ class Herd(object):
         surnames = [surname for surname in surnames if surname != '']
         self._forename_freq_dict.update(forenames)
         self._surname_freq_dict.update(surnames)
+
+    def append_similarity_matrix_row(self, comparison_record):
+        row = comparison_record._meta.accession
+        for block in comparison_record._blocks:
+            for record in self._block_dict[block]:
+                col = record._meta.accession
+                self._similarity_matrix[row][col] = \
+                    record_similarity(self,
+                                      comparison_record,
+                                      record,
+                                      damerau_levenshtein,
+                                      damerau_levenshtein)
 
 
 def gen_record(data):
