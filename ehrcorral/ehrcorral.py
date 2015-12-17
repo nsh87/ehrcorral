@@ -2,15 +2,17 @@
 """Contains core classes and functions for defining populations and acting upon
 them.
 """
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import sys
 from collections import namedtuple, defaultdict
-from pylev import levenshtein, damerau_levenshtein
+
 import numpy as np
+from pylev import damerau_levenshtein
+
 try:
     from collections import Counter
 except ImportError:

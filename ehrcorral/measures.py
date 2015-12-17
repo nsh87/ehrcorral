@@ -1,16 +1,16 @@
+# -*- coding: utf-8 -*-
 """Contains functions for measures of similarity between records.
 """
-
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
 import json
-import string
-from pylev import levenshtein, damerau_levenshtein
 import pkgutil
+import string
+
+from pylev import damerau_levenshtein
 
 
 def record_similarity(herd,

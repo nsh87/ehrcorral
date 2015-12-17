@@ -4,22 +4,19 @@
 
 Tests for `ehrcorral` module.
 """
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
-import unittest2 as unittest
 import numpy as np
-import json
-import os
-
+import unittest2 as unittest
 from faker import Faker
 
-from ehrcorral.ehrcorral import Herd
-from ehrcorral.ehrcorral import gen_record
-from ehrcorral.ehrcorral import compress
 from ehrcorral.compressions import soundex, nysiis, metaphone, dmetaphone
+from ehrcorral.ehrcorral import Herd
+from ehrcorral.ehrcorral import compress
+from ehrcorral.ehrcorral import gen_record
 from ehrcorral.measures import *
 
 fake = Faker()
