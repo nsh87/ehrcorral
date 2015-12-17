@@ -4,12 +4,12 @@ Overview
 
 Significant effort has been put into developing record-linkage algorithms
 using deterministic, probabilistic, or machine learning methods, or
-a combination of approaches [#current_practice]_ [#state_of_linkage]_.
-EHRCorral takes a probabilistic approach, wherein certain fields are weighted
-based on their match-level, which is determined using numerical or lexical
-analysis in the context of two records or the entire set of records.
-A composite probability of two records matching is calculated and if the
-probability is above a threshold value the records are linked. Several
+a combination of approaches [#current_practice]_ [#state_of_linkage]_
+[#final_report]_. EHRCorral takes a probabilistic approach, wherein certain
+fields are weighted based on their match-level, which is determined using
+numerical or lexical analysis in the context of two records or the entire set
+of records. A composite probability of two records matching is calculated and
+if the probability is above a threshold value the records are linked. Several
 pre-processing steps are often taken to reduce the computational requirements
 and attempt to increase the sensitivity and specificity of the algorithm.
 
@@ -253,3 +253,6 @@ Weighting
 
 .. [#practical_introduction] Clark, D. E. "Practical introduction to record
    linkage for injury research." Injury Prevention 10.3 (2004): 186-191.
+
+.. [#final_report] Morris, Genevieve et al. "Patient Identification And
+   Matching Final Report". HealthIT.gov. N.p., 2014. Web. 17 Sept. 2015.
