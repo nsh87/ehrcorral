@@ -57,7 +57,7 @@ other Records that describe the same individual.
             'birth_surname': 'Doe',
             'current_surname': 'Fonda',
             'suffix': '',
-            'address1': '1 Bipinbop St'
+            'address1': '1 Bipinbop St',
             'address2': 'Apt. 100',
             'city': 'Austin',
             'state_province': 'TX',
