@@ -306,9 +306,13 @@ respective blocks for that record (see `Record Blocking`_ for details) and
 determines similarities for each record within the respective blocks. Then, the
 accession number for each record is used to fill in the correct row with the
 similarities in the correct columns. All records that are not in the same
-block as the one being compared receive a zero similarity score.
+block as the one being compared receive a zero similarity score. The
+similarity of any two records can be found by looking up their respective
+accession numbers and then look at either row and column combination.
 
-
+Thresholding can be used to determine the linkage of records. EHRcorral
+leaves to the user the determination of which threshold is appropriate based
+on the particular data set on which they are using EHRcorral.
 
 .. rubric:: References
 
