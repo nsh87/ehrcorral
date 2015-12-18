@@ -251,6 +251,13 @@ simple entry errors, any field that is not exactly the same is considered no
 match at all. This is due to the fact that similar values for these fields
 are only meaningful in as much as they represent entry errors.
 
+The similarity between two sex fields is very simple. EHRcorral asks for
+single character sex identification. If they are the same, a small, positive
+weight is returned. If they are not, then a large negative weight is returned.
+This is due to the fact that a different sex should render two records
+significantly less similar, but the same sex means very little for their
+similarity.
+
 
 
 Weighting
