@@ -12,3 +12,10 @@ Release Log
    + Some tweaking of probabilities could be attempted for certain scenarios.
    + Probabilities are generated using birth year, name fields, address, and
      zip code.
+
+0.0.2 (2015-12-17)
+^^^^^^^^^^^^^^^^^^
+
+* Update documentation.
+   + Add significant documentation of matching algorithm in Overview docs.
+   + Fix up code examples in Usage docs.
