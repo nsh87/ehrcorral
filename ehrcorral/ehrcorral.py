@@ -270,13 +270,19 @@ class Record(object):
 class Herd(object):
     """A collection of :py:class:`.Record` with methods for interacting with
     and linking records in the herd.
+
+    Attributes:
+        similarity_matrix (numpy.ndarray, None): A numpy array containing the
+            similarities between :py:class:`.Record` instances, ordered by
+            accession number on both axes. Each entry is between 0 and 1 with 1
+            being perfect similarity.
     """
     def __init__(self):
         self._population = None
         self._block_dict = defaultdict(list)
         self._surname_freq_dict = Counter()
         self._forename_freq_dict = Counter()
-        self._similarity_matrix = None
+        self.similarity_matrix = None
 
     def __unicode__(self):
         population = self._population
@@ -347,7 +353,7 @@ class Herd(object):
                 appended to the surname compressions to generate block codes.
         """
         pop_length = len(self._population)
-        self._similarity_matrix = np.zeros((pop_length, pop_length),
+        self.similarity_matrix = np.zeros((pop_length, pop_length),
                                            dtype=np.float32)
         for i, record in enumerate(self._population):
             try:
@@ -409,7 +415,7 @@ class Herd(object):
         for block in comparison_record._blocks:
             for record in self._block_dict[block]:
                 col = record._meta.accession
-                self._similarity_matrix[row][col] = \
+                self.similarity_matrix[row][col] = \
                     record_similarity(self,
                                       comparison_record,
                                       record,

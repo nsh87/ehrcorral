@@ -598,7 +598,7 @@ class TestHerdSimilarityMatrix(unittest.TestCase):
                                   damerau_levenshtein,
                                   damerau_levenshtein)]],
             dtype=np.float32)
-        self.assertTrue((test_similarity == self.herd._similarity_matrix).all())
+        self.assertTrue((test_similarity == self.herd.similarity_matrix).all())
 
 
 class TestCommonCharacterErrors(unittest.TestCase):
@@ -621,7 +621,7 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)
 
     def test_character_insertion(self):
         """See how character insertion in someone's name impacts probability
@@ -637,7 +637,7 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)
 
     def test_character_omission(self):
         """See how character omission in someone's name impacts probability
@@ -653,7 +653,7 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)
 
     def test_character_substitution(self):
         """See how character substitution in someone's name impacts probability
@@ -669,7 +669,7 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)
 
     def test_character_transposition(self):
         """See how character transposition in someone's name impacts probability
@@ -685,7 +685,7 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)
 
     def test_gender_misclassification(self):
         """See how gender misclassification impacts probability matrix.
@@ -700,4 +700,4 @@ class TestCommonCharacterErrors(unittest.TestCase):
         herd.populate(records)
         herd.corral()
         print()
-        print(herd._similarity_matrix)
+        print(herd.similarity_matrix)

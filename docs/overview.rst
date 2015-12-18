@@ -5,7 +5,7 @@ Overview
 Significant effort has been put into developing record-linkage algorithms
 using deterministic, probabilistic, or machine learning methods, or
 a combination of approaches [#current_practice]_ [#state_of_linkage]_
-[#final_report]_. EHRCorral takes a probabilistic approach, wherein certain
+[#final_report]_. EHRcorral takes a probabilistic approach, wherein certain
 fields are weighted based on their match-level, which is determined using
 numerical or lexical analysis in the context of two records or the entire set
 of records. A composite probability of two records matching is calculated and
@@ -50,6 +50,8 @@ The approach taken here is influenced in large part by the methods of OX-LINK.
 Subsequent improvements to such probabilistic techniques have been incorporated,
 as well.
 
+.. _phonemic-tokenization-label:
+
 Phonemic Tokenization
 ---------------------
 
@@ -84,7 +86,7 @@ Caity, and Katie are all **CATY**. The improvement can be seen here since NYSIIS
 correctly identifies the same code for these phonetically identical names.
 
 Metaphone, and then double metaphone, are the most recent phonemic
-compressions available in EHRCorral [#metaphone]_ [#double_metaphone]_.
+compressions available in EHRcorral [#metaphone]_ [#double_metaphone]_.
 Metaphone was first published in 1990 and is the first algorithm here to
 consider the sequences of letters and sounds rather than just individual
 characters. It also performs its compression based on the entire name, not
@@ -124,7 +126,7 @@ able to limit record-to-record comparisons to groups (i.e. blocks) of records
 that have the possibility of matching and ignore other record-to-record
 combinations, the time to completion could be greatly reduced.
 
-By default, EHRCorral blocks data into groups by the phonemic compression of the
+By default, EHRcorral blocks data into groups by the phonemic compression of the
 current surname plus the first initial of the forename. Other blocking
 techniques group by phonemic compression of the forename or current surname, or
 by birth month or year. A combinatory approach can be taken, as well, blocking
@@ -181,7 +183,7 @@ that the blocking group is only used to determine which Records are checked. It
 does not modify the forename, nor does it insert William in place of Bill.
 
 A standard set of names and their nicknames is not yet included with
-EHRCorral, but in the future one can be supplied to customize the explosion
+EHRcorral, but in the future one can be supplied to customize the explosion
 to names from a different region. For example, instead of Bill and William,
 when dealing with records containing Hispanic and Western European names
 perhaps the European name Elizabeth should also be considered as Isabel, the
@@ -190,14 +192,127 @@ accepted Spanish version of Elizabeth, for blocking purposes.
 Matching
 --------
 
-Lexical Analysis
-^^^^^^^^^^^^^^^^
+The matching that EHRcorral does is heavily based on the Oxford Record
+Linkage System (OX-Link) [#ox_link]_. It takes a number of name and non-name
+fields and determines the similarities between two respective records. Based
+on the similarity weight calculated for each individual field, an aggregate
+similarity for the two records is determined.
+
+EHRcorral cycles through every record to build a square symmetric similarity
+matrix. Thus, the similarity between any two records can be determined by
+looking at the matrix. By thresholding the similarity matrix, one can create
+a link between records with similarities above the threshold.
 
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
 
-Weighting
-^^^^^^^^^
+EHRcorral separates record similarity into two sections: name fields and
+non-name fields. Name fields alone have a high degree of accuracy in
+determining the similarity of two records [#accuracy_matching]_
+[#simple_heuristic]_. Thus, EHRcorral heavily weights matching based on names
+and uses the non-name fields for fine-tuning.
+
+However, there are many types of entry errors [#typo_errors]_.
+
+    * **character insertion**: Richard :math:`{\Rightarrow}` Ricthard
+    * **character omission**: Sullivan :math:`{\Rightarrow}` Sulivan
+    * **character substitution**: Robert :math:`{\Rightarrow}` Rodert
+    * **character transposition**: 55414 :math:`{\Rightarrow}` 55441
+    * **gender misclassification**: M :math:`{\Rightarrow}` F
+
+To deal with the first four errors, EHRcorral converts all characters to
+lowercase and uses the damerau-levenshtein edit distance measurement on most
+of its data fields [#matching_records_nmpi]_. Thus, if any of those errors
+occur, the similarity between the two fields compared is still high. To avoid
+the issue of gender misclassification as best as possible, EHRcorral focuses
+on sex in comparisons. Further work may be done in this area to handle
+better gender misclassification in the future. Birth date and postal code are
+converted to character fields to handle all of the character errors above
+and better understand the similarity of the fields between records.
+
+The name fields have complex similarity calculations. These fields have the
+potential for a different type of transposition error than other fields. One
+may enter a forename as a mid-forename or vice versa. This can happen with
+current and birth surname as well. To account for this, EHRcorral checks both
+forename or surname fields in the second record when comparing it with the
+respective field from the first and takes the one with the highest similarity.
+This has the benefit of handling the case where a surname is changed, e.g. in
+marriage, much better. Once the similarity is determined, EHRcorral checks
+whether a given surname compression (see `Phonemic Tokenization`_ for
+compression details) is common or rare or checks whether a given forename
+first letter is common or rare. The compression is used with surnames to
+negate potentially unique entry errors impacting the determination. The
+forename is less significant in determining the similarity of two records, so
+using just the first letter saves time computationally and avoids most entry
+errors while remaining relatively accurate. With the determination of a name
+being common or rare, the similarity is scaled accordingly and a weight is
+assigned, which can go negative since very dissimilar names should lead
+records to be considered very dissimilar.
+
+The address field requires a lot cleaning before a weight is calculated.
+First, both address fields are combined and put into lowercase. Then, all
+abbreviations for address suffixes (e.g. avenue) and designators (e
+.g. apartment) are found and standardized based on the abbreviations that the
+United States Postal Service uses [#usps]_. After this, the first 12
+characters of the address are compared as mentioned above to account for the
+different types of character entry errors. Address fields that only have a
+couple entry errors still have some similarity weight, but ones that have
+more differences are given zero weight. This accounts for people moving
+around without diminishing the similarity too much.
+
+The comparison of the respective postal code and national identification
+fields are relatively simple. EHRcorral looks for exact matches and single
+differences in determining similarity for these fields. Here, outside of
+simple entry errors, any field that is not exactly the same is considered no
+match at all. This is due to the fact that similar values for these fields
+are only meaningful in as much as they represent entry errors. Like with
+address, there are no negative weights for the postal code due to the
+potential for moving. National identifications do not have negative weights
+because of the difficulty with getting consistent entry in this area.
+
+The similarity between two sex fields is very simple. EHRcorral asks for
+single character sex identification. If they are the same, a small positive
+weight is returned. If they are not, then a large negative weight is returned.
+This is due to the fact that a different sex should render two records
+significantly less similar, but the same sex means very little for their
+similarity.
+
+The date of birth field has a slightly more complex comparison. The year,
+month, and day are each compared separately using the damerau-levenshtein
+method of calculating edit distance to account for all of the character
+errors mentioned above. Then, the total similarity is summed with extra
+weight given to the year, since entry errors are less likely there (i.e.
+someone is more likely to recognize that 1972 was keyed in as 9172), and
+different generations will be reflected in this area to separate family
+members with common birth days. This field has a strong influence amongst the
+non-name fields since it should never change and matches do imply that
+records are quite similar. Like with sex, there is a strong negative weight
+for records that are strongly dissimilar, but there is also a strong positive
+weight for the reasons mentioned above.
+
+The summing of the weights is relatively simple once all individual weights
+are calculated. An algebraic sum is divided by the total possible weight that
+a record could have (this will vary based on commonality of forenames and
+surnames). This returns a values between zero and one that determines the
+probability that two records are the same. Then, thresholding can be applied
+to make actual determinations.
+
+Similarity Matrix
+^^^^^^^^^^^^^^^^^
+
+The similarity matrix is calculated by using the record similarity function
+described above. As EHRcorral cycles through each record, it looks at the
+respective blocks for that record (see `Record Blocking`_ for details) and
+determines similarities for each record within the respective blocks. Then, the
+accession number for each record is used to fill in the correct row with the
+similarities in the correct columns. All records that are not in the same
+block as the one being compared receive a zero similarity score. The
+similarity of any two records can be found by looking up their respective
+accession numbers and then look at either row and column combination.
+
+Thresholding can be used to determine the linkage of records. EHRcorral
+leaves to the user the determination of which threshold is appropriate based
+on the particular data set on which they are using EHRcorral.
 
 .. rubric:: References
 
@@ -214,7 +329,7 @@ Weighting
 
 .. [#deterministic_vs_probabilistic] Zhu, Ying, et al. "When to conduct
    probabilistic linkage vs. deterministic linkage? A simulation study." Journal
-   of Biomedical Informatics 56.C (2015): 80-86. 
+   of Biomedical Informatics 56.C (2015): 80-86.
 
 .. [#integrity_patient_data] Just, B. H., et al. "Managing the integrity of
    patient identity in health information exchange." Journal of AHIMA/American
@@ -256,3 +371,19 @@ Weighting
 
 .. [#practical_introduction] Clark, D. E. "Practical introduction to record
    linkage for injury research." Injury Prevention 10.3 (2004): 186-191.
+
+.. [#accuracy_matching] Aldridge, Robert W., et al. "Accuracy of
+   Probabilistic Linkage Using the Enhanced Matching System for Public Health
+   and Epidemiological Studies." PloS one 10.8 (2015): e0136179.
+
+.. [#simple_heuristic] Weber, Susan C., et al. "A simple heuristic for
+   blindfolded record linkage." Journal of the American Medical Informatics
+   Association 19.e1 (2012): e157-e161.
+
+.. [#typo_errors] Theera-Ampornpunt, Nawanan, Boonchai Kijsanayotin, and
+   Stuart M. Speedie. "Creating a large database test bed with typographical
+   errors for record linkage evaluation." AMIA... Annual Symposium
+   proceedings/AMIA Symposium. AMIA Symposium. 2007.
+
+.. [#usps] United States Postal Service. "Appendix C". Pe.usps.gov. N.p.,
+   2015. Web. 4 Dec. 2015.
