@@ -33,7 +33,7 @@ other Records that describe the same individual.
 .. code-block:: python
 
     ehr_entries = [
-        first_entry = {
+        {
             'forename': 'John',
             'mid_forename': '',
             'current_surname': 'Doe',
@@ -50,8 +50,8 @@ other Records that describe the same individual.
             'birth_month': '08',
             'birth_day': '04',
             'blood_type': 'B+'
-        }
-        second_entry = {
+        },
+        {
             'first_name': 'Jane',
             'middle_name': 'Erin',
             'birth_surname': 'Doe',
@@ -68,7 +68,7 @@ other Records that describe the same individual.
             'birth_year': 1976,
             'birth_month': '08',  # Numeric fields are coerced to proper type
             'birth_day': 01,
-            'blood_type': 'A-'),
+            'blood_type': 'A-',
         }
     ]
     records = [ehrcorral.gen_record(entry) for entry in ehr_entries]
@@ -96,7 +96,7 @@ the ones above are thrown away once the Record is created:
         # Extract forenames, sex, etc. from EHR data into dict called 'entry'
         # ...
         # entry =  {'forename': 'John', ... , 'blood_type': 'B+'}
-        records.append(ehrcorral.gen_record(entry)
+        records.append(ehrcorral.gen_record(entry))
 
 Record Fields
 -------------
