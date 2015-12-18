@@ -5,7 +5,7 @@ Overview
 Significant effort has been put into developing record-linkage algorithms
 using deterministic, probabilistic, or machine learning methods, or
 a combination of approaches [#current_practice]_ [#state_of_linkage]_
-[#final_report]_. EHRCorral takes a probabilistic approach, wherein certain
+[#final_report]_. EHRcorral takes a probabilistic approach, wherein certain
 fields are weighted based on their match-level, which is determined using
 numerical or lexical analysis in the context of two records or the entire set
 of records. A composite probability of two records matching is calculated and
@@ -84,7 +84,7 @@ Caity, and Katie are all **CATY**. The improvement can be seen here since NYSIIS
 correctly identifies the same code for these phonetically identical names.
 
 Metaphone, and then double metaphone, are the most recent phonemic
-compressions available in EHRCorral [#metaphone]_ [#double_metaphone]_.
+compressions available in EHRcorral [#metaphone]_ [#double_metaphone]_.
 Metaphone was first published in 1990 and is the first algorithm here to
 consider the sequences of letters and sounds rather than just individual
 characters. It also performs its compression based on the entire name, not
@@ -124,7 +124,7 @@ able to limit record-to-record comparisons to groups (i.e. blocks) of records
 that have the possibility of matching and ignore other record-to-record
 combinations, the time to completion could be greatly reduced.
 
-By default, EHRCorral blocks data into groups by the phonemic compression of the
+By default, EHRcorral blocks data into groups by the phonemic compression of the
 current surname plus the first initial of the forename. Other blocking
 techniques group by phonemic compression of the forename or current surname, or
 by birth month or year. A combinatory approach can be taken, as well, blocking
@@ -181,7 +181,7 @@ that the blocking group is only used to determine which Records are checked. It
 does not modify the forename, nor does it insert William in place of Bill.
 
 A standard set of names and their nicknames is not yet included with
-EHRCorral, but in the future one can be supplied to customize the explosion
+EHRcorral, but in the future one can be supplied to customize the explosion
 to names from a different region. For example, instead of Bill and William,
 when dealing with records containing Hispanic and Western European names
 perhaps the European name Elizabeth should also be considered as Isabel, the
@@ -190,13 +190,13 @@ accepted Spanish version of Elizabeth, for blocking purposes.
 Matching
 --------
 
-The matching that EHRCorral does is heavily based on the Oxford Record
+The matching that EHRcorral does is heavily based on the Oxford Record
 Linkage System (OX-Link) [#ox_link]_. It takes a number of name and non-name
 fields and determines the similarities between two respective records. Based
 on the similarity weight calculated for each individual field, an aggregate
 similarity for the two records is determined.
 
-EHRCorral cycles through every record to build a square symmetric similarity
+EHRcorral cycles through every record to build a square symmetric similarity
 matrix. Thus, the similarity between any two records can be determined by
 looking at the matrix. By thresholding the similarity matrix, one can create
 a link between records with similarities above the threshold.
@@ -204,10 +204,10 @@ a link between records with similarities above the threshold.
 Similarity Measures
 ^^^^^^^^^^^^^^^^^^^
 
-EHRCorral separates record similarity into two sections: name fields and
+EHRcorral separates record similarity into two sections: name fields and
 non-name fields. Name fields alone have a high degree of accuracy in
 determining the similarity of two records [#accuracy_matching]_
-[#simple_heuristic]_. Thus, EHRCorral heavily weights matching based on names
+[#simple_heuristic]_. Thus, EHRcorral heavily weights matching based on names
 and uses the non-name fields for fine-tuning.
 
 However, there are many types of entry errors [#typo_errors]_.
@@ -218,25 +218,31 @@ However, there are many types of entry errors [#typo_errors]_.
     * **character transposition**: 55414 :math:`{\Rightarrow}` 55441
     * **gender misclassification**: M :math:`{\Rightarrow}` F
 
-To deal with the first four errors, EHRCorral uses the damerau-levenshtein
-edit distance measurement on most of its data fields [#matching_records_nmpi]_.
-Thus, if any of those errors occur, the similarity between the two fields
-compared is still high. To avoid the issue of gender misclassification as
-best as possible, EHRCorral focuses on sex in comparisons. Further work may
-be done in this area to handle better gender misclassification in the future.
-Birth date and zip code are converted to character fields to handle
-all of the character errors above and better understand the similarity of the
-fields between records.
+To deal with the first four errors, EHRcorral converts all characters to
+lowercase and uses the damerau-levenshtein edit distance measurement on most
+of its data fields [#matching_records_nmpi]_. Thus, if any of those errors
+occur, the similarity between the two fields compared is still high. To avoid
+the issue of gender misclassification as best as possible, EHRcorral focuses
+on sex in comparisons. Further work may be done in this area to handle
+better gender misclassification in the future. Birth date and zip code are
+converted to character fields to handle all of the character errors above
+and better understand the similarity of the fields between records.
 
 The name fields have the potential for a different type of transposition
 error than other fields. One may enter a forename as a mid-forename or vice
 versa. This can happen with current and birth surname as well. To account for
-this, EHRCorral checks both forename or surname fields in the second record
+this, EHRcorral checks both forename or surname fields in the second record
 when comparing it with the respective field from the first. Also, this has the
 benefit of handling the case where a surname is changed, e.g. in marriage,
 much better.
 
-
+The address field requires a lot cleaning before a distance measurement can
+be applied to it. First, both address fields are combined and made lowercase.
+Then, all abbreviations for address suffixes (e.g. avenue) and designators (e
+.g. apartment) are found and standardized based on the abbreviations that the
+United States Postal Service uses [#usps]_. After this, the first 12
+characters of the address are compared as mentioned above to account for the
+different types of character entry errors.
 
 Weighting
 ^^^^^^^^^
@@ -312,3 +318,5 @@ Weighting
    errors for record linkage evaluation." AMIA... Annual Symposium
    proceedings/AMIA Symposium. AMIA Symposium. 2007.
 
+.. [#usps] United States Postal Service. "Appendix C". Pe.usps.gov. N.p.,
+   2015. Web. 4 Dec. 2015.
