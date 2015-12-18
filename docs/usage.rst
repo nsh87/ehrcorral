@@ -33,7 +33,7 @@ other Records that describe the same individual.
 .. code-block:: python
 
     ehr_entries = [
-        first_entry = {
+        {
             'forename': 'John',
             'mid_forename': '',
             'current_surname': 'Doe',
@@ -50,14 +50,14 @@ other Records that describe the same individual.
             'birth_month': '08',
             'birth_day': '04',
             'blood_type': 'B+'
-        }
-        second_entry = {
+        },
+        {
             'first_name': 'Jane',
             'middle_name': 'Erin',
             'birth_surname': 'Doe',
             'current_surname': 'Fonda',
             'suffix': '',
-            'address1': '1 Bipinbop St'
+            'address1': '1 Bipinbop St',
             'address2': 'Apt. 100',
             'city': 'Austin',
             'state_province': 'TX',
@@ -68,7 +68,7 @@ other Records that describe the same individual.
             'birth_year': 1976,
             'birth_month': '08',  # Numeric fields are coerced to proper type
             'birth_day': 01,
-            'blood_type': 'A-'),
+            'blood_type': 'A-',
         }
     ]
     records = [ehrcorral.gen_record(entry) for entry in ehr_entries]
@@ -96,7 +96,7 @@ the ones above are thrown away once the Record is created:
         # Extract forenames, sex, etc. from EHR data into dict called 'entry'
         # ...
         # entry =  {'forename': 'John', ... , 'blood_type': 'B+'}
-        records.append(ehrcorral.gen_record(entry)
+        records.append(ehrcorral.gen_record(entry))
 
 Record Fields
 -------------
@@ -144,11 +144,27 @@ used. If you are not yet familiar with blocking methods, please consult
 
 .. code-block:: python
 
+    from ehrcorral.compressions import dmetaphone
+    # Alternate blocking compressions:
     # from ehrcorral.compressions import soundex
     # from ehrcorral.compressions import nysiis
     # from ehrcorral.compressions import metaphone
-    from ehrcorral.compressions import dmetaphone
-    herd.corral(blocking=dmetaphone)
+    # from ehrcorral.compressions import first_letter
+    herd.corral(blocking_compression=dmetaphone)
+    similarities = herd.similarity_matrix
 
 See :py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of additional
 function parameters.
+
+Running ``corral()`` on the Herd generates a similarity (i.e. probability)
+matrix with dimension N _x_ N, where N is the number of records in the Herd.
+This matrix provides the probabilities that each record belongs to the same
+person as contained in every other record in the Herd. Each row and column
+index in the similarity matrix corresponds to each Record's ``record_number``
+property (see documentation for Record class). The user can decide how to link
+records using a threshold value to determine which records belong to the same
+individual. Currently there is no built-in method to automatically merge
+records together since there are many different strategies for merging that
+the user might want to employ. Additionally, it is likely that the user would
+want to merge the original data that was used to generate each Record rather
+than merging the Records themselves.
