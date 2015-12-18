@@ -228,31 +228,48 @@ better gender misclassification in the future. Birth date and postal code are
 converted to character fields to handle all of the character errors above
 and better understand the similarity of the fields between records.
 
-The name fields have the potential for a different type of transposition
-error than other fields. One may enter a forename as a mid-forename or vice
-versa. This can happen with current and birth surname as well. To account for
-this, EHRcorral checks both forename or surname fields in the second record
-when comparing it with the respective field from the first. Also, this has the
-benefit of handling the case where a surname is changed, e.g. in marriage,
-much better.
+The name fields have complex similarity calculations. These fields have the
+potential for a different type of transposition error than other fields. One
+may enter a forename as a mid-forename or vice versa. This can happen with
+current and birth surname as well. To account for this, EHRcorral checks both
+forename or surname fields in the second record when comparing it with the
+respective field from the first and takes the one with the highest similarity.
+This has the benefit of handling the case where a surname is changed, e.g. in
+marriage, much better. Once the similarity is determined, EHRcorral checks
+whether a given surname compression (see above for compression details) is
+common or rare or checks whether a given forename first letter is common or
+rare. The compression is used with surnames to negate potentially unique
+entry errors impacting the determination. The forename is less significant in
+determining the similarity of two records, so using just the first letter
+saves time computationally and avoids most entry errors while remaining
+relatively accurate. With the determination of a name being common or rare,
+the similarity is scaled accordingly and a weight is assigned, which can go
+negative since very dissimilar names should lead records to be considered
+very dissimilar.
 
-The address field requires a lot cleaning before a distance measurement can
-be applied to it. First, both address fields are combined and made lowercase.
-Then, all abbreviations for address suffixes (e.g. avenue) and designators (e
+The address field requires a lot cleaning before a weight is calculated.
+First, both address fields are combined and put into lowercase. Then, all
+abbreviations for address suffixes (e.g. avenue) and designators (e
 .g. apartment) are found and standardized based on the abbreviations that the
 United States Postal Service uses [#usps]_. After this, the first 12
 characters of the address are compared as mentioned above to account for the
-different types of character entry errors.
+different types of character entry errors. Address fields that only have a
+couple entry errors still have some similarity weight, but ones that have
+more differences are given zero weight. This accounts for people moving
+around without diminishing the similarity too much.
 
 The comparison of the respective postal code and national identification
 fields are relatively simple. EHRcorral looks for exact matches and single
 differences in determining similarity for these fields. Here, outside of
 simple entry errors, any field that is not exactly the same is considered no
 match at all. This is due to the fact that similar values for these fields
-are only meaningful in as much as they represent entry errors.
+are only meaningful in as much as they represent entry errors. Like with
+address, there are no negative weights for the postal code due to the
+potential for moving. National identifications do not have negative weights
+because of the difficulty with getting consistent entry in this area.
 
 The similarity between two sex fields is very simple. EHRcorral asks for
-single character sex identification. If they are the same, a small, positive
+single character sex identification. If they are the same, a small positive
 weight is returned. If they are not, then a large negative weight is returned.
 This is due to the fact that a different sex should render two records
 significantly less similar, but the same sex means very little for their
@@ -265,7 +282,11 @@ errors mentioned above. Then, the total similarity is summed with extra
 weight given to the year, since entry errors are less likely there (i.e.
 someone is more likely to recognize that 1972 was keyed in as 9172), and
 different generations will be reflected in this area to separate family
-members with common birth days.
+members with common birth days. This field has a strong influence amongst the
+non-name fields since it should never change and matches do imply that
+records are quite similar. Like with sex, there is a strong negative weight
+for records that are strongly dissimilar, but there is also a strong positive
+weight for the reasons mentioned above.
 
 Weighting
 ^^^^^^^^^
