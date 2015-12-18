@@ -258,7 +258,14 @@ This is due to the fact that a different sex should render two records
 significantly less similar, but the same sex means very little for their
 similarity.
 
-
+The date of birth field has a slightly more complex comparison. The year,
+month, and day are each compared separately using the damerau-levenshtein
+method of calculating edit distance to account for all of the character
+errors mentioned above. Then, the total similarity is summed with extra
+weight given to the year, since entry errors are less likely there (i.e.
+someone is more likely to recognize that 1972 was keyed in as 9172), and
+different generations will be reflected in this area to separate family
+members with common birth days.
 
 Weighting
 ^^^^^^^^^
