@@ -30,7 +30,7 @@ test_requirements = [
 
 setup(
     name='EHRcorral',
-    version='0.0.2',
+    version='0.0.3',
     description="EHRcorral cross-matches and links electronic medical records for the purpose of de-duplication",
     long_description=readme + '\n\n' + history,
     author="Nikhil Haas",
