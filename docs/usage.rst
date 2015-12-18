@@ -144,11 +144,27 @@ used. If you are not yet familiar with blocking methods, please consult
 
 .. code-block:: python
 
+    from ehrcorral.compressions import dmetaphone
+    # Alternate blocking compressions:
     # from ehrcorral.compressions import soundex
     # from ehrcorral.compressions import nysiis
     # from ehrcorral.compressions import metaphone
-    from ehrcorral.compressions import dmetaphone
-    herd.corral(blocking=dmetaphone)
+    # from ehrcorral.compressions import first_letter
+    herd.corral(blocking_compression=dmetaphone)
+    similarities = herd.similarity_matrix
 
 See :py:func:`ehrcorral.ehrcorral.Herd.corral` for documentation of additional
 function parameters.
+
+Running ``corral()`` on the Herd generates a similarity (i.e. probability)
+matrix with dimension N _x_ N, where N is the number of records in the Herd.
+This matrix provides the probabilities that each record belongs to the same
+person as contained in every other record in the Herd. Each row and column
+index in the similarity matrix corresponds to each Record's ``record_number``
+property (see documentation for Record class). The user can decide how to link
+records using a threshold value to determine which records belong to the same
+individual. Currently there is no built-in method to automatically merge
+records together since there are many different strategies for merging that
+the user might want to employ. Additionally, it is likely that the user would
+want to merge the original data that was used to generate each Record rather
+than merging the Records themselves.
