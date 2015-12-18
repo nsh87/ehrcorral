@@ -224,7 +224,7 @@ of its data fields [#matching_records_nmpi]_. Thus, if any of those errors
 occur, the similarity between the two fields compared is still high. To avoid
 the issue of gender misclassification as best as possible, EHRcorral focuses
 on sex in comparisons. Further work may be done in this area to handle
-better gender misclassification in the future. Birth date and zip code are
+better gender misclassification in the future. Birth date and postal code are
 converted to character fields to handle all of the character errors above
 and better understand the similarity of the fields between records.
 
@@ -243,6 +243,15 @@ Then, all abbreviations for address suffixes (e.g. avenue) and designators (e
 United States Postal Service uses [#usps]_. After this, the first 12
 characters of the address are compared as mentioned above to account for the
 different types of character entry errors.
+
+The comparison of the respective postal code and national identification
+fields are relatively simple. EHRcorral looks for exact matches and single
+differences in determining similarity for these fields. Here, outside of
+simple entry errors, any field that is not exactly the same is considered no
+match at all. This is due to the fact that similar values for these fields
+are only meaningful in as much as they represent entry errors.
+
+
 
 Weighting
 ^^^^^^^^^
