@@ -270,6 +270,12 @@ class Record(object):
 class Herd(object):
     """A collection of :py:class:`.Record` with methods for interacting with
     and linking records in the herd.
+
+    Attributes:
+        similarity_matrix (numpy.ndarray, None): A numpy array containing the
+            similarities between :py:class:`.Record` instances, ordered by
+            accession number on both axes. Each entry is between 0 and 1 with 1
+            being perfect similarity.
     """
     def __init__(self):
         self._population = None
