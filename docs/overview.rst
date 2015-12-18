@@ -50,6 +50,8 @@ The approach taken here is influenced in large part by the methods of OX-LINK.
 Subsequent improvements to such probabilistic techniques have been incorporated,
 as well.
 
+.. _phonemic-tokenization-label:
+
 Phonemic Tokenization
 ---------------------
 
@@ -236,16 +238,16 @@ forename or surname fields in the second record when comparing it with the
 respective field from the first and takes the one with the highest similarity.
 This has the benefit of handling the case where a surname is changed, e.g. in
 marriage, much better. Once the similarity is determined, EHRcorral checks
-whether a given surname compression (see above for compression details) is
-common or rare or checks whether a given forename first letter is common or
-rare. The compression is used with surnames to negate potentially unique
-entry errors impacting the determination. The forename is less significant in
-determining the similarity of two records, so using just the first letter
-saves time computationally and avoids most entry errors while remaining
-relatively accurate. With the determination of a name being common or rare,
-the similarity is scaled accordingly and a weight is assigned, which can go
-negative since very dissimilar names should lead records to be considered
-very dissimilar.
+whether a given surname compression (see `Phonemic Tokenization`_ for
+compression details) is common or rare or checks whether a given forename
+first letter is common or rare. The compression is used with surnames to
+negate potentially unique entry errors impacting the determination. The
+forename is less significant in determining the similarity of two records, so
+using just the first letter saves time computationally and avoids most entry
+errors while remaining relatively accurate. With the determination of a name
+being common or rare, the similarity is scaled accordingly and a weight is
+assigned, which can go negative since very dissimilar names should lead
+records to be considered very dissimilar.
 
 The address field requires a lot cleaning before a weight is calculated.
 First, both address fields are combined and put into lowercase. Then, all
@@ -297,6 +299,14 @@ to make actual determinations.
 
 Similarity Matrix
 ^^^^^^^^^^^^^^^^^
+
+The similarity matrix is calculated by using the record similarity function
+described above. As EHRcorral cycles through each record, it looks at the
+respective blocks for that record (see `Record Blocking`_ for details) and
+determines similarities for each record within the respective blocks. Then, the
+accession number for each record is used to fill in the correct row with the
+similarities in the correct columns. All records that are not in the same
+block as the one being compared receive a zero similarity score.
 
 
 
