@@ -288,8 +288,17 @@ records are quite similar. Like with sex, there is a strong negative weight
 for records that are strongly dissimilar, but there is also a strong positive
 weight for the reasons mentioned above.
 
-Weighting
-^^^^^^^^^
+The summing of the weights is relatively simple once all individual weights
+are calculated. An algebraic sum is divided by the total possible weight that
+a record could have (this will vary based on commonality of forenames and
+surnames). This returns a values between zero and one that determines the
+probability that two records are the same. Then, thresholding can be applied
+to make actual determinations.
+
+Similarity Matrix
+^^^^^^^^^^^^^^^^^
+
+
 
 .. rubric:: References
 
