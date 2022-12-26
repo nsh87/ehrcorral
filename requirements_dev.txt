@@ -1,5 +1,5 @@
 bumpversion==0.5.3
-wheel==0.23.0
+wheel==0.38.1
 fake-factory==0.5.3
 coverage==4.0
 pylint==1.4.4
